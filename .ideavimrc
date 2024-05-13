@@ -1,0 +1,166 @@
+" Base Settings
+" =========================================
+
+" General Settings
+set clipboard+=unnamed
+set scrolloff=15
+set number
+set relativenumber
+set showcmd
+set autoindent
+set backspace=indent,eol,start
+set hlsearch
+set ignorecase
+set incsearch
+set smartcase
+
+let mapleader = " "
+
+" Idea Specific Settings
+set ideajoin
+set ideastatusicon=gray
+set idearefactormode=keep
+" Plugin Settings
+" =========================================
+set highlightedyank
+set NERDTree
+set surround
+set multiple-cursors
+set commentary
+
+" 3rd Party Plugins
+set easymotion
+
+" Turn Off Sound Error
+set noerrorbells
+set visualbell
+
+let g:EasyMotion_do_mapping=0
+
+" Key Mapping
+" =========================================
+
+" Insert Mode Mapping
+inoremap <C-c> <ESC>
+inoremap <C-y> :action EditorPaste<CR>
+nnoremap <C-l> :noh<CR>
+
+" Easy Motion
+nmap s <Plug>(easymotion-s2)
+nmap S <Plug>(easymotion-sl2)
+
+"Tab Navigation
+nnoremap <Tab> :tabnext<CR>
+nnoremap <C-Tab> :tabprev<CR>
+
+" Jump Between Methods
+nnoremap <C-j>   :action MethodDown<CR>
+nnoremap <C-k>   :action MethodUp<CR>
+
+" Move actions
+nnoremap <S-j>   :action MoveLineDown<CR>
+nnoremap <S-k>   :action MoveLineUp<CR>
+
+" Goto
+nnoremap gi  :action GotoImplementation<CR>
+nnoremap gs  :action GotoSuperMethod<CR>
+nnoremap gt :action GotoTest<CR>
+nnoremap gD  :action FindUsages<CR>
+
+" Leader Key Mapping
+" =========================================
+" Apply macro
+nnoremap <Leader>ma @q
+r Create new File
+nnoremap <Leader>ne :action NewElement<CR>
+
+" Update Config - Build <C-S-O>
+nnoremap <leader>vrr    :source ~/.ideavimrc<CR>
+nnoremap <leader>hrr    :action ExternalSystem.ProjectRefreshAction<CR>
+
+" Menu
+nnoremap <Leader>mm :action MainMenu<CR>
+
+" Docs
+nnoremap <leader>j   :action QuickJavaDoc<CR>
+
+" Search
+nnoremap <leader><leader> :action GotoFile<CR>
+nnoremap <leader>sr       :action RecentFiles<CR>
+nnoremap <Leader>ss       /
+nnoremap <leader>sa       :action GotoAction<CR>
+nnoremap <leader>se       :action SearchEverywhere<CR>
+nnoremap <leader>sf       :action FindInPath<CR>
+
+" Generate Commands
+nnoremap <leader>ig   :action Generate<CR>
+nnoremap <leader>ii   :action ShowIntentionActions<CR>
+
+" Project View
+nnoremap <leader>pv :action ActivateProjectToolWindow<CR>
+nnoremap <leader>ps :action SelectInProjectView<CR>
+
+" Code Format
+nnoremap <leader>cf :action ReformatCode<CR>
+nnoremap <leader>co :action OptimizeImports<CR>
+nnoremap <leader>cc :action SilentCodeCleanup<CR>:action ReformatCode<CR>:action OptimizeImports<CR>
+
+"Terminal
+nnoremap <leader>to :action ActivateTerminalToolWindow<CR>
+
+" Database Settings
+nnoremap <Leader>db :action ActivateDatabaseToolWindow<CR>
+
+" Close active Tab
+map <leader>q :action CloseContent<CR>
+
+" Display
+map <leader>dz :action ToggleZenMode<CR>
+map <leader>dp :action TogglePresentationMode<CR>
+
+" Method Refactor
+nnoremap <leader>rq    :action Refactorings.QuickListPopupAction<CR>
+nnoremap <leader>rn    :action RenameElement<CR>
+
+" Run
+nnoremap <Leader>rr :action RunClass<CR>
+nnoremap <Leader>rt :action RunTest<CR>
+nnoremap <Leader>ru :action Rerun<CR>
+nnoremap <leader>rs :action Stop<CR>
+nnoremap <leader>rg :action ChooseRunConfiguration<CR>
+nnoremap <leader>rd :action ChooseDebugConfiguration<CR>
+nnoremap <Leader>rc :action RunCoverage<CR>
+
+" Debug
+nnoremap <leader>dd    :action Debug<CR>
+nnoremap <Leader>da    :action ToggleLineBreakpoint<CR>
+nnoremap <Leader>dA    :action ToggleMethodBreakpoint<CR>
+
+" Window Splits
+nnoremap <Leader>wv <C-w>v<CR>
+nnoremap <Leader>ws <C-w>s<CR>
+nnoremap <Leader>ww <C-w>w<CR>
+
+nnoremap <Leader>wu :action Unsplit<CR>
+nnoremap <Leader>wh :action HideAllWindows<CR>
+nnoremap <Leader>wo :action ChangeSplitOrientation<CR>
+
+" Errors
+nnoremap <leader>en :action GotoNextError<CR>
+nnoremap <leader>ep :action GotoPreviousError<CR>
+
+" Build
+"rust
+nnoremap <leader>bc :action Rust.Cargo<CR>
+"maven
+nnoremap <leader>bm :action Maven.NavigatorActionsToolbar<CR>
+"gradle
+nnoremap <leader>bg :action ExternalSystemView.ActionsToolbar<CR>
+
+" Git
+nnoremap <leader>gp :action Github.View.Pull.Request<CR>
+nnoremap <leader>gl :action ActivateVersionControlToolWindow<CR>
+nnoremap <leader>gc :action ActivateCommitToolWindow<CR>
+nnoremap <leader>gf :action Git.Fetch<CR>
+nnoremap <leader>gb :action Git.Branches<CR>
+nnoremap <leader>gm :action Git.Menu<CR>
