@@ -1,0 +1,20 @@
+
+[youtube-music]
+command=~/.config/i3blocks/youtube-music-title.sh
+interval=5
+
+[net-speed]
+command=~/.config/i3blocks/net_speed.sh
+interval=5
+
+[time]
+command=date '+%H:%M:%S %d-%m-%Y'
+interval=1
+
+[battery]
+command=~/.config/i3blocks/battery_status.sh
+interval=30
+
+
+
+

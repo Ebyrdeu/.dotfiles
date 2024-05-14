@@ -11,9 +11,8 @@
 
 set $mod Mod1
 
-# This font is widely installed, provides lots of unicode glyphs, right-to-left
-# text rendering and scalability on retina/hidpi displays (thanks to pango).
-#font pango:DejaVu Sans Mono 8
+# Turn off all screens
+exec_always --no-startup-id ~/.config/i3/screen-config.sh
 
 # Start XDG autostart .desktop files using dex. See also
 # https://wiki.archlinux.org/index.php/XDG_Autostart
@@ -29,6 +28,10 @@ exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 # NetworkManager is the most popular way to manage wireless networks on Linux,
 # and nm-applet is a desktop environment-independent system tray GUI for it.
 exec --no-startup-id nm-applet
+
+# set bg 
+exec_always --no-startup-id xsetroot -solid "#282828"
+
 
 # Use pactl to adjust volume in PulseAudio.
 set $refresh_i3status killall -SIGUSR1 i3status
@@ -92,9 +95,6 @@ bindsym $mod+s layout stacking
 bindsym $mod+w layout tabbed
 bindsym $mod+e layout toggle split
 
-# toggle tiling / floating
-bindsym $mod+Shift+space floating toggle
-
 # change focus between tiling / floating windows
 bindsym $mod+space focus mode_toggle
 
@@ -116,6 +116,7 @@ set $ws7 "7"
 set $ws8 "8"
 set $ws9 "9"
 set $ws10 "10"
+
 
 # switch to workspace
 bindsym $mod+1 workspace number $ws1
@@ -148,51 +149,101 @@ bindsym $mod+Shift+r restart
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
-        # These bindings trigger as soon as you enter the resize mode
+# These bindings trigger as soon as you enter the resize mode
 
-        # Pressing left will shrink the window’s width.
-        # Pressing right will grow the window’s width.
-        # Pressing up will shrink the window’s height.
-        # Pressing down will grow the window’s height.
-        bindsym j resize shrink width 10 px or 10 ppt
-        bindsym k resize grow height 10 px or 10 ppt
-        bindsym l resize shrink height 10 px or 10 ppt
-        bindsym semicolon resize grow width 10 px or 10 ppt
+# Pressing left will shrink the window’s width.
+# Pressing right will grow the window’s width.
+# Pressing up will shrink the window’s height.
+# Pressing down will grow the window’s height.
+	bindsym j resize shrink width 10 px or 10 ppt
+		bindsym k resize grow height 10 px or 10 ppt
+		bindsym l resize shrink height 10 px or 10 ppt
+		bindsym semicolon resize grow width 10 px or 10 ppt
 
-        # same bindings, but for the arrow keys
-        bindsym Left resize shrink width 10 px or 10 ppt
-        bindsym Down resize grow height 10 px or 10 ppt
-        bindsym Up resize shrink height 10 px or 10 ppt
-        bindsym Right resize grow width 10 px or 10 ppt
+# same bindings, but for the arrow keys
+		bindsym Left resize shrink width 10 px or 10 ppt
+		bindsym Down resize grow height 10 px or 10 ppt
+		bindsym Up resize shrink height 10 px or 10 ppt
+		bindsym Right resize grow width 10 px or 10 ppt
 
-        # back to normal: Enter or Escape or $mod+r
-        bindsym Return mode "default"
-        bindsym Escape mode "default"
-        bindsym $mod+r mode "default"
+# back to normal: Enter or Escape or $mod+r
+		bindsym Return mode "default"
+		bindsym Escape mode "default"
+		bindsym $mod+r mode "default"
 }
 
 bindsym $mod+r mode "resize"
 
 mode "exit: [l]ogout, [r]eboot, [h]ibernate, [s]leep, [p]oweroff" {
-    bindsym l exec i3-msg 'exit'
-    bindsym r exec systemctl reboot
-    bindsym h exec systemctl hibernate
-    bindsym s exec systemctl suspend
-    bindsym p exec systemctl poweroff
-    # Fallback if script fails to save
-    bindsym Return exec i3-msg exit
-    bindsym Escape mode "default"
+	bindsym l exec i3-msg 'exit'
+		bindsym r exec systemctl reboot
+		bindsym h exec systemctl hibernate
+		bindsym s exec systemctl suspend
+		bindsym p exec systemctl poweroff
+# Fallback if script fails to save
+		bindsym Return exec i3-msg exit
+		bindsym Escape mode "default"
 }
+
 bindsym $mod+Shift+e mode "exit: [l]ogout, [r]eboot, [h]ibernate, [s]leep, [p]oweroff"
 
 
 # font used by i3 for titles and bars
 font pango:monospace 11
 
+# Border
+default_border pixel 2
+default_floating_border none
+hide_edge_borders smart
+
+# Colors (Gruvbox Material Dark)
+set $bg       #282828
+set $fg       #d4be98
+set $red      #ea6962
+set $orange   #e78a4e
+set $green    #a9b665
+set $blue     #7daea3
+set $purple   #d3869b
+set $aqua     #89b482
+set $darkgray #282828
+
+# Class                 border 	    backgr	text    indicator   child_border
+client.focused          $fg	    $fg		$bg     $fg         $blue
+client.focused_inactive $aqua       $aqua       $bg     $aqua       $aqua
+client.unfocused        $bg         $bg         $bg     $bg         $bg
+client.urgent           $red        $red        $bg     $red        $red
+
+
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
-        status_command i3status
-	output DP-4
+	status_command i3blocks
+		output DP-4
+		colors {
+# bar background color
+			background $bg
+# text color used for blocks that do not have a color specified.
+				statusline $lightgray
+# workspaces section
+#                    border    backgr.   text
+				focused_workspace    $blue     $blue     $bg
+				inactive_workspace   $darkgray $darkgray $lightgray
+				active_workspace     $darkgray $darkgray $lightgray
+				urgent_workspace     $red      $red      $bg
+		}
 }
+
+
+
+# Start firefox on workspace 2
+exec --no-startup-id i3-msg 'workspace 2; exec firefox'
+
+# Start firefox on workspace 9
+exec --no-startup-id i3-msg 'workspace 9; exec thunderbird'
+
+# Start Youtube Music on workspace 10
+exec --no-startup-id i3-msg 'workspace 10; exec youtube-music'
+
+# Start Telegram desktop on workspace 10
+exec --no-startup-id i3-msg 'workspace 10; exec telegram-desktop'
 

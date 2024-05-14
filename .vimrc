@@ -21,6 +21,7 @@ let mapleader = " "
 call plug#begin()
 Plug 'easymotion/vim-easymotion'
 Plug 'ericbn/vim-solarized'
+Plug 'morhetz/gruvbox'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
 Plug 'machakann/vim-highlightedyank'
@@ -31,7 +32,7 @@ call plug#end()
 " Themes
 syntax enable
 set background=dark
-colorscheme solarized
+colorscheme gruvbox
 
 " Turn Off Sound Error
 set belloff=all
@@ -70,6 +71,9 @@ nnoremap <Leader>ss /
 
 " Terminal
 nnoremap <leader>to :terminal<CR>
+
+" Code Format
+nnoremap <leader>cc =G<CR>
 
 " Close active Tab
 nnoremap <leader>q :bd<CR>
