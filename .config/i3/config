@@ -189,7 +189,7 @@ bindsym $mod+Shift+e mode "exit: [l]ogout, [r]eboot, [h]ibernate, [s]leep, [p]ow
 
 
 # font used by i3 for titles and bars
-font pango:monospace 11
+font pango:monospace 12
 
 # Border
 default_border pixel 2
@@ -237,9 +237,6 @@ bar {
 
 # Start firefox on workspace 2
 exec --no-startup-id i3-msg 'workspace 2; exec firefox'
-
-# Start firefox on workspace 9
-exec --no-startup-id i3-msg 'workspace 9; exec thunderbird'
 
 # Start Youtube Music on workspace 10
 exec --no-startup-id i3-msg 'workspace 10; exec youtube-music'
