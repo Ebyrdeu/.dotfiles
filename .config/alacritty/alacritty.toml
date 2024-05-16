@@ -1,0 +1,31 @@
+import = [ "~/.config/alacritty/gruvbox.toml"
+]
+
+[env]
+TERM = "xterm-256color"
+
+[font.bold]
+family = "JetBrainsMono"
+style = "Bold"
+
+[font.bold_italic]
+family = "JetBrainsMono"
+style = "Bold Italic"
+
+[font.italic]
+family = "JetBrainsMono"
+style = "Medium Italic"
+
+[font.normal]
+family = "JetBrainsMono"
+style = "Regular"
+
+
+[font]
+size = 12.0
+
+[selection]
+save_to_clipboard = true
+
+[mouse]
+hide_when_typing = true
