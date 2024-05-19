@@ -20,8 +20,6 @@ let mapleader = " "
 " =========================================
 call plug#begin()
 Plug 'easymotion/vim-easymotion'
-Plug 'ericbn/vim-solarized'
-Plug 'morhetz/gruvbox'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
 Plug 'machakann/vim-highlightedyank'
@@ -31,8 +29,6 @@ call plug#end()
 
 " Themes
 syntax enable
-set background=dark
-colorscheme gruvbox
 
 " Turn Off Sound Error
 set belloff=all

@@ -1,8 +1,0 @@
-
-[youtube-music]
-command=/.config/i3blocks/youtube-music-title.sh
-interval=1
-
-[time]
-command=date '+%H:%M:%S %d-%m-%Y'
-interval=1
