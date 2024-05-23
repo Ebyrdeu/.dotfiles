@@ -69,7 +69,7 @@ nnoremap <Leader>ss /
 nnoremap <leader>to :terminal<CR>
 
 " Code Format
-nnoremap <leader>cc =G<CR>
+nnoremap <leader>cc =mzgg=G`z<CR>
 
 " Close active Tab
 nnoremap <leader>q :bd<CR>

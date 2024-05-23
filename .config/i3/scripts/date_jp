@@ -1,0 +1,19 @@
+#!/bin/bash
+
+export LC_TIME=ja_JP.UTF-8
+# Get the day of the week in English (abbreviated)
+day=$(date '+%a')
+
+# Map the English day to Japanese kanji
+case $day in
+  Mon) day_kanji="月" ;;
+  Tue) day_kanji="火" ;;
+  Wed) day_kanji="水" ;;
+  Thu) day_kanji="木" ;;
+  Fri) day_kanji="金" ;;
+  Sat) day_kanji="土" ;;
+  Sun) day_kanji="日" ;;
+esac
+
+# Print the date with the day of the week in Japanese kanji
+date "+($day_kanji) %H:%M:%S %d-%m-%Y"
