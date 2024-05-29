@@ -205,7 +205,7 @@ bar {
 }
 
 # define colors for windows:
-client.focused          $lightgray $lightgray $bg $purple $green
+client.focused          $green $green $green $green $green
 client.focused_inactive $bg $bg $bg $bg $bg
 client.unfocused        $bg $bg $bg $bg $bg
 client.urgent           $red $red $white $red $red
