@@ -16,14 +16,14 @@ set $ws10 "10"
 
 # Screen configuration
 # Turn off all monitors
-exec_always --no-startup-id ~/.config/i3/scripts/screen-config
+#exec_always --no-startup-id ~/.config/i3/scripts/screen-config
 
 # Change keyboard layout
 exec "setxkbmap -model pc104 -layout us,se,ru -option grp:win_space_toggle"
 
 #Background settings
 # Set solid black background
-exec --no-startup-id xsetroot -solid "#000000"
+exec --no-startup-id xsetroot -solid "#282828"
 
 # Set background image
 exec --no-startup-id sleep 1 && feh --bg-fill ~/Pictures/bg.png
@@ -180,20 +180,35 @@ default_floating_border none
 hide_edge_borders smart
 
 # Define colors variables:
-set $darkblue		#08052b
-set $lightblue		#5294e2
-set $white		    #ffffff
-set $mediumgrey		#8b8b8b
+set $bg #282828
+set $red #cc241d
+set $green #98971a
+set $yellow #d79921
+set $blue #458588
+set $purple #b16286
+set $aqua #689d68
+set $gray #a89984
+set $darkgray #1d2021
 
 # i3bar configuration
 bar {
     status_command i3blocks -c ~/.config/i3/i3blocks.conf
-    output DP-4
+   #output DP-4a
+    colors {
+        background $bg
+        statusline $lightgray
+        focused_workspace    $lightgray $lightgray $bg
+        inactive_workspace   $darkgray $darkgray $lightgray
+        active_workspace     $darkgray $darkgray $lightgray
+        urgent_workspace     $red $red $bg
+    }
 }
 
 # define colors for windows:
-#class		        	border		bground		text		indicator	child_border
-client.focused		    $lightblue	$darkblue	$white		$mediumgrey	$mediumgrey
+client.focused          $lightgray $lightgray $bg $purple $green
+client.focused_inactive $bg $bg $bg $bg $bg
+client.unfocused        $bg $bg $bg $bg $bg
+client.urgent           $red $red $white $red $red
 
 # Autostart applications
 # Start Youtube Music
