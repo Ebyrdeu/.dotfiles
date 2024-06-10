@@ -16,17 +16,10 @@ set $ws10 "10"
 
 # Screen configuration
 # Turn off all monitors
-#exec_always --no-startup-id ~/.config/i3/scripts/screen-config
+exec_always --no-startup-id ~/.config/i3/scripts/screen-config
 
 # Change keyboard layout
 exec "setxkbmap -model pc104 -layout us,se,ru -option grp:win_space_toggle"
-
-#Background settings
-# Set solid black background
-exec --no-startup-id xsetroot -solid "#282828"
-
-# Set background image
-exec --no-startup-id sleep 1 && feh --bg-fill ~/Pictures/bg.png
 
 # Autostart XDG .desktop files using dex
 exec --no-startup-id dex --autostart --environment i3
@@ -45,8 +38,12 @@ bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
 bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
 
-bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl set +1%
-bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 1%-
+bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl set +2%
+bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 2%-
+
+# Night lights
+bindsym $mod+x exec redshift -x
+bindsym $mod+c exec redshift -P -O 2500
 
 # Application launchers and shortcuts
 # Start terminal
@@ -144,30 +141,30 @@ bindsym $mod+Shift+r restart
 # Resize mode
 mode "resize" {
     bindsym h resize shrink width 10 px or 10 ppt
-    bindsym k resize grow height 10 px or 10 ppt
-    bindsym j resize shrink height 10 px or 10 ppt
-    bindsym l resize grow width 10 px or 10 ppt
+        bindsym k resize grow height 10 px or 10 ppt
+        bindsym j resize shrink height 10 px or 10 ppt
+        bindsym l resize grow width 10 px or 10 ppt
 
-    bindsym Left resize shrink width 10 px or 10 ppt
-    bindsym Down resize grow height 10 px or 10 ppt
-    bindsym Up resize shrink height 10 px or 10 ppt
-    bindsym Right resize grow width 10 px or 10 ppt
+        bindsym Left resize shrink width 10 px or 10 ppt
+        bindsym Down resize grow height 10 px or 10 ppt
+        bindsym Up resize shrink height 10 px or 10 ppt
+        bindsym Right resize grow width 10 px or 10 ppt
 
-    bindsym Return mode "default"
-    bindsym Escape mode "default"
-    bindsym $mod+r mode "default"
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+        bindsym $mod+r mode "default"
 }
 bindsym $mod+r mode "resize"
 
 # Exit menu
 mode "exit: [l]ogout, [r]eboot, [h]ibernate, [s]leep, [p]oweroff" {
     bindsym l exec i3-msg 'exit'
-    bindsym r exec systemctl reboot
-    bindsym h exec systemctl hibernate
-    bindsym s exec systemctl suspend
-    bindsym p exec systemctl poweroff
-    bindsym Return exec i3-msg exit
-    bindsym Escape mode "default"
+        bindsym r exec systemctl reboot
+        bindsym h exec systemctl hibernate
+        bindsym s exec systemctl suspend
+        bindsym p exec systemctl poweroff
+        bindsym Return exec i3-msg exit
+        bindsym Escape mode "default"
 }
 bindsym $mod+Shift+e mode "exit: [l]ogout, [r]eboot, [h]ibernate, [s]leep, [p]oweroff"
 
@@ -175,7 +172,7 @@ bindsym $mod+Shift+e mode "exit: [l]ogout, [r]eboot, [h]ibernate, [s]leep, [p]ow
 font pango: JetBrains Mono 11
 
 # Border settings
-default_border pixel 2
+default_border pixel 3
 default_floating_border none
 hide_edge_borders smart
 
@@ -193,23 +190,22 @@ set $darkgray #1d2021
 # i3bar configuration
 bar {
     status_command i3blocks -c ~/.config/i3/i3blocks.conf
-   #output DP-4a
-    colors {
-        background $bg
-        statusline $lightgray
-        focused_workspace    $lightgray $lightgray $bg
-        inactive_workspace   $darkgray $darkgray $lightgray
-        active_workspace     $darkgray $darkgray $lightgray
-        urgent_workspace     $red $red $bg
-    }
+#output DP-4a
+        colors {
+            background $bg
+                statusline $lightgray
+                focused_workspace    $lightgray $lightgray $bg
+                inactive_workspace   $darkgray $darkgray $lightgray
+                active_workspace     $darkgray $darkgray $lightgray
+                urgent_workspace     $red $red $bg
+        }
 }
 
 # define colors for windows:
-client.focused          $green $green $green $green $green
-client.focused_inactive $bg $bg $bg $bg $bg
-client.unfocused        $bg $bg $bg $bg $bg
+client.focused          $lightgray $lightgray $bg $purple $blue
+client.focused_inactive $darkgray $darkgray $lightgray $blue $darkgray
+client.unfocused        $darkgray $darkgray $lightgray $blue $darkgray
 client.urgent           $red $red $white $red $red
-
 # Autostart applications
 # Start Youtube Music
 exec --no-startup-id i3-msg 'workspace 10; exec youtube-music'

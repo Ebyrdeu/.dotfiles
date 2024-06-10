@@ -2,7 +2,7 @@
     background:     #282828FF;
     background-alt: #353535FF;
     foreground:     #EBDBB2FF;
-    selected:       #83A598FF;
+    selected:       #458588FF;
     active:         #B8BB26FF;
     urgent:         #FB4934FF;
 }
@@ -57,8 +57,8 @@ window {
     enabled:                     true;
     margin:                      0px;
     padding:                     0px;
-    border:                      1px solid;
-    border-radius:               0px;
+    border:                      3px solid;
+    border-radius:               0px 0px 0px 0px;
     border-color:                @border-colour;
     cursor:                      "default";
     background-color:            @background-colour;
