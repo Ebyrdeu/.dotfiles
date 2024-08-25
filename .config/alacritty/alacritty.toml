@@ -1,6 +1,8 @@
 import = [ "~/.config/alacritty/gruvbox_light.toml"
 ]
 
+[shell]
+program = 'zellij'
 [env]
 TERM = "xterm-256color"
 

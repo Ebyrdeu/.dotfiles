@@ -16,4 +16,4 @@ case $day in
 esac
 
 # Print the date with the day of the week in Japanese kanji
-date "+($day_kanji) %H:%M:%S %d-%m-%Y"
+date "+[$day_kanji] %H:%M:%S %d-%m-%Y"

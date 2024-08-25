@@ -10,6 +10,7 @@ alias grep='grep --color=auto'
 alias add='git add .'
 alias commit='git commit -m'
 alias undo='git reset'
+alias log='git log --stat'
 PS1='[\u@\h \W]\$ '
 . "$HOME/.cargo/env"
 
@@ -24,3 +25,6 @@ export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
 # GPG
 export GPG_TTY=$(tty)
 
+export WEBKIT_DISABLE_COMPOSITING_MODE=1
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash

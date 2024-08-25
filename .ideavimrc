@@ -2,20 +2,19 @@
 " =========================================
 
 " General Settings
-set clipboard+=unnamed         " Use the system clipboard for all yank, delete, change, and put operations
-set scrolloff=15               " Keep 15 lines visible above and below the cursor
-set number                     " Show absolute line numbers
-set relativenumber             " Show relative line numbers
-set showcmd                    " Display incomplete commands in the status line
-set autoindent                 " Automatically set indent of new lines to match the previous line
-set backspace=indent,eol,start " Allow backspace over autoindent, line breaks, and insert start
+set clipboard+=unnamed
+set scrolloff=8
+set number
+set relativenumber
+set showcmd
+set autoindent
+set backspace=indent,eol,start
 
 " Search Settings
-set hlsearch                   " Highlight search results
-set ignorecase                 " Ignore case in search patterns
-set incsearch                  " Show partial matches as search pattern is typed
-set smartcase                  " Override 'ignorecase' if search pattern contains uppercase letters
-
+set hlsearch
+set ignorecase
+set incsearch
+set smartcase
 
 let mapleader = " "
 
@@ -43,15 +42,21 @@ set visualbell
 " Key Mapping
 " =========================================
 
-" Insert Mode Mapping
-inoremap <C-y> :action EditorPaste<CR>
+" make missing : less annoying 
+nnoremap ; :
+
+" Paste From System Buffer
+inoremap <C-v> :action EditorPaste<CR>
+
+" stop searching
 nnoremap <C-l> :noh<CR>
+vnoremap <C-l> :noh<CR>
 
 " Easy Motion
 nmap s <Plug>(easymotion-s2)
 nmap S <Plug>(easymotion-sl2)
 
-"Tab Navigation
+" Tab Navigation
 nnoremap <Tab> :tabnext<CR>
 nnoremap <C-Tab> :tabprev<CR>
 
@@ -59,35 +64,57 @@ nnoremap <C-Tab> :tabprev<CR>
 nnoremap <C-j>   :action MethodDown<CR>
 nnoremap <C-k>   :action MethodUp<CR>
 
-" Move actions
-nnoremap <C-S-j>   :action MoveLineDown<CR>
-nnoremap <C-S-k>   :action MoveLineUp<CR>
+" Move Actions
+nnoremap <C-S-j> :action MoveLineDown<CR>
+nnoremap <C-S-k> :action MoveLineUp<CR>
 
 " Goto
 nnoremap gi  :action GotoImplementation<CR>
 nnoremap gs  :action GotoSuperMethod<CR>
-nnoremap gt :action GotoTest<CR>
+nnoremap gt  :action GotoTest<CR>
 nnoremap gD  :action FindUsages<CR>
+
+" Jump to Start and End of Line
+nnoremap H ^
+nnoremap L $
+
+" Center Search Results
+nnoremap n nzz
+nnoremap N Nzz
+nnoremap * *zz
+nnoremap # #zz
+nnoremap g* g*zz
+
+" No Arrow Keys for Navigation (optional)
+nnoremap <up> <nop>
+nnoremap <down> <nop>
+inoremap <up> <nop>
+inoremap <down> <nop>
+inoremap <left> <nop>
+inoremap <right> <nop>
+
+" F1 as Escape
+nnoremap <F1> <Esc>
+inoremap <F1> <Esc>
 
 " Leader Key Mapping
 " =========================================
 
-" Apply macro
-nnoremap <leader>ma @q
-
-" Create new File
+" Create New File
 nnoremap <leader>ne :action NewElement<CR>
 nnoremap <leader>nf :action NewFile<CR>
+
 " Update Config - Build <C-S-O>
-nnoremap <leader>vrr    :source ~/.ideavimrc<CR>
-nnoremap <leader>hrr    :action ExternalSystem.ProjectRefreshAction<CR>
+nnoremap <leader>vrr :source ~/.ideavimrc<CR>
+nnoremap <leader>hrr :action ExternalSystem.ProjectRefreshAction<CR>
 
 " Menu
 nnoremap <leader>mm :action MainMenu<CR>
 
 " Docs
-nnoremap <leader>j   :action QuickJavaDoc<CR>
-nnoremap <leader>ee   :action ShowErrorDescription<CR>
+nnoremap <leader>j  :action QuickJavaDoc<CR>
+nnoremap <leader>ee :action ShowErrorDescription<CR>
+
 " Search
 nnoremap <leader><leader> :action GotoFile<CR>
 nnoremap <leader>sr       :action RecentFiles<CR>
@@ -97,8 +124,8 @@ nnoremap <leader>se       :action SearchEverywhere<CR>
 nnoremap <leader>sf       :action FindInPath<CR>
 
 " Generate Commands
-nnoremap <leader>ig   :action Generate<CR>
-nnoremap <leader>ii   :action ShowIntentionActions<CR>
+nnoremap <leader>ig :action Generate<CR>
+nnoremap <leader>ii :action ShowIntentionActions<CR>
 
 " Project View
 nnoremap <leader>pv :action ActivateProjectToolWindow<CR>
@@ -107,44 +134,37 @@ nnoremap <leader>ps :action SelectInProjectView<CR>
 " Code Format
 nnoremap <leader>cc :action SilentCodeCleanup<CR>:action ReformatCode<CR>:action OptimizeImports<CR>
 
-"Terminal
+" Terminal
 nnoremap <leader>to :action ActivateTerminalToolWindow<CR>
 
-" Close active Tab
+" Close Active Tab
 map <leader>q :action CloseContent<CR>
 
 " Display
-map <leader>dz :action ToggleZenMode<CR>
+map <leader>dz :action ToggleDistractionFreeMode<CR>
 map <leader>dp :action TogglePresentationMode<CR>
 
 " Method Refactor
-nnoremap <leader>rq    :action Refactorings.QuickListPopupAction<CR>
-nnoremap <leader>rn    :action RenameElement<CR>
-nnoremap <leader>rv    :action IntroduceVariable<CR>
+nnoremap <leader>rq :action Refactorings.QuickListPopupAction<CR>
+nnoremap <leader>rn :action RenameElement<CR>
+nnoremap <leader>rv :action IntroduceVariable<CR>
 
 " Run
-nnoremap <leader>rr :action RunClass<CR>
+nnoremap <leader>rr  :action RunClass<CR>
 nnoremap <leader>rtt :action RunTest<CR>
 nnoremap <leader>rtc :action RunCoverage<CR>
-nnoremap <leader>ru :action Rerun<CR>
-nnoremap <leader>rs :action Stop<CR>
-nnoremap <leader>rc :action ChooseRunConfiguration<CR>
-nnoremap <leader>rd :action ChooseDebugConfiguration<CR>
-
+nnoremap <leader>ru  :action Rerun<CR>
+nnoremap <leader>rs  :action Stop<CR>
+nnoremap <leader>rc  :action ChooseRunConfiguration<CR>
+nnoremap <leader>rd  :action ChooseDebugConfiguration<CR>
 
 " Debug
-nnoremap <leader>dd    :action Debug<CR>
-nnoremap <leader>da    :action ToggleLineBreakpoint<CR>
-nnoremap <leader>dA    :action ToggleMethodBreakpoint<CR>
+nnoremap <leader>dd  :action Debug<CR>
+nnoremap <leader>da  :action ToggleLineBreakpoint<CR>
+nnoremap <leader>dA  :action ToggleMethodBreakpoint<CR>
 
-" Window Splits
-nnoremap <leader>wv <C-w>v<CR>
-nnoremap <leader>ws <C-w>s<CR>
-nnoremap <leader>ww <C-w>w<CR>
-
-nnoremap <leader>wu :action Unsplit<CR>
-nnoremap <leader>wh :action HideAllWindows<CR>
-nnoremap <leader>wo :action ChangeSplitOrientation<CR>
+" Quick-Save
+nnoremap <leader>w :w<CR>
 
 " Errors
 nnoremap <leader>en :action GotoNextError<CR>
@@ -152,10 +172,10 @@ nnoremap <leader>ep :action GotoPreviousError<CR>
 
 " Build
 
-"rust
+" Rust
 nnoremap <leader>bc :action Rust.Cargo<CR>
 
-"maven
+" Maven
 nnoremap <leader>bm :action Maven.NavigatorActionsToolbar<CR>
 
 " Git
@@ -165,3 +185,4 @@ nnoremap <leader>gc :action ActivateCommitToolWindow<CR>
 nnoremap <leader>gf :action Git.Fetch<CR>
 nnoremap <leader>gb :action Git.Branches<CR>
 nnoremap <leader>gm :action Git.Menu<CR>
+

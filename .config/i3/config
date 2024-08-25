@@ -3,16 +3,16 @@
 set $mod Mod1
 
 # Workspace definitions
-set $ws1 "1"
-set $ws2 "2"
-set $ws3 "3"
-set $ws4 "4"
-set $ws5 "5"
-set $ws6 "6"
-set $ws7 "7"
-set $ws8 "8"
-set $ws9 "9"
-set $ws10 "10"
+set $ws1 1
+set $ws2 2
+set $ws3 3
+set $ws4 4
+set $ws5 5
+set $ws6 6
+set $ws7 7
+set $ws8 8
+set $ws9 9
+set $ws10 10
 
 # Screen configuration
 # Turn off all monitors
@@ -108,16 +108,16 @@ bindsym $mod+space focus mode_toggle
 bindsym $mod+a focus parent
 
 # Workspace navigation
-bindsym $mod+1 workspace number $ws1
-bindsym $mod+2 workspace number $ws2
-bindsym $mod+3 workspace number $ws3
-bindsym $mod+4 workspace number $ws4
-bindsym $mod+5 workspace number $ws5
-bindsym $mod+6 workspace number $ws6
-bindsym $mod+7 workspace number $ws7
-bindsym $mod+8 workspace number $ws8
-bindsym $mod+9 workspace number $ws9
-bindsym $mod+0 workspace number $ws10
+bindsym $mod+1 workspace  number $ws1
+bindsym $mod+2 workspace  number $ws2
+bindsym $mod+3 workspace  number $ws3
+bindsym $mod+4 workspace  number $ws4
+bindsym $mod+5 workspace  number $ws5
+bindsym $mod+6 workspace  number $ws6
+bindsym $mod+7 workspace  number $ws7
+bindsym $mod+8 workspace  number $ws8
+bindsym $mod+9 workspace  number $ws9
+bindsym $mod+0 workspace  number $ws10
 
 # Move focused container to workspace
 bindsym $mod+Shift+1 move container to workspace number $ws1
@@ -177,32 +177,32 @@ default_floating_border none
 hide_edge_borders smart
 
 # Define colors variables:
-set $bg #282828
+set $bg #f2e5bc
 set $red #cc241d
 set $green #98971a
 set $yellow #d79921
 set $blue #458588
 set $purple #b16286
 set $aqua #689d68
-set $gray #a89984
-set $darkgray #1d2021
+set $gray #7c6f64
+set $darkgray #f2e5bc
+set $lightgray #282828
 
 # i3bar configuration
 bar {
     status_command i3blocks -c ~/.config/i3/i3blocks.conf
-#output DP-4a
         colors {
-            background $bg
-                statusline $lightgray
-                focused_workspace    $lightgray $lightgray $bg
-                inactive_workspace   $darkgray $darkgray $lightgray
-                active_workspace     $darkgray $darkgray $lightgray
-                urgent_workspace     $red $red $bg
+	background $bg
+        statusline $lightgray
+        focused_workspace    $lightgray $lightgray $bg
+        inactive_workspace   $darkgray $darkgray $lightgray
+        active_workspace     $darkgray $darkgray $lightgray
+        urgent_workspace     $red $red $bg
         }
 }
 
 # define colors for windows:
-client.focused          $lightgray $lightgray $bg $purple $blue
+client.focused          $lightgray $lightgray $bg $aqua $aqua
 client.focused_inactive $darkgray $darkgray $lightgray $blue $darkgray
 client.unfocused        $darkgray $darkgray $lightgray $blue $darkgray
 client.urgent           $red $red $white $red $red
