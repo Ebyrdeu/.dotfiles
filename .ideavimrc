@@ -3,7 +3,7 @@
 
 " General Settings
 set clipboard+=unnamed
-set scrolloff=8
+set scrolloff=2
 set number
 set relativenumber
 set showcmd
@@ -45,9 +45,6 @@ set visualbell
 " make missing : less annoying 
 nnoremap ; :
 
-" Paste From System Buffer
-inoremap <C-v> :action EditorPaste<CR>
-
 " stop searching
 nnoremap <C-l> :noh<CR>
 vnoremap <C-l> :noh<CR>
@@ -85,20 +82,15 @@ nnoremap * *zz
 nnoremap # #zz
 nnoremap g* g*zz
 
-" No Arrow Keys for Navigation (optional)
-nnoremap <up> <nop>
-nnoremap <down> <nop>
-inoremap <up> <nop>
-inoremap <down> <nop>
-inoremap <left> <nop>
-inoremap <right> <nop>
-
 " F1 as Escape
 nnoremap <F1> <Esc>
 inoremap <F1> <Esc>
 
 " Leader Key Mapping
 " =========================================
+
+" Paste From System Buffer
+inoremap <leader>y :action EditorPaste<CR>
 
 " Create New File
 nnoremap <leader>ne :action NewElement<CR>
@@ -163,8 +155,14 @@ nnoremap <leader>dd  :action Debug<CR>
 nnoremap <leader>da  :action ToggleLineBreakpoint<CR>
 nnoremap <leader>dA  :action ToggleMethodBreakpoint<CR>
 
-" Quick-Save
-nnoremap <leader>w :w<CR>
+" Window Splits
+nnoremap <leader>wv <C-w>v<CR>
+nnoremap <leader>ws <C-w>s<CR>
+nnoremap <leader>ww <C-w>w<CR>
+
+nnoremap <leader>wu :action Unsplit<CR>
+nnoremap <leader>wh :action HideAllWindows<CR>
+nnoremap <leader>wo :action ChangeSplitOrientation<CR>
 
 " Errors
 nnoremap <leader>en :action GotoNextError<CR>

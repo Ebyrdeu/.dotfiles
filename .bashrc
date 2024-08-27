@@ -18,13 +18,8 @@ PS1='[\u@\h \W]\$ '
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
-#GO LANG
-export GOPATH=$HOME/go
-export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
-
 # GPG
 export GPG_TTY=$(tty)
-
 export WEBKIT_DISABLE_COMPOSITING_MODE=1
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash

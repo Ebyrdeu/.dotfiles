@@ -3,7 +3,7 @@
 
 " General Settings
 set clipboard=unnamed
-set scrolloff=15
+set scrolloff=2
 set number
 set relativenumber
 set showcmd

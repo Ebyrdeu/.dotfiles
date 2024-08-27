@@ -192,7 +192,7 @@ set $lightgray #282828
 bar {
     status_command i3blocks -c ~/.config/i3/i3blocks.conf
         colors {
-	background $bg
+		background $bg
         statusline $lightgray
         focused_workspace    $lightgray $lightgray $bg
         inactive_workspace   $darkgray $darkgray $lightgray
@@ -206,6 +206,7 @@ client.focused          $lightgray $lightgray $bg $aqua $aqua
 client.focused_inactive $darkgray $darkgray $lightgray $blue $darkgray
 client.unfocused        $darkgray $darkgray $lightgray $blue $darkgray
 client.urgent           $red $red $white $red $red
+
 # Autostart applications
 # Start Youtube Music
 exec --no-startup-id i3-msg 'workspace 10; exec youtube-music'

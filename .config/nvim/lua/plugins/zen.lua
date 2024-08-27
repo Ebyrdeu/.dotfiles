@@ -5,7 +5,8 @@ return {
 			require("zen-mode").setup {
 				window = {
 					width = 120,
-					options = {}
+					options = {},
+					backdrop = .99
 				},
 			}
 			require("zen-mode").toggle()
