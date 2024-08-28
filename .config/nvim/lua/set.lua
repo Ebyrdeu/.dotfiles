@@ -4,6 +4,9 @@
 --
 -------------------------------------------------------------------------------
 
+-- now with system clipboard
+vim.opt.clipboard="unnamed,unnamedplus"
+
 -- never ever folding
 vim.opt.foldenable = false
 vim.opt.foldmethod = 'manual'

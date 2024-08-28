@@ -1,12 +1,13 @@
 [user]
     name = Maxim Khnykin
     email = ebyrdeu.khnykin@gmail.com
-    signingkey = XXXXXXXXX
+    signingkey = 
 
 [core]
     autocrlf = input
     safecrlf = true
     defaultBranch = main
+	editor = nvim
 
 [commit]
     gpgsign = true
@@ -21,13 +22,12 @@
     tool = nvim -d
 
 [alias]
-    c = commit
     s = status
     st = status
     lg = log --oneline
     last = log -1 HEAD
     cl = log -p -- ':(exclude)Cargo.lock'
-    f = push --force-with-lease
+    pf = push --force-with-lease
     ss = "!f() { git stash show stash^{/$*} -p; }; f"
     sa = "!f() { git stash apply stash^{/$*}; }; f"
     sl = stash list
@@ -43,4 +43,8 @@
 
 [github]
     user = ebyrdeu
+
+[diff]
+	algorithm = histogram
+	indentHeuristic = true
 

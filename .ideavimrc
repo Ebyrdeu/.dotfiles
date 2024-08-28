@@ -67,9 +67,8 @@ nnoremap <C-S-k> :action MoveLineUp<CR>
 
 " Goto
 nnoremap gi  :action GotoImplementation<CR>
-nnoremap gs  :action GotoSuperMethod<CR>
 nnoremap gt  :action GotoTest<CR>
-nnoremap gD  :action FindUsages<CR>
+nnoremap gr  :action FindUsages<CR>
 
 " Jump to Start and End of Line
 nnoremap H ^

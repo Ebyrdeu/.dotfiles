@@ -5,12 +5,27 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
+if [ -f /etc/bashrc ]; then
+  source /etc/bashrc
+elif [ -f /etc/bash.bashrc ]; then
+  source /etc/bash.bashrc
+fi
+
 alias ls='ls -a --color=auto'
 alias grep='grep --color=auto'
-alias add='git add .'
-alias commit='git commit -m'
-alias undo='git reset'
-alias log='git log --stat'
+alias e='nvim'
+alias g='git'
+alias ga='git add -p'
+alias gc='git commit -m'
+alias gl='git log --stat'
+
+
+
+# History management
+export HISTCONTROL=ignoreboth
+export HISTSIZE=5000
+export HISTIGNORE="clear:bg:fg:cd:cd -:cd ..:exit:date:w:* --help:ls:l:ll:lll"
+
 PS1='[\u@\h \W]\$ '
 . "$HOME/.cargo/env"
 
@@ -20,6 +35,5 @@ export SDKMAN_DIR="$HOME/.sdkman"
 
 # GPG
 export GPG_TTY=$(tty)
-export WEBKIT_DISABLE_COMPOSITING_MODE=1
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash

@@ -29,4 +29,3 @@ return {
 		end, { bang = true, nargs = '?', complete = "dir" })
 	end
 }
-

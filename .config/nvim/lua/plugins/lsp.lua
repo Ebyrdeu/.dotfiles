@@ -20,6 +20,7 @@ return {
 					"tsserver", -- TypeScript/JavaScript
 					"jdtls", -- Java
 					"eslint", -- ESLint for linting JS/TS/React
+					"pyright", -- Python
 				}
 			})
 		end,
@@ -52,6 +53,9 @@ return {
 					},
 				},
 			})
+
+			-- Python (using pyright)
+			lspconfig.pyright.setup({})
 
 			-- TypeScript/JavaScript (including React support)
 			lspconfig.tsserver.setup({

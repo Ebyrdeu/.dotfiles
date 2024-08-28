@@ -1,7 +1,0 @@
-#!/bin/bash
-
-# Get the current keyboard layout
-layout=$(xkblayout print "%s")
-# Output the layout
-echo "$layout"
-

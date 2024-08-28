@@ -1,7 +1,6 @@
 return {
-	'ggandor/leap.nvim',
+	'andymass/vim-matchup',
 	config = function()
-		require('leap').create_default_mappings()
+		vim.g.matchup_matchparen_offscreen = { method = "popup" }
 	end
-
 }
