@@ -1,31 +1,31 @@
 return {
+
 	'junegunn/fzf.vim',
 	dependencies = {
 		{ 'junegunn/fzf', build = './install --all' },
 	},
 	config = function()
-		-- Simple layout
+		-- stop putting a giant window over my editor
 		vim.g.fzf_layout = { down = '~20%' }
-
-		-- Get the initial working directory (root folder)
-		local root_dir = vim.fn.getcwd()
-
-		-- List command using fd and removing the root path
+		-- when using :Files, pass the file list through
+		--
+		--   https://github.com/jonhoo/proximity-sort
+		--
+		-- to prefer files closer to the current file.
 		function list_cmd()
-			-- fd command to find all files in the root directory
-			local fd_cmd = string.format('fd --type file --follow . %s', vim.fn.shellescape(root_dir))
-
-			-- Use sed to remove the root directory from the output
-			local sed_cmd = string.format("sed 's|^%s/||'", vim.fn.escape(root_dir, '/'))
-
-			-- Combine fd and sed commands
-			return fd_cmd .. " | " .. sed_cmd
+			local base = vim.fn.fnamemodify(vim.fn.expand('%'), ':h:.:S')
+			if base == '.' then
+				-- if there is no current file,
+				-- proximity-sort can't do its thing
+				return 'fd --type file --hidden --follow'
+			else
+				return vim.fn.printf('fd --type file --hidden --follow | proximity-sort %s',
+					vim.fn.shellescape(vim.fn.expand('%')))
+			end
 		end
 
-		-- Override the Files command
 		vim.api.nvim_create_user_command('Files', function(arg)
-			vim.fn['fzf#vim#files'](arg.qargs, { source = list_cmd(), options = '--tiebreak=index' },
-				arg.bang)
+			vim.fn['fzf#vim#files'](arg.qargs, { source = list_cmd(), options = '--tiebreak=index' }, arg.bang)
 		end, { bang = true, nargs = '?', complete = "dir" })
 	end
 }

@@ -11,8 +11,11 @@ elif [ -f /etc/bash.bashrc ]; then
   source /etc/bash.bashrc
 fi
 
+
+
+alias fzf='fzf -m --preview="cat {}" --bind "enter:become(nvim {+})"'
 alias ls='ls -a --color=auto'
-alias grep='grep --color=auto'
+alias grep='rg --color=auto'
 alias e='nvim'
 alias g='git'
 alias ga='git add -p'
