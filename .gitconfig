@@ -1,7 +1,7 @@
 [user]
     name = Maxim Khnykin
     email = ebyrdeu.khnykin@gmail.com
-    signingkey = 
+    signingkey = 3DA2113C3138DBF8
 
 [core]
     autocrlf = input
@@ -28,8 +28,6 @@
     last = log -1 HEAD
     cl = log -p -- ':(exclude)Cargo.lock'
     pf = push --force-with-lease
-    ss = "!f() { git stash show stash^{/$*} -p; }; f"
-    sa = "!f() { git stash apply stash^{/$*}; }; f"
     sl = stash list
 
 [pull]

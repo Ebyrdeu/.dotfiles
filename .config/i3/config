@@ -16,7 +16,7 @@ set $ws10 10
 
 # Screen configuration
 # Turn off all monitors
-exec_always --no-startup-id ~/.config/i3/scripts/screen-config.py
+exec_always --no-startup-id ~/.config/i3/scripts/screen-config.sh
 
 # Change keyboard layout
 exec "setxkbmap -model pc104 -layout us,se,ru -option grp:win_space_toggle"

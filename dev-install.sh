@@ -1,6 +1,5 @@
 #!/bin/bash
-
-# List of packages to install
+# 
 packages=(
 	"stow" 
 	"fd" 
@@ -10,15 +9,12 @@ packages=(
 	"zellij" 
 	"neovim" 
 	"alacritty"
+	"go"
+	"nodejs"
+	"docker"
+	"docker-buildx"
+	"docker-compose"
 )
-
-# URL of the JetBrains Mono font
-font_url="https://download.jetbrains.com/fonts/JetBrainsMono-2.304.zip"
-font_dir="$HOME/.local/share/fonts"
-font_zip="$HOME/JetBrainsMono.zip"
-
-# Directory of the .dotfiles repo
-dotfiles_dir="$HOME/.dotfiles"
 
 # Directory for code projects
 code_dir="$HOME/code"
@@ -45,20 +41,24 @@ install_package_yay() {
     yay -S --noconfirm $1
 }
 
-# Function to download and unpack JetBrains Mono font
-install_fonts() {
-    echo "Downloading JetBrains Mono fonts..."
-    curl -L -o $font_zip $font_url
-    
-    echo "Unpacking fonts to $font_dir..."
-    mkdir -p $font_dir
-    unzip -o $font_zip -d $font_dir
-    
-    echo "Updating font cache..."
-    fc-cache -fv
-    
-    echo "Cleaning up..."
-    rm $font_zip
+# Function to install SDKMAN
+install_sdkman() {
+    if [ ! -d "$HOME/.sdkman" ]; then
+        echo "Installing SDKMAN..."
+        curl -s "https://get.sdkman.io" | bash
+    else
+        echo "SDKMAN is already installed."
+    fi
+}
+
+# Function to install Rust using rustup
+install_rust() {
+    if ! command -v rustup &> /dev/null; then
+        echo "Installing Rust..."
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+    else
+        echo "Rust is already installed."
+    fi
 }
 
 # Function to create code directory if it doesn't exist
@@ -85,10 +85,13 @@ for package in "${packages[@]}"; do
     fi
 done
 
-# Install JetBrains Mono font
-install_fonts
+# Install SDKMAN
+install_sdkman
+
+# Install Rust
+install_rust
 
 # Create code directory
 create_code_directory
 
-echo "All packages, fonts, SDKMAN, Rust, and directories are set up."
+echo "Done"

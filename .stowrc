@@ -1,0 +1,4 @@
+--ignore=.stowrc
+--ignore=arch-install.sh
+--ignore=dev-install.sh
+--ignore=dark-reader/

@@ -19,10 +19,17 @@ alias grep='rg --color=auto'
 alias e='nvim'
 alias g='git'
 alias ga='git add -p'
+alias gaa='git add .'
 alias gc='git commit -m'
 alias gl='git log --stat'
+alias glt="git log --graph --topo-order --pretty='%w(100,0,6)%C(#b57614)%h%C(bold)%C(#665c54)%d %C(#d65d0e)%ar %C(#689d6a)%an%n%C(bold)%C(#7c6f64)%s %N' --abbrev-commit"
 
-
+# Docker
+alias dco="docker compose"
+alias dps="docker ps"
+alias dpa="docker ps -a"
+alias dl="docker ps -l -q"
+alias dx="docker exec -it"
 
 # History management
 export HISTCONTROL=ignoreboth
@@ -39,4 +46,5 @@ export SDKMAN_DIR="$HOME/.sdkman"
 # GPG
 export GPG_TTY=$(tty)
 
+export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow'
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash

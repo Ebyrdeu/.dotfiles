@@ -36,13 +36,13 @@ set easymotion
 let g:EasyMotion_do_mapping=0
 
 " Turn Off Sound Error
-set noerrorbells
-set visualbell
+"set noerrorbells
+"set visualbell
 
 " Key Mapping
 " =========================================
 
-" make missing : less annoying 
+" make missing : less annoying
 nnoremap ; :
 
 " stop searching
@@ -89,7 +89,7 @@ inoremap <F1> <Esc>
 " =========================================
 
 " Paste From System Buffer
-inoremap <leader>y :action EditorPaste<CR>
+nnoremap <leader>y :action EditorPaste<CR>
 
 " Create New File
 nnoremap <leader>ne :action NewElement<CR>
