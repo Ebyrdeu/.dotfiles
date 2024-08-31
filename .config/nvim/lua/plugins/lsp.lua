@@ -17,10 +17,6 @@ return {
 					"clangd", -- C/C++
 					"rust_analyzer", -- Rust
 					"gopls", -- Go
-					"tsserver", -- TypeScript/JavaScript
-					"jdtls", -- Java
-					"eslint", -- ESLint for linting JS/TS/React
-					"pyright", -- Python
 				}
 			})
 		end,
@@ -54,29 +50,6 @@ return {
 				},
 			})
 
-			-- Python (using pyright)
-			lspconfig.pyright.setup({})
-
-			-- TypeScript/JavaScript (including React support)
-			lspconfig.tsserver.setup({
-				filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" },
-				settings = {
-					completions = {
-						completeFunctionCalls = true
-					}
-				}
-			})
-
-			-- ESLint (for linting JavaScript/TypeScript/React)
-			lspconfig.eslint.setup({
-				filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
-				settings = {
-					validate = "on",
-					packageManager = "npm",
-				}
-			})
-
-			-- Other language server configurations
 			lspconfig.clangd.setup({})
 			lspconfig.rust_analyzer.setup({
 				-- Server-specific settings. See `:help lspconfig-setup`
@@ -100,7 +73,6 @@ return {
 
 			})
 			lspconfig.gopls.setup({})
-			lspconfig.jdtls.setup({})
 
 			-- Key mappings for LSP features
 			vim.keymap.set("n", "<leader>j", vim.lsp.buf.hover, opts)

@@ -25,6 +25,7 @@ alias gl='git log --stat'
 alias glt="git log --graph --topo-order --pretty='%w(100,0,6)%C(#b57614)%h%C(bold)%C(#665c54)%d %C(#d65d0e)%ar %C(#689d6a)%an%n%C(bold)%C(#7c6f64)%s %N' --abbrev-commit"
 
 # Docker
+alias d="docker"
 alias dco="docker compose"
 alias dps="docker ps"
 alias dpa="docker ps -a"
