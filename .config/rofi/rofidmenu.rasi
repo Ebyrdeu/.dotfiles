@@ -43,6 +43,7 @@ configuration {
     scroll-method:       0;
     disable-history:     false;
     sidebar-mode:        false;
+	terminal: "alacritty";
 }
 
 /*****----- Main Window -----*****/
@@ -216,8 +217,6 @@ element-text {
     vertical-align:              0.5;
     horizontal-align:            0.0;
 }
-
-
 
 mode-switcher{
     enabled:                     true;

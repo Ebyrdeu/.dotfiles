@@ -1,5 +1,5 @@
 #!/bin/bash
-# 
+ 
 packages=(
 	"stow" 
 	"fd" 
@@ -74,7 +74,7 @@ create_code_directory() {
 # Loop through the list of packages and install if not already installed
 for package in "${packages[@]}"; do
     if is_installed_pacman $package || is_installed_yay $package; then
-        echo "$package is already installed."
+        echo "[$package] is already installed."
     else
         if pacman -Si $package > /dev/null 2>&1; then
             install_package_pacman $package
