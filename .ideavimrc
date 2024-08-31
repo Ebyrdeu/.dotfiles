@@ -1,3 +1,4 @@
+
 " Base Settings
 " =========================================
 
@@ -123,7 +124,8 @@ nnoremap <leader>pv :action ActivateProjectToolWindow<CR>
 nnoremap <leader>ps :action SelectInProjectView<CR>
 
 " Code Format
-nnoremap <leader>cc :action SilentCodeCleanup<CR>:action ReformatCode<CR>:action OptimizeImports<CR>
+nnoremap <leader>cc :action ReformatCode<CR>
+nnoremap <leader>co :action OptimizeImports<CR>
 
 " Terminal
 nnoremap <leader>to :action ActivateTerminalToolWindow<CR>
@@ -182,4 +184,3 @@ nnoremap <leader>gc :action ActivateCommitToolWindow<CR>
 nnoremap <leader>gf :action Git.Fetch<CR>
 nnoremap <leader>gb :action Git.Branches<CR>
 nnoremap <leader>gm :action Git.Menu<CR>
-
