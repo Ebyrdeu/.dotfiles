@@ -11,6 +11,7 @@ packages=(
 	"alacritty"
 	"go"
 	"nodejs"
+	"npm"
 	"docker"
 	"docker-buildx"
 	"docker-compose"
