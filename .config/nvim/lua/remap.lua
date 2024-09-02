@@ -51,7 +51,7 @@ vim.keymap.set('n', '/', '/\\v')
 vim.keymap.set('c', '%s/', '%sm/')
 
 -- open new file adjacent to current file
-vim.keymap.set('n', '<leader>o', ':e <C-R>=expand("%:p:h") . "/" <cr>')
+vim.keymap.set('n', '<leader>ne', ':e <C-R>=expand("%:p:h") . "/" <cr>')
 
 -- let the left and right arrows be useful: they can switch buffers
 vim.keymap.set('n', '<Tab>', ':bp<cr>')
