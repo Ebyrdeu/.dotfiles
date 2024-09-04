@@ -4,12 +4,8 @@ return {
 		vim.keymap.set("n", "<leader>zz", function()
 			require("zen-mode").setup {
 				window = {
-					width = 120,
-					options = {
-						signcolumn = "no",
-						number = false,
-						relativenumber = false
-					},
+					width = 100,
+					options = {},
 					backdrop = .99
 				},
 			}

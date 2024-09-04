@@ -14,7 +14,7 @@ vim.keymap.set('', '<leader><leader>', '<cmd>Files<cr>')
 -- search buffers
 vim.keymap.set('n', '<leader>sr', '<cmd>Buffers<cr>')
 
--- Window Managment 
+-- Window Managment
 -- Splits / Unsplits
 vim.keymap.set('n', '<leader>wv', '<C-w>v<cr>')
 vim.keymap.set('n', '<leader>ws', '<C-w>s<cr>')
@@ -62,3 +62,13 @@ vim.keymap.set('n', 'j', 'gj')
 vim.keymap.set('n', 'k', 'gk')
 
 vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
+
+-- Key mappings for LSP features
+vim.keymap.set("n", "<leader>j", vim.lsp.buf.hover, opts)
+vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
+vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+vim.keymap.set("n", "<leader>a", vim.lsp.buf.code_action, opts)
+vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
+vim.keymap.set("n", "<leader>cc", function()
+	vim.lsp.buf.format({ async = true })
+end, opts)

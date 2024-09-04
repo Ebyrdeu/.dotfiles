@@ -11,7 +11,7 @@ vim.opt.clipboard="unnamed,unnamedplus"
 vim.opt.foldenable = false
 vim.opt.foldmethod = 'manual'
 vim.opt.foldlevelstart = 99
-vim.opt.scrolloff = 2
+vim.opt.scrolloff = 8
 
 -- never show me line breaks if they're not there
 vim.opt.wrap = false
@@ -42,7 +42,6 @@ vim.opt.wildmode = 'list:longest'
 -- don't suggest files like there:
 vim.opt.wildignore = '.hg,.svn,*~,*.png,*.jpg,*.gif,*.min.js,*.swp,*.o,vendor,dist,_site'
 
--- tabs: go big or go home
 vim.opt.shiftwidth = 4
 vim.opt.softtabstop = 4
 vim.opt.tabstop = 4
@@ -73,7 +72,6 @@ vim.opt.colorcolumn = '80'
 
 --- except in Rust where the rule is 100 characters
 vim.api.nvim_create_autocmd('Filetype', { pattern = 'rust', command = 'set colorcolumn=100' })
-vim.api.nvim_create_autocmd('Filetype', { pattern = 'java', command = 'set colorcolumn=120' })
 
 -- show more hidden characters
 -- also, show tabs nicer
