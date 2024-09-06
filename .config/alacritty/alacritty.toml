@@ -24,7 +24,11 @@ family = "JetBrainsMono"
 style = "Regular"
 
 [font]
+#1440p
 size = 15.0
+
+#1080p
+# size = 11.0
 
 [selection]
 save_to_clipboard = true

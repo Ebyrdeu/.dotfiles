@@ -6,6 +6,7 @@ packages=(
 	"i3blocks"
 	"rofi"
 	"brightnessctl"
+	"xprop"
 	"xkblayout"
 	"xwininfo"
 	"redshift"

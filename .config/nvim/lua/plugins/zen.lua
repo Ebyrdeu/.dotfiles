@@ -6,8 +6,13 @@ return {
 				window = {
 					width = 100,
 					options = {},
-					backdrop = .99
+					backdrop = .80
 				},
+				plugins = {
+					options = {
+						laststatus = 3
+					}
+				}
 			}
 			require("zen-mode").toggle()
 			vim.wo.wrap = false

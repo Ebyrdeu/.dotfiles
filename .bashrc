@@ -16,13 +16,17 @@ fi
 alias fzf='fzf -m --preview="cat {}" --bind "enter:become(nvim {+})"'
 alias ls='ls -a --color=auto'
 alias grep='rg --color=auto'
+
+# Neovim
 alias e='nvim'
+alias vi='nvim'
+alias vim='nvim'
+
+# Git
 alias g='git'
 alias ga='git add -p'
 alias gaa='git add .'
 alias gc='git commit -m'
-alias gl='git log --stat'
-alias glt="git log --graph --topo-order --pretty='%w(100,0,6)%C(#b57614)%h%C(bold)%C(#665c54)%d %C(#d65d0e)%ar %C(#689d6a)%an%n%C(bold)%C(#7c6f64)%s %N' --abbrev-commit"
 
 # Docker
 alias d="docker"
@@ -47,5 +51,5 @@ export SDKMAN_DIR="$HOME/.sdkman"
 # GPG
 export GPG_TTY=$(tty)
 
-export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow'
+export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude node_modules'
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash

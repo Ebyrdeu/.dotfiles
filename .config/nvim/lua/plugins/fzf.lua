@@ -17,9 +17,9 @@ return {
 			if base == '.' then
 				-- if there is no current file,
 				-- proximity-sort can't do its thing
-				return 'fd --type file --hidden --follow'
+				return 'fd --type file --hidden --follow --exclude .git'
 			else
-				return vim.fn.printf('fd --type file --hidden --follow | proximity-sort %s',
+				return vim.fn.printf('fd --type file --hidden --follow --exclude .git | proximity-sort %s',
 					vim.fn.shellescape(vim.fn.expand('%')))
 			end
 		end
