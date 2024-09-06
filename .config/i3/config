@@ -154,6 +154,7 @@ mode "resize" {
         bindsym Escape mode "default"
         bindsym $mod+r mode "default"
 }
+
 bindsym $mod+r mode "resize"
 
 # Exit menu
@@ -202,9 +203,9 @@ bar {
 }
 
 # define colors for windows:
-client.focused          $lightgray $lightgray $bg $aqua $aqua
+client.focused          $darkgray $darkgray $lightgray $aqua $aqua
 client.focused_inactive $darkgray $darkgray $lightgray $blue $darkgray
-client.unfocused        $darkgray $darkgray $lightgray $blue $darkgray
+client.unfocused        $lightgray $lightgray $darkgray $blue $darkgray
 client.urgent           $red $red $white $red $red
 
 # Autostart applications
