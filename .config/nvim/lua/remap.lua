@@ -8,8 +8,10 @@ vim.g.mapleader = " "
 --
 ----------------------------------------------------------------
 
+
 -- quick-open
 vim.keymap.set('', '<leader><leader>', '<cmd>Files<cr>')
+
 
 -- search buffers
 vim.keymap.set('n', '<leader>sr', '<cmd>Buffers<cr>')
@@ -38,6 +40,9 @@ vim.keymap.set('', 'L', '$')
 -- <leader>c will copy entire buffer into clipboard
 vim.keymap.set('n', '<leader>y', ':r !xclip -selection clipboard -o<CR>')
 
+-- neat chmod
+vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
+
 -- always center search results
 vim.keymap.set('n', 'n', 'nzz', { silent = true })
 vim.keymap.set('n', 'N', 'Nzz', { silent = true })
@@ -63,12 +68,12 @@ vim.keymap.set('n', 'k', 'gk')
 
 vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
 
--- Key mappings for LSP features
-vim.keymap.set("n", "<leader>j", vim.lsp.buf.hover, opts)
-vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
-vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
-vim.keymap.set("n", "<leader>a", vim.lsp.buf.code_action, opts)
-vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
-vim.keymap.set("n", "<leader>cc", function()
-	vim.lsp.buf.format({ async = true })
-end, opts)
+-------------------------------------------------------------------------------
+--
+-- plugins hotkeys
+--
+----------------------------------------------------------------
+
+-- Leap
+vim.keymap.set('n', 's', '<Plug>(leap)')
+vim.keymap.set('n', 'S', '<Plug>(leap-from-window)')

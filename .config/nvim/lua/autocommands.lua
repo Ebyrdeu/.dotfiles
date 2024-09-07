@@ -1,4 +1,3 @@
-
 --
 -- autocommands
 --
@@ -28,11 +27,14 @@ vim.api.nvim_create_autocmd(
 		end
 	}
 )
+
 -- prevent accidental writes to buffers that shouldn't be edited
 vim.api.nvim_create_autocmd('BufRead', { pattern = '*.orig', command = 'set readonly' })
 vim.api.nvim_create_autocmd('BufRead', { pattern = '*.pacnew', command = 'set readonly' })
+
 -- leave paste mode when leaving insert mode (if it was on)
 vim.api.nvim_create_autocmd('InsertLeave', { pattern = '*', command = 'set nopaste' })
+
 -- help filetype detection (add as needed)
 --vim.api.nvim_create_autocmd('BufRead', { pattern = '*.ext', command = 'set filetype=someft' })
 -- correctly classify mutt buffers
@@ -42,6 +44,7 @@ vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
 	group = email,
 	command = 'setfiletype mail',
 })
+
 -- also, produce "flowed text" wrapping
 -- https://brianbuccola.com/line-breaks-in-mutt-and-vim/
 vim.api.nvim_create_autocmd('Filetype', {
@@ -49,6 +52,7 @@ vim.api.nvim_create_autocmd('Filetype', {
 	group = email,
 	command = 'setlocal formatoptions+=w',
 })
+
 -- shorter columns in text because it reads better that way
 local text = vim.api.nvim_create_augroup('text', { clear = true })
 for _, pat in ipairs({ 'text', 'markdown', 'mail', 'gitcommit' }) do
@@ -58,9 +62,26 @@ for _, pat in ipairs({ 'text', 'markdown', 'mail', 'gitcommit' }) do
 		command = 'setlocal spell tw=72 colorcolumn=73',
 	})
 end
+
 --- tex has so much syntax that a little wider is ok
 vim.api.nvim_create_autocmd('Filetype', {
 	pattern = 'tex',
 	group = text,
 	command = 'setlocal spell tw=80 colorcolumn=81',
+})
+
+-- idea is keymaps only works when LSP is on
+vim.api.nvim_create_autocmd('LspAttach', {
+	callback = function(e)
+		local opts = { buffer = e.buf }
+		-- Key mappings for LSP features
+		vim.keymap.set("n", "<leader>j", vim.lsp.buf.hover, opts)
+		vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
+		vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+		vim.keymap.set("n", "<leader>a", vim.lsp.buf.code_action, opts)
+		vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
+		vim.keymap.set("n", "<leader>cc", function()
+			vim.lsp.buf.format({ async = true })
+		end, opts)
+	end
 })
