@@ -1,39 +1,17 @@
-// If you'd like to override the default keybindings completely, be sure to change "keybinds" to "keybinds clear-defaults=true"
 
-keybinds clear-defaults=true{
-    normal {
+keybinds {
+	
+    normal  {
         // uncomment this and adjust key if using copy_on_select=false
         // bind "Alt c" { Copy; }
-		unbind "Ctrl s"
-		unbind "Ctrl q"
+		unbind "Ctrl n" 
+		// move
 		unbind "Ctrl h"
-		unbind "Ctrl n"
+		// scroll
+		unbind "Ctrl s"
+		// tmux
+		unbind "Ctrl b"
     }
-
-    locked {
-        bind "Ctrl g" { SwitchToMode "Normal"; }
-    }
-
-	tmux {
-        bind "[" { SwitchToMode "Scroll"; }
-        bind "Ctrl a" { Write 2; SwitchToMode "Normal"; }
-        bind "\"" { NewPane "Down"; SwitchToMode "Normal"; }
-        bind "p" { NewPane "Right"; SwitchToMode "Normal"; }
-        bind "z" { ToggleFocusFullscreen; SwitchToMode "Normal"; }
-        bind "n" { NewTab; SwitchToMode "Normal"; }
-        bind "r" { SwitchToMode "RenameTab"; }
-        bind "k" { GoToPreviousTab;}
-        bind "j" { GoToNextTab;}
-        bind "H" { MoveFocus "Left"; SwitchToMode "Normal"; }
-        bind "L" { MoveFocus "Right"; SwitchToMode "Normal"; }
-        bind "J" { MoveFocus "Down"; SwitchToMode "Normal"; }
-        bind "K" { MoveFocus "Up"; SwitchToMode "Normal"; }
-        bind "o" { FocusNextPane; }
-        bind "d" { Detach; }
-        bind "Space" { NextSwapLayout; }
-        bind "x" { CloseFocus; SwitchToMode "Normal"; }
-    }
-
     pane {
         bind "Ctrl p" { SwitchToMode "Normal"; }
         bind "h" "Left" { MoveFocus "Left"; }
@@ -42,16 +20,14 @@ keybinds clear-defaults=true{
         bind "k" "Up" { MoveFocus "Up"; }
         bind "p" { SwitchFocus; }
         bind "n" { NewPane; SwitchToMode "Normal"; }
-        bind "d" { NewPane "Down"; SwitchToMode "Normal"; }
-        bind "r" { NewPane "Right"; SwitchToMode "Normal"; }
+        bind "s" { NewPane "Down"; SwitchToMode "Normal"; }
+        bind "w" { NewPane "Right"; SwitchToMode "Normal"; }
         bind "x" { CloseFocus; SwitchToMode "Normal"; }
         bind "f" { ToggleFocusFullscreen; SwitchToMode "Normal"; }
         bind "z" { TogglePaneFrames; SwitchToMode "Normal"; }
-        bind "w" { ToggleFloatingPanes; SwitchToMode "Normal"; }
         bind "e" { TogglePaneEmbedOrFloating; SwitchToMode "Normal"; }
-        bind "r" { SwitchToMode "RenamePane"; PaneNameInput 0;}
+        bind "c" { SwitchToMode "RenamePane"; PaneNameInput 0;}
     }
-
     tab {
         bind "Ctrl t" { SwitchToMode "Normal"; }
         bind "r" { SwitchToMode "RenameTab"; TabNameInput 0; }
@@ -61,8 +37,8 @@ keybinds clear-defaults=true{
         bind "x" { CloseTab; SwitchToMode "Normal"; }
         bind "s" { ToggleActiveSyncTab; SwitchToMode "Normal"; }
         bind "b" { BreakPane; SwitchToMode "Normal"; }
-        bind "K" { BreakPaneRight; SwitchToMode "Normal"; }
-        bind "J" { BreakPaneLeft; SwitchToMode "Normal"; }
+        bind "]" { BreakPaneRight; SwitchToMode "Normal"; }
+        bind "[" { BreakPaneLeft; SwitchToMode "Normal"; }
         bind "1" { GoToTab 1; SwitchToMode "Normal"; }
         bind "2" { GoToTab 2; SwitchToMode "Normal"; }
         bind "3" { GoToTab 3; SwitchToMode "Normal"; }
@@ -103,26 +79,41 @@ keybinds clear-defaults=true{
         }
     }
 
-	shared_except "locked" {
+    shared_except "locked" {
         bind "Ctrl g" { SwitchToMode "Locked"; }
+        bind "Ctrl q" { Quit; }
+        unbind "Alt n" { NewPane; }
+        unbind "Alt i" { MoveTab "Left"; }
+        unbind "Alt o" { MoveTab "Right"; }
+        unbind "Alt h" "Alt Left" { MoveFocusOrTab "Left"; }
+        unbind "Alt l" "Alt Right" { MoveFocusOrTab "Right"; }
+        unbind "Alt j" "Alt Down" { MoveFocus "Down"; }
+        unbind "Alt k" "Alt Up" { MoveFocus "Up"; }
+        unbind "Alt =" "Alt +" { Resize "Increase"; }
+        unbind "Alt -" { Resize "Decrease"; }
+        unbind "Alt [" { PreviousSwapLayout; }
+        unbind "Alt ]" { NextSwapLayout; }
     }
 
-	shared_except "normal" "locked" {
+    shared_except "normal" "locked" {
         bind "Enter" "Esc" { SwitchToMode "Normal"; }
+    }
+
+    shared_except "pane" "locked" {
+        bind "Ctrl p" { SwitchToMode "Pane"; }
+    }
+
+    shared_except "session" "locked" {
+        bind "Ctrl o" { SwitchToMode "Session"; }
     }
 
     shared_except "tab" "locked" {
         bind "Ctrl t" { SwitchToMode "Tab"; }
     }
-
-    shared_except "tmux" "locked" {
-        bind "Ctrl a" { SwitchToMode "Tmux"; }
-    }
 }
-
 plugins {
     tab-bar location="zellij:tab-bar"
-    status-bar location="zellij:status-bar"
+    status-bar location="zellij:status-bar" 
     strider location="zellij:strider"
     compact-bar location="zellij:compact-bar"
     session-manager location="zellij:session-manager"
@@ -136,6 +127,9 @@ plugins {
 
 // remove bottom bar 
 default_layout "compact"
+
+// make tabs to be blocks (no arrows)
+simplified_ui true
 
 // Define color themes for Zellij
 // For more examples, see: https://github.com/zellij-org/zellij/tree/main/example/themes
