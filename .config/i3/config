@@ -18,9 +18,10 @@ set $ws10 10
 # Turn off all monitors
 exec_always --no-startup-id ~/.config/i3/scripts/screen-config.sh
 
+# bg
+exec_always feh --bg-scale ~/Pictures/bg.png
 # Change keyboard layout
 exec "setxkbmap -model pc104 -layout us,se,ru -option grp:win_space_toggle"
-
 # Autostart XDG .desktop files using dex
 exec --no-startup-id dex --autostart --environment i3
 

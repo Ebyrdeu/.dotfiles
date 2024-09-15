@@ -155,6 +155,9 @@ nnoremap <leader>rd  :action ChooseDebugConfiguration<CR>
 nnoremap <leader>dd  :action Debug<CR>
 nnoremap <leader>da  :action ToggleLineBreakpoint<CR>
 nnoremap <leader>dA  :action ToggleMethodBreakpoint<CR>
+nnoremap <leader>di    :action StepInto<CR>
+nnoremap <leader>do    :action StepOver<CR>
+nnoremap <leader>dO    :action StepOut<CR>
 
 " Window Splits
 nnoremap <leader>wv <C-w>v<CR>
