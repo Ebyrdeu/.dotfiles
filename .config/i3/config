@@ -179,6 +179,8 @@ default_floating_border none
 hide_edge_borders smart
 
 # Define colors variables:
+
+# gruvbox-light-soft
 set $bg #f2e5bc
 set $red #cc241d
 set $green #98971a
@@ -189,6 +191,19 @@ set $aqua #689d68
 set $gray #7c6f64
 set $darkgray #f2e5bc
 set $lightgray #282828
+
+#gruvbox-light-dark
+# set $bg #282828
+# set $fg #ebdbb2
+# set $red #cc241d
+# set $green #98971a
+# set $yellow #d79921
+# set $blue #458588
+# set $purple #b16286
+# set $aqua #689d6a
+# set $gray #928374
+# set $darkgray #3c3836
+# set $lightgray #a89984
 
 # i3bar configuration
 bar {
