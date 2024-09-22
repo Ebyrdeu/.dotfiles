@@ -16,7 +16,7 @@ fi
 alias fzf='fzf -m --preview="cat {}" --bind "enter:become(nvim {+})"'
 alias ls='ls -a --color=auto'
 alias grep='rg --color=auto'
-
+alias tree='ls -aR | grep ":$" | perl -pe '\''s/:$//;s/[^-][^\/]*\//    /g;s/^    (\S)/└── \1/;s/(^    |    (?= ))/│   /g;s/    (\S)/└── \1/'\'''
 # Neovim
 alias e='nvim'
 alias vi='nvim'
