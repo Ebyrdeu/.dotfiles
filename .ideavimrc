@@ -1,10 +1,8 @@
-
 " Base Settings
 " =========================================
 
 " General Settings
-set clipboard+=unnamed
-set scrolloff=2
+set scrolloff=8
 set number
 set relativenumber
 set showcmd
@@ -36,9 +34,6 @@ set commentary
 set easymotion
 let g:EasyMotion_do_mapping=0
 
-" Turn Off Sound Error
-"set noerrorbells
-"set visualbell
 
 " Key Mapping
 " =========================================
@@ -82,15 +77,16 @@ nnoremap * *zz
 nnoremap # #zz
 nnoremap g* g*zz
 
-" F1 as Escape
-nnoremap <F1> <Esc>
-inoremap <F1> <Esc>
-
 " Leader Key Mapping
 " =========================================
-
 " Paste From System Buffer
-nnoremap <leader>y :action EditorPaste<CR>
+nnoremap <leader>pp :action EditorPaste<CR>
+
+" Copy To System Buffer
+nnoremap  <leader>y  "+yy
+vnoremap <leader>y "+y
+nnoremap  <leader>Y  "+yg_
+nnoremap  <leader>gy  "+ygg
 
 " Create New File
 nnoremap <leader>ne :action NewElement<CR>

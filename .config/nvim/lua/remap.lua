@@ -12,6 +12,8 @@ vim.g.mapleader = " "
 -- quick-open
 vim.keymap.set('', '<leader><leader>', '<cmd>Files<cr>')
 
+-- close buffer
+vim.keymap.set('', '<leader>q', '<cmd>bd<cr>')
 
 -- search buffers
 vim.keymap.set('n', '<leader>sr', '<cmd>Buffers<cr>')
@@ -35,10 +37,11 @@ vim.keymap.set('n', '<C-l>', '<cmd>nohlsearch<cr>')
 vim.keymap.set('', 'H', '^')
 vim.keymap.set('', 'L', '$')
 
--- Neat X clipboard integration
--- <leader>p will paste clipboard into buffer
--- <leader>c will copy entire buffer into clipboard
-vim.keymap.set('n', '<leader>y', ':r !xclip -selection clipboard -o<CR>')
+vim.keymap.set('n', '<leader>y', '"+yy')
+vim.keymap.set('v', '<leader>y', '"+y')
+vim.keymap.set('n', '<leader>Y', '"+yg_')
+vim.keymap.set('n', '<leader>gy', '"+ygg')
+vim.keymap.set('n', '<leader>pp', '"+p')
 
 -- neat chmod
 vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
