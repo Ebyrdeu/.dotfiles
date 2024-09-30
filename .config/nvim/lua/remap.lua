@@ -8,10 +8,6 @@ vim.g.mapleader = " "
 --
 ----------------------------------------------------------------
 
-
--- quick-open
-vim.keymap.set('', '<leader><leader>', '<cmd>Files<cr>')
-
 -- close buffer
 vim.keymap.set('', '<leader>q', '<cmd>bd<cr>')
 

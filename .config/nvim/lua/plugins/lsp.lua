@@ -31,7 +31,9 @@ return {
 				"clangd",
 				"bashls",
 				"dockerls",
-				"yamlls"
+				"yamlls",
+				"eslint",
+				"tsserver"
 			},
 
 			handlers = {

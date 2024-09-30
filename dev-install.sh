@@ -2,8 +2,8 @@
  
 packages=(
 	"stow" 
-	"fd" 
-	"proximity-sort"
+	"fd"
+	"tldr"
 	"fzf" 
 	"ripgrep" 
 	"zellij" 
