@@ -33,7 +33,7 @@ return {
 				"dockerls",
 				"yamlls",
 				"eslint",
-				"tsserver"
+				"ts_ls"
 			},
 
 			handlers = {
