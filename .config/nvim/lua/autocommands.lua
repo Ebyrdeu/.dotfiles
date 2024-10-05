@@ -11,6 +11,7 @@ vim.api.nvim_create_autocmd(
 		command = 'silent! lua vim.highlight.on_yank({ timeout = 500 })'
 	}
 )
+
 -- jump to last edit position on opening file
 vim.api.nvim_create_autocmd(
 	'BufReadPost',
@@ -35,23 +36,6 @@ vim.api.nvim_create_autocmd('BufRead', { pattern = '*.pacnew', command = 'set re
 -- leave paste mode when leaving insert mode (if it was on)
 vim.api.nvim_create_autocmd('InsertLeave', { pattern = '*', command = 'set nopaste' })
 
--- help filetype detection (add as needed)
---vim.api.nvim_create_autocmd('BufRead', { pattern = '*.ext', command = 'set filetype=someft' })
--- correctly classify mutt buffers
-local email = vim.api.nvim_create_augroup('email', { clear = true })
-vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufRead' }, {
-	pattern = '/tmp/mutt*',
-	group = email,
-	command = 'setfiletype mail',
-})
-
--- also, produce "flowed text" wrapping
--- https://brianbuccola.com/line-breaks-in-mutt-and-vim/
-vim.api.nvim_create_autocmd('Filetype', {
-	pattern = 'mail',
-	group = email,
-	command = 'setlocal formatoptions+=w',
-})
 
 -- shorter columns in text because it reads better that way
 local text = vim.api.nvim_create_augroup('text', { clear = true })
@@ -70,6 +54,13 @@ vim.api.nvim_create_autocmd('Filetype', {
 	command = 'setlocal spell tw=80 colorcolumn=81',
 })
 
+-- auto foramt on saving
+vim.api.nvim_create_autocmd("BufWritePost", {
+	callback = function()
+		vim.lsp.buf.format()
+	end
+})
+
 -- idea is keymaps only works when LSP is on
 vim.api.nvim_create_autocmd('LspAttach', {
 	callback = function(e)
@@ -81,8 +72,8 @@ vim.api.nvim_create_autocmd('LspAttach', {
 		vim.keymap.set("n", "<leader>a", vim.lsp.buf.code_action, opts)
 		vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
 		vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
-        vim.keymap.set('n', '<leader>en', vim.diagnostic.goto_next, { noremap = true, silent = true })
-        vim.keymap.set('n', '<leader>ep', vim.diagnostic.goto_prev, { noremap = true, silent = true })
+		vim.keymap.set('n', '<leader>en', vim.diagnostic.goto_next, { noremap = true, silent = true })
+		vim.keymap.set('n', '<leader>ep', vim.diagnostic.goto_prev, { noremap = true, silent = true })
 		vim.keymap.set("n", "<leader>cc", function()
 			vim.lsp.buf.format({ async = true })
 		end, opts)

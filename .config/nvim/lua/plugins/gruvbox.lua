@@ -1,12 +1,14 @@
 return {
 	{
-		"sainnhe/gruvbox-material",
+		"ellisonleao/gruvbox.nvim",
+		lazy = false, -- load at start
+		priority = 1000, -- load first
 		config = function()
-			vim.o.background = "light"
-			vim.g.gruvbox_material_background = 'soft'
-			vim.g.gruvbox_material_palette = 'original'
-			vim.g.gruvbox_material_spell_foreground = 'original'
-			vim.cmd("colorscheme gruvbox-material")
+			require("gruvbox").setup({
+				contrast = "soft"
+			})
+			vim.o.background = 'light'
+			vim.cmd("colorscheme gruvbox")
 		end
 	}
 }
