@@ -6,7 +6,7 @@ return {
 				window = {
 					width = 100,
 					options = {},
-					backdrop = .80
+					backdrop = 1
 				},
 				plugins = {
 					options = {

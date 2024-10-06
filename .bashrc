@@ -41,6 +41,8 @@ export HISTCONTROL=ignoreboth
 export HISTSIZE=5000
 export HISTIGNORE="clear:bg:fg:cd:cd -:cd ..:exit:date:w:* --help:ls:l:ll:lll"
 
+export WEBKIT_DISABLE_COMPOSITING_MODE=1
+
 PS1='[\u@\h \W]\$ '
 . "$HOME/.cargo/env"
 
@@ -50,6 +52,5 @@ export SDKMAN_DIR="$HOME/.sdkman"
 
 # GPG
 export GPG_TTY=$(tty)
-
 export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude node_modules'
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash

@@ -3,6 +3,8 @@
 -- preferences
 --
 -------------------------------------------------------------------------------
+vim.api.nvim_set_hl(0, 'NormalFloat', { bg = '#282828' })  -- Background color
+vim.api.nvim_set_hl(0, 'FloatBorder', { bg = '#282828', fg = '#ebdbb2' })  -- Border 
 
 -- never ever folding
 vim.opt.foldenable = false
@@ -52,6 +54,9 @@ vim.opt.smartcase = true
 
 -- never ever make my terminal beep
 vim.opt.vb = true
+
+-- no swap for once
+vim.o.swapfile = false
 
 -- more useful diffs (nvim -d)
 --- by ignoring whitespace
