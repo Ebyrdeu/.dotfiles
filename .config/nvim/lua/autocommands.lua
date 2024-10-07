@@ -54,13 +54,6 @@ vim.api.nvim_create_autocmd('Filetype', {
 	command = 'setlocal spell tw=80 colorcolumn=81',
 })
 
--- auto foramt on saving
-vim.api.nvim_create_autocmd("BufWritePost", {
-	callback = function()
-		vim.lsp.buf.format()
-	end
-})
-
 -- idea is keymaps only works when LSP is on
 vim.api.nvim_create_autocmd('LspAttach', {
 	callback = function(e)
