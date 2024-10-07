@@ -41,16 +41,17 @@ export HISTCONTROL=ignoreboth
 export HISTSIZE=5000
 export HISTIGNORE="clear:bg:fg:cd:cd -:cd ..:exit:date:w:* --help:ls:l:ll:lll"
 
+# For Tauri on X11
 export WEBKIT_DISABLE_COMPOSITING_MODE=1
 
 PS1='[\u@\h \W]\$ '
 . "$HOME/.cargo/env"
 
-#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-export SDKMAN_DIR="$HOME/.sdkman"
-[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
-
 # GPG
 export GPG_TTY=$(tty)
 export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude node_modules'
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"

@@ -8,6 +8,7 @@ packages=(
 	"rofi"
 	"brightnessctl"
 	"xprop"
+	"xclip"
 	"xkblayout"
 	"xorg-xwininfo"
 	"redshift"
