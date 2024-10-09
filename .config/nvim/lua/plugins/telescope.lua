@@ -6,24 +6,7 @@ return {
 	config = function()
 		require('telescope').setup({
 			defaults = {
-				file_ignore_patterns = { "node_modules", ".git" },
-				file_sorter = require("telescope.sorters").get_fuzzy_file,
-				generic_sorter = require("telescope.sorters").get_generic_fuzzy_sorter,
-				vimgrep_arguments = {
-					'rg',
-					'--color=never',
-					'--no-heading',
-					'--with-filename',
-					'--line-number',
-					'--column',
-					'--smart-case',
-					'--hidden',
-					'--glob=!.git/*',
-					'--glob=!node_modules/*',
-					'--glob=!.vscode/*',
-					'--glob=!.idea/*',
-					'-L',
-				}
+				file_ignore_patterns = { 'node_modules', '.git' },
 			}
 		})
 
@@ -34,7 +17,7 @@ return {
 			builtin.find_files({ hidden = true })
 		end, { desc = 'Telescope find files' })
 
-		vim.keymap.set('n', '<leader>se', function()
+		vim.keymap.set('n', '<leader><leader>', function()
 			builtin.find_files({ hidden = true })
 		end, { desc = 'Telescope find files' })
 

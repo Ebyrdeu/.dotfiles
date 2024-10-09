@@ -3,8 +3,8 @@
 -- preferences
 --
 -------------------------------------------------------------------------------
-vim.api.nvim_set_hl(0, 'NormalFloat', { bg = '#282828' })  -- Background color
-vim.api.nvim_set_hl(0, 'FloatBorder', { bg = '#282828', fg = '#ebdbb2' })  -- Border 
+vim.api.nvim_set_hl(0, 'NormalFloat', { bg = '#282828' })                 -- Background color
+vim.api.nvim_set_hl(0, 'FloatBorder', { bg = '#282828', fg = '#ebdbb2' }) -- Border
 
 -- never ever folding
 vim.opt.foldenable = false
@@ -78,3 +78,5 @@ vim.api.nvim_create_autocmd('Filetype', { pattern = 'rust', command = 'set color
 -- show more hidden characters
 -- also, show tabs nicer
 vim.opt.listchars = 'tab:^ ,nbsp:¬,extends:»,precedes:«,trail:•'
+
+vim.api.nvim_set_hl(0, 'LeapBackdrop', { link = 'Comment' })
