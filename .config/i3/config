@@ -179,50 +179,43 @@ default_floating_border none
 hide_edge_borders smart
 
 # Define colors variables:
+set $red #9d0006
+set $green #79740e
+set $yellow #b57614
+set $blue #076678
+set $purple #8f3f71
+set $aqua #427b58
 
-# gruvbox-light-soft
-set $bg #f2e5bc
-set $red #cc241d
-set $green #98971a
-set $yellow #d79921
-set $blue #458588
-set $purple #b16286
-set $aqua #689d68
-set $gray #7c6f64
-set $darkgray #f2e5bc
-set $lightgray #282828
+#light-soft
+set $bg0 #f2e5bc
+set $bg2 #d5c4a1
+set $fg0 #282828
 
-#gruvbox-light-dark
-# set $bg #282828
-# set $fg #ebdbb2
-# set $red #cc241d
-# set $green #98971a
-# set $yellow #d79921
-# set $blue #458588
-# set $purple #b16286
-# set $aqua #689d6a
-# set $gray #928374
-# set $darkgray #3c3836
-# set $lightgray #a89984
+# dark-medium 
+# set $bg0 #282828
+# set $bg2 #504945
+# set $fg0 #fbf1c7
 
 # i3bar configuration
 bar {
     status_command i3blocks -c ~/.config/i3/i3blocks.conf
         colors {
-		background $bg
-        statusline $lightgray
-        focused_workspace    $lightgray $lightgray $bg
-        inactive_workspace   $darkgray $darkgray $lightgray
-        active_workspace     $darkgray $darkgray $lightgray
-        urgent_workspace     $red $red $bg
+        background $bg0
+        statusline $fg0
+
+        #                    border  backgr. text
+        focused_workspace    $bg2	 $bg2	 $fg0
+        inactive_workspace   $bg0    $bg0	 $fg0
+        active_workspace     $bg0    $bg0    $fg0 
+        urgent_workspace     $red    $red    $fg0
         }
 }
 
-# define colors for windows:
-client.focused          $darkgray $darkgray $lightgray $aqua $aqua
-client.focused_inactive $darkgray $darkgray $lightgray $blue $darkgray
-client.unfocused        $lightgray $lightgray $darkgray $blue $darkgray
-client.urgent           $red $red $white $red $red
+#                       border|backgr|text|indicator|child_border
+client.focused          $bg2   $bg2   $fg0 $purple   $bg2
+client.focused_inactive $bg2   $bg2   $fg0 $purple   $bg2
+client.unfocused        $bg0   $bg0   $fg0 $purple   $bg0
+client.urgent           $red   $red   $fg0 $red      $red
 
 # Autostart applications
 # Start Youtube Music

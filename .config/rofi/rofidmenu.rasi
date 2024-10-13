@@ -1,10 +1,22 @@
 * {
+
+	/*****----- Light-Soft -----*****/
     background:     #f2e5bcFF;
     background-alt: #f2e5bcFF;
     foreground:     #282828FF;
-    selected:       #689d6aFF;
-    active:         #689d6aFF;
-    urgent:         #cc241dFF;
+    selected:       #d5c4a1FF;
+    active:         #d5c4a1FF;
+    urgent:         #d5c4a1FF;
+
+	/*****----- Dark-Medium -----*****/
+	/** 
+	background:     #282828FF;
+    background-alt: #282828FF;
+    foreground:     #fbf1c7FF;
+    selected:       #504945FF;
+    active:         #504945FF;
+    urgent:         #504945FF; 
+	**/
 }
 
 * {
@@ -38,8 +50,7 @@ configuration {
     font:                "JetBrains Mono 13";
     show-icons:          true;
     icon-theme:          "Qogir";
-    display-drun:        "Apps";
-    drun-display-format: "{name}";
+    display-drun:        "";
     scroll-method:       0;
     disable-history:     false;
     sidebar-mode:        false;
@@ -58,8 +69,8 @@ window {
     enabled:                     true;
     margin:                      0px;
     padding:                     0px;
-    border:                      3px solid;
-    border-radius:               0px 0px 0px 0px;
+    border:                      4px solid;
+    border-radius:               0px;
     border-color:                @border-colour;
     cursor:                      "default";
     background-color:            @background-colour;
