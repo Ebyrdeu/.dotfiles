@@ -5,9 +5,9 @@ return {
 		priority = 1000, -- load first
 		config = function()
 			require("gruvbox").setup({
-				contrast = "soft"
+				contrast = "medium"
 			})
-			vim.o.background = 'light'
+			vim.o.background = 'dark'
 			vim.cmd("colorscheme gruvbox")
 		end
 	}
