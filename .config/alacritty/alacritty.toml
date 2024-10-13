@@ -1,9 +1,19 @@
 [colors]
+normal.red     = '#cc241d'
+normal.green   = '#98971a'
+normal.yellow  = '#d79921'
+normal.blue    = '#458588'
+normal.magenta = '#b16286'
+normal.cyan    = '#689d6a'
+normal.white   = '#7c6f64'
+
 # light-soft
+normal.black   = '#3c3836'
 primary.background = "#f2e5bc"
 primary.foreground = "#282828"
 
 # dark-medium
+# normal.black   = '#3bdbb2'
 # primary.background = "#282828"
 # primary.foreground = "#fbf1c7"
 

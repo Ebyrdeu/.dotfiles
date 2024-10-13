@@ -207,7 +207,7 @@ bar {
         focused_workspace    $bg2	 $bg2	 $fg0
         inactive_workspace   $bg0    $bg0	 $fg0
         active_workspace     $bg0    $bg0    $fg0 
-        urgent_workspace     $red    $red    $fg0
+        urgent_workspace     $red    $red    $bg0
         }
 }
 
@@ -215,7 +215,7 @@ bar {
 client.focused          $bg2   $bg2   $fg0 $purple   $bg2
 client.focused_inactive $bg2   $bg2   $fg0 $purple   $bg2
 client.unfocused        $bg0   $bg0   $fg0 $purple   $bg0
-client.urgent           $red   $red   $fg0 $red      $red
+client.urgent           $red   $red   $bg0 $red      $red
 
 # Autostart applications
 # Start Youtube Music
