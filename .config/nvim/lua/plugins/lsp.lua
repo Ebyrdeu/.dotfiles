@@ -29,9 +29,12 @@ return {
 				"lua_ls",
 				"rust_analyzer",
 				"clangd",
+				"gopls",
 				"bashls",
 				"dockerls",
-				"yamlls"
+				"yamlls",
+				"eslint",
+				"ts_ls",
 			},
 
 			handlers = {

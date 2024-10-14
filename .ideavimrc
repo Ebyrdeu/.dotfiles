@@ -88,6 +88,9 @@ vnoremap <leader>y "+y
 nnoremap  <leader>Y  "+yg_
 nnoremap  <leader>gy  "+ygg
 
+" Undotree
+nnoremap <leader>u :action Vcs.RollbackChangedLines<CR>
+
 " Create New File
 nnoremap <leader>ne :action NewElement<CR>
 nnoremap <leader>nf :action NewFile<CR>
@@ -106,14 +109,12 @@ nnoremap <leader>ee :action ShowErrorDescription<CR>
 " Search
 nnoremap <leader><leader> :action GotoFile<CR>
 nnoremap <leader>sr       :action RecentFiles<CR>
-nnoremap <leader>ss       /
 nnoremap <leader>sa       :action GotoAction<CR>
 nnoremap <leader>se       :action SearchEverywhere<CR>
 nnoremap <leader>sf       :action FindInPath<CR>
 
 " Generate Commands
-nnoremap <leader>ig :action Generate<CR>
-nnoremap <leader>ii :action ShowIntentionActions<CR>
+nnoremap <leader>gg :action Generate<CR>
 
 " Project View
 nnoremap <leader>pv :action ActivateProjectToolWindow<CR>
@@ -125,6 +126,8 @@ nnoremap <leader>co :action OptimizeImports<CR>
 
 " Terminal
 nnoremap <leader>to :action ActivateTerminalToolWindow<CR>
+nnoremap <leader>tn :action Terminal.NewTab<CR>
+nnoremap <leader>tx :action CloseActiveTab<CR>
 
 " Close Active Tab
 map <leader>q :action CloseContent<CR>
@@ -134,18 +137,17 @@ map <leader>dz :action ToggleDistractionFreeMode<CR>
 map <leader>dp :action TogglePresentationMode<CR>
 
 " Method Refactor
-nnoremap <leader>rq :action Refactorings.QuickListPopupAction<CR>
+nnoremap <leader>rm :action Refactorings.QuickListPopupAction<CR>
 nnoremap <leader>rn :action RenameElement<CR>
-nnoremap <leader>rv :action IntroduceVariable<CR>
 
 " Run
 nnoremap <leader>rr  :action RunClass<CR>
-nnoremap <leader>rtt :action RunTest<CR>
-nnoremap <leader>rtc :action RunCoverage<CR>
 nnoremap <leader>ru  :action Rerun<CR>
 nnoremap <leader>rs  :action Stop<CR>
+
+" config
 nnoremap <leader>rc  :action ChooseRunConfiguration<CR>
-nnoremap <leader>rd  :action ChooseDebugConfiguration<CR>
+nnoremap <leader>dc  :action ChooseDebugConfiguration<CR>
 
 " Debug
 nnoremap <leader>dd  :action Debug<CR>
@@ -177,9 +179,5 @@ nnoremap <leader>bc :action Rust.Cargo<CR>
 nnoremap <leader>bm :action Maven.NavigatorActionsToolbar<CR>
 
 " Git
-nnoremap <leader>gp :action Github.View.Pull.Request<CR>
 nnoremap <leader>gl :action ActivateVersionControlToolWindow<CR>
-nnoremap <leader>gc :action ActivateCommitToolWindow<CR>
-nnoremap <leader>gf :action Git.Fetch<CR>
-nnoremap <leader>gb :action Git.Branches<CR>
 nnoremap <leader>gm :action Git.Menu<CR>

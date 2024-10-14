@@ -3,7 +3,6 @@
     email = ebyrdeu.khnykin@gmail.com
     signingkey = 974A5D7DDAF92C74 
 
-
 [core]
     autocrlf = input
     safecrlf = true

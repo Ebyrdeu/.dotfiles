@@ -1,33 +1,39 @@
-import = [ "~/.config/alacritty/gruvbox_light.toml"
-]
+[colors]
+normal.red     = '#cc241d'
+normal.green   = '#98971a'
+normal.yellow  = '#d79921'
+normal.blue    = '#458588'
+normal.magenta = '#b16286'
+normal.cyan    = '#689d6a'
+normal.white   = '#7c6f64'
+
+# light-soft
+# normal.black   = '#3c3836'
+# primary.background = "#f2e5bc"
+# primary.foreground = "#282828"
+
+# dark-medium
+normal.black   = '#3bdbb2'
+primary.background = "#282828"
+primary.foreground = "#fbf1c7"
+
 [shell]
 program = 'zellij'  
 
 [env]
 TERM = "xterm-256color"
 
-[font.bold]
-family = "JetBrainsMono"
-style = "Bold"
-
-[font.bold_italic]
-family = "JetBrainsMono"
-style = "Bold Italic"
-
-[font.italic]
-family = "JetBrainsMono"
-style = "Medium Italic"
-
-[font.normal]
-family = "JetBrainsMono"
-style = "Regular"
-
 [font]
 #1440p
-# size = 15.0
+#size = 18.0
 
 #1080p
 size = 11.0
+
+normal = { family = "JetBrainsMono Nerd Font", style = "Regular" }
+bold = { family = "JetBrainsMono Nerd Font", style = "Bold" }
+italic = { family = "JetBrainsMono Nerd Font", style = "Italic" }
+bold_italic = { family = "JetBrainsMono Nerd Font", style = "Bold Italic" }
 
 [selection]
 save_to_clipboard = true
@@ -37,4 +43,5 @@ hide_when_typing = true
 
 [window]
 decorations = "none"
-startup_mode = "Maximized"
+dynamic_padding = true
+padding = {x = 0, y = 0}
