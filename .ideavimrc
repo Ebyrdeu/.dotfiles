@@ -1,7 +1,7 @@
 " Base Settings
 " =========================================
 
-" General Settings
+j General Settings
 set scrolloff=8
 set number
 set relativenumber
@@ -128,8 +128,7 @@ nnoremap <leader>co :action OptimizeImports<CR>
 nnoremap <leader>to :action ActivateTerminalToolWindow<CR>
 nnoremap <leader>tn :action Terminal.NewTab<CR>
 nnoremap <leader>tx :action CloseActiveTab<CR>
-
-" Close Active Tab
+ " Close Active Tab
 map <leader>q :action CloseContent<CR>
 
 " Display
