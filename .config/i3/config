@@ -25,6 +25,8 @@ exec "setxkbmap -model pc104 -layout us,se,ru -option grp:win_space_toggle"
 # Autostart XDG .desktop files using dex
 exec --no-startup-id dex --autostart --environment i3
 
+bindsym Print exec flameshot gui
+
 # System tray applications
 exec --no-startup-id nm-applet
 
@@ -171,7 +173,7 @@ mode "exit: [l]ogout, [r]eboot, [h]ibernate, [s]leep, [p]oweroff" {
 bindsym $mod+Shift+e mode "exit: [l]ogout, [r]eboot, [h]ibernate, [s]leep, [p]oweroff"
 
 # Font settings
-font pango: JetBrains Mono 10
+font pango: JetBrains Mono  10
 
 # Border settings
 default_border pixel 3
@@ -179,22 +181,28 @@ default_floating_border none
 hide_edge_borders smart
 
 # Define colors variables:
-set $red #9d0006
-set $green #79740e
-set $yellow #b57614
-set $blue #076678
-set $purple #8f3f71
-set $aqua #427b58
 
 #light-soft
 set $bg0 #f2e5bc
-set $bg2 #d5c4a1
-set $fg0 #282828
+set $bg2 #ebdbb2
+set $fg0 #654735
+set $red #c14a4a
+set $green #6c782e
+set $yellow #b47109
+set $blue #45707a
+set $purple #945e80
+set $aqua #4c7a5d
 
 # dark-medium 
 # set $bg0 #282828
-# set $bg2 #504945
-# set $fg0 #fbf1c7
+# set $bg2 #32302f
+# set $fg0 #d4be98
+# set $red #ea6962
+# set $green #a9b665
+# set $yellow #d8a657
+# set $blue #7daea3
+# set $purple #d3869b
+# set $aqua #89b482
 
 # i3bar configuration
 bar {

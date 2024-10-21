@@ -1,22 +1,27 @@
 [colors]
-normal.red     = '#cc241d'
-normal.green   = '#98971a'
-normal.yellow  = '#d79921'
-normal.blue    = '#458588'
-normal.magenta = '#b16286'
-normal.cyan    = '#689d6a'
-normal.white   = '#7c6f64'
-
 # light-soft
-normal.black   = '#3c3836'
+normal.black   = '#654735'
+normal.red     = '#c14a4a'
+normal.green   = '#6c782e'
+normal.yellow  = '#b47109'
+normal.blue    = '#45707a'
+normal.magenta = '#945e80'
+normal.cyan    = '#4c7a5d'
+normal.white   = '#a89984'
 primary.background = "#f2e5bc"
-primary.foreground = "#282828"
+primary.foreground = "#654735"
 
 # dark-medium
-# normal.black   = '#3bdbb2'
+# normal.black   = '#d4be98'
+# normal.red     = '#ea6962'
+# normal.green   = '#a9b665'
+# normal.yellow  = '#d8a657'
+# normal.blue    = '#7daea3'
+# normal.magenta = '#d3869b'
+# normal.cyan    = '#89b482'
+# normal.white   = '#7c6f64'
 # primary.background = "#282828"
-# primary.foreground = "#fbf1c7"
-
+# primary.foreground = "#d4be98"
 [shell]
 program = 'zellij'  
 
