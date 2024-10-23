@@ -2,18 +2,15 @@
 
 # setup script for fresh install arch using i3wm
 packages=(
+	"ly"
+	"hyprland"
+	"wofi"
+	"wl-clipboard"
 	"ttf-jetbrains-mono"
 	"ttf-jetbrains-mono-nerd"
-	"i3blocks"
-	"rofi"
 	"brightnessctl"
-	"xprop"
-	"xclip"
 	"xkblayout"
-	"xorg-xwininfo"
-	"redshift"
 	"btop"
-	"feh"
 	"gnome-keyring"
 	"telegram-desktop"
 	"youtube-music-bin"
@@ -34,6 +31,7 @@ is_installed_yay() {
 install_package_pacman() {
     echo "Installing $1 from official repositories..."
     sudo pacman -S --noconfirm $1
+
 }
 
 # Function to install a package using yay (AUR)

@@ -44,6 +44,9 @@ export HISTIGNORE="clear:bg:fg:cd:cd -:cd ..:exit:date:w:* --help:ls:l:ll:lll"
 # For Tauri on X11
 export WEBKIT_DISABLE_COMPOSITING_MODE=1
 
+# zig
+export PATH="$HOME/zig:$PATH"
+
 PS1='[\u@\h \W]\$ '
 . "$HOME/.cargo/env"
 
