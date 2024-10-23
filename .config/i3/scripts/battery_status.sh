@@ -67,13 +67,13 @@ echo " $label $short_text"
 # Handle urgency and color based on the battery percentage if discharging
 if [[ "$status" == "discharging" ]]; then
   if [[ $percent -lt 20 ]]; then
-    echo "#fb4934"  # Gruvbox Red (Bright)
+    echo "#ebdbb2"  # Gruvbox Red (Bright)
   elif [[ $percent -lt 40 ]]; then
-    echo "#fe8019"  # Gruvbox Orange (Bright)
+    echo "#ebdbb2"  # Gruvbox Orange (Bright)
   elif [[ $percent -lt 60 ]]; then
-    echo "#fabd2f"  # Gruvbox Yellow (Bright)
+    echo "#ebdbb2"  # Gruvbox Yellow (Bright)
   elif [[ $percent -lt 85 ]]; then
-    echo "#b8bb26"  # Gruvbox Green (Bright)
+    echo "#ebdbb2"  # Gruvbox Green (Bright)
   fi
 
   # Set urgency flag if below 5%

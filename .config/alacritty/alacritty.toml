@@ -22,7 +22,7 @@ primary.foreground = "#654735"
 # normal.white   = '#7c6f64'
 # primary.background = "#282828"
 # primary.foreground = "#d4be98"
-[shell]
+[terminal.shell]
 program = 'zellij'  
 
 [env]
