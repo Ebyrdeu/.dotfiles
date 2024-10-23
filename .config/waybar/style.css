@@ -1,0 +1,27 @@
+* {
+	
+    border: none;
+    border-radius: 0;
+    font-family: "JetBrainsMono Nerd Font", sans-serif;
+    font-size: 15px;
+    min-height: 0;
+    color: #654735;
+
+}
+
+window#waybar {
+    background: #f2e5bc;
+}
+
+
+#workspaces button.active {
+    background: #ebdbb2;
+}
+
+#workspaces button.urgent {
+    background-color: #c14a4a;
+}
+
+#custom-keyboard, #wireplumber, #clock, #tray {
+    margin: 0 10px;
+}
