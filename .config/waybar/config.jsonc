@@ -5,10 +5,12 @@
     "modules-center": ["custom/youtube-music"],
     "modules-right": ["hyprland/language", "wireplumber", "clock", "tray"],
     "tray": {
+		"icon-size": 24,
         "spacing": 5
     },
     "custom/youtube-music": {
         "exec": "~/.config/waybar/scripts/youtube-music-title.sh",
+		"interval": 1,
         "escape": true
     },
     "hyprland/language": {
@@ -18,7 +20,8 @@
 		"format-ru": "RU", 
     },
     "clock": {
-        "format": "  {:%a/%d/%b %H:%M:%S}"
+        "format": "  {:%a/%d/%b %H:%M:%S}",
+		"interval": 1
     },
     "wireplumber": {
         "format": "{icon}  {volume}%",
