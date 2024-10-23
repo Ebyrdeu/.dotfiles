@@ -1,7 +1,7 @@
 [user]
     name = Maxim Khnykin
     email = ebyrdeu.khnykin@gmail.com
-    signingkey = FCF050DE87047586
+    signingkey = 1635B2913C093847
 [core]
     autocrlf = input
     safecrlf = true

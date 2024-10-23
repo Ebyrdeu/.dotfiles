@@ -183,26 +183,26 @@ hide_edge_borders smart
 # Define colors variables:
 
 #light-soft
-set $bg0 #f2e5bc
-set $bg2 #ebdbb2
-set $fg0 #654735
-set $red #c14a4a
-set $green #6c782e
-set $yellow #b47109
-set $blue #45707a
-set $purple #945e80
-set $aqua #4c7a5d
+# set $bg0 #f2e5bc
+# set $bg2 #ebdbb2
+# set $fg0 #654735
+# set $red #c14a4a
+# set $green #6c782e
+# set $yellow #b47109
+# set $blue #45707a
+# set $purple #945e80
+# set $aqua #4c7a5d
 
 # dark-medium 
-# set $bg0 #282828
-# set $bg2 #32302f
-# set $fg0 #d4be98
-# set $red #ea6962
-# set $green #a9b665
-# set $yellow #d8a657
-# set $blue #7daea3
-# set $purple #d3869b
-# set $aqua #89b482
+set $bg0 #282828
+set $bg2 #32302f
+set $fg0 #d4be98
+set $red #ea6962
+set $green #a9b665
+set $yellow #d8a657
+set $blue #7daea3
+set $purple #d3869b
+set $aqua #89b482
 
 # i3bar configuration
 bar {

@@ -1,22 +1,21 @@
 * {
 
 	/*****----- Light-Soft -----*****/
+	/** 
     background:     #f2e5bcFF;
     background-alt: #f2e5bcFF;
     foreground:     #654735FF;
     selected:       #d5c4a1FF;
     active:         #d5c4a1FF;
     urgent:         #d5c4a1FF;
-
+	**/
 	/*****----- Dark-Medium -----*****/
-	/** 
 	background:     #282828FF;
     background-alt: #282828FF;
     foreground:     #d4be98FF;
     selected:       #5a524cFF;
     active:         #5a524cFF;
     urgent:         #5a524cFF; 
-	**/
 }
 
 * {
