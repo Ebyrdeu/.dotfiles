@@ -21,6 +21,6 @@ window#waybar {
     background-color: #c14a4a;
 }
 
-#custom-keyboard, #wireplumber, #clock, #tray {
+#backlight, #battery, #custom-keyboard, #wireplumber, #clock, #tray {
     margin: 0 10px;
 }

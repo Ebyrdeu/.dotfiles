@@ -3,7 +3,7 @@
     "position": "bottom",
     "modules-left": ["hyprland/workspaces"],
     "modules-center": ["custom/youtube-music"],
-    "modules-right": ["hyprland/language", "wireplumber", "clock", "tray"],
+    "modules-right": ["hyprland/language", "backlight", "wireplumber", "clock", "battery","tray"],
     "tray": {
 		"icon-size": 24,
         "spacing": 5
@@ -31,5 +31,24 @@
             "default": ["", "", ""]
         },
         "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
-    }
+    },
+	"battery": {
+		"states": {
+			"good": 95,
+			"warning": 30,
+			"critical": 15
+		},
+		"format": "{icon} {capacity}%",
+		"format-icons": [
+			"",
+			"",
+			"",
+			"",
+			""
+		]
+	},
+   "backlight": {
+        "device": "intel_backlight",
+        "format": "󰃟 {percent}%",
+    },
 }
