@@ -177,6 +177,7 @@ font pango: JetBrains Mono  10
 
 # Border settings
 default_border pixel 3
+for_window [class=".*"] border pixel 3
 default_floating_border none
 hide_edge_borders smart
 
@@ -184,7 +185,7 @@ hide_edge_borders smart
 
 #light-soft
 set $bg0 #f2e5bc
-set $bg2 #ebdbb2
+set $bg5 #d5c4a1
 set $fg0 #654735
 set $red #c14a4a
 set $green #6c782e
@@ -212,7 +213,7 @@ bar {
         statusline $fg0
 
         #                    border  backgr. text
-        focused_workspace    $bg2	 $bg2	 $fg0
+        focused_workspace    $bg5	 $bg5	 $fg0
         inactive_workspace   $bg0    $bg0	 $fg0
         active_workspace     $bg0    $bg0    $fg0 
         urgent_workspace     $red    $red    $bg0
@@ -220,8 +221,8 @@ bar {
 }
 
 #                       border|backgr|text|indicator|child_border
-client.focused          $bg2   $bg2   $fg0 $purple   $bg2
-client.focused_inactive $bg2   $bg2   $fg0 $purple   $bg2
+client.focused          $bg5   $bg5   $fg0 $purple   $bg5
+client.focused_inactive $bg5   $bg5   $fg0 $purple   $bg5
 client.unfocused        $bg0   $bg0   $fg0 $purple   $bg0
 client.urgent           $red   $red   $bg0 $red      $red
 
