@@ -22,8 +22,9 @@ primary.foreground = "#654735"
 # normal.white   = '#7c6f64'
 # primary.background = "#282828"
 # primary.foreground = "#d4be98"
+
 [terminal.shell]
-program = 'zellij'  
+program = 'tmux'  
 
 [env]
 TERM = "xterm-256color"
@@ -31,9 +32,6 @@ TERM = "xterm-256color"
 [font]
 #1440p
 size = 18.0
-
-#1080p
-# size = 11.0
 
 normal = { family = "JetBrainsMono Nerd Font", style = "Regular" }
 bold = { family = "JetBrainsMono Nerd Font", style = "Bold" }
