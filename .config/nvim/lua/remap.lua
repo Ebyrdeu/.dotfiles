@@ -57,6 +57,24 @@ vim.keymap.set('c', '%s/', '%sm/')
 -- open new file adjacent to current file
 vim.keymap.set('n', '<leader>ne', ':e <C-R>=expand("%:p:h") . "/" <cr>')
 
+-- rename current file
+vim.keymap.set('n', '<leader>re', function()
+  -- Get the current file path
+  local old_name = vim.fn.expand("%:p")
+  
+  -- Prompt the user for a new name
+  local new_name = vim.fn.input("Rename to: ", old_name)
+
+  -- If the user provides a new name, proceed with the rename
+  if new_name and new_name ~= "" and new_name ~= old_name then
+    -- Save the file with the new name and delete the old one
+    vim.cmd('saveas ' .. vim.fn.fnameescape(new_name))
+    vim.cmd('silent !rm ' .. vim.fn.fnameescape(old_name))
+    
+    -- Update the buffer list to reflect the new file name
+    vim.cmd('bdelete ' .. vim.fn.bufnr(old_name))
+  end
+end, { desc = "Rename current file", noremap = true, silent = true })
 -- let the left and right arrows be useful: they can switch buffers
 vim.keymap.set('n', '<Tab>', ':bp<cr>')
 vim.keymap.set('n', '<C-Tab>', ':bn<cr>')
@@ -70,13 +88,3 @@ vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
 
 vim.keymap.set("v", "<C-K>", ":m '<-2<CR>gv=gv")
 vim.keymap.set("v", "<C-J>", ":m '>+1<CR>gv=gv")
-
--------------------------------------------------------------------------------
---
--- plugins hotkeys
---
-----------------------------------------------------------------
-
--- Leap
-vim.keymap.set('n', 's', '<Plug>(leap)')
-vim.keymap.set('n', 'S', '<Plug>(leap-from-window)')
