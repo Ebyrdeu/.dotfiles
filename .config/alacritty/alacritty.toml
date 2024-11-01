@@ -25,6 +25,7 @@ primary.foreground = "#654735"
 
 [terminal.shell]
 program = 'tmux'  
+args = ["new-session", "-A", "-s", "0"]
 
 [env]
 TERM = "xterm-256color"
