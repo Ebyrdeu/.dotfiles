@@ -13,10 +13,10 @@ fi
 
 
 
-alias fzf='fzf -m --preview="cat {}" --bind "enter:become(nvim {+})"'
-alias ls='ls -a --color=auto'
-alias grep='rg --color=auto'
+alias ls='ls -alh --color=auto'
+alias grep='rg --smart-case --color=auto --line-number'
 alias tree='ls -aR | grep ":$" | perl -pe '\''s/:$//;s/[^-][^\/]*\//    /g;s/^    (\S)/└── \1/;s/(^    |    (?= ))/│   /g;s/    (\S)/└── \1/'\'''
+
 # Neovim
 alias e='nvim'
 alias vi='nvim'
@@ -27,14 +27,20 @@ alias g='git'
 alias ga='git add -p'
 alias gaa='git add .'
 alias gc='git commit -m'
+alias gl='git log --oneline --graph --decorate --all'
+alias gp='git pull'
+alias gpu='git push'
+alias gf='git fetch --all --prune'
 
 # Docker
-alias d="docker"
-alias dco="docker compose"
-alias dps="docker ps"
-alias dpa="docker ps -a"
-alias dl="docker ps -l -q"
-alias dx="docker exec -it"
+alias d='docker'
+alias dcont='docker container'
+alias dcomp='docker compose'
+alias drc='docker rm $(docker ps -aq)'
+alias dri='docker rmi $(docker images -q -f dangling=true)'
+alias dclean='docker system prune -af --volumes'
+alias dpsa='docker ps -a'
+alias dlsa='docker container ls -a'
 
 # History management
 export HISTCONTROL=ignoreboth
