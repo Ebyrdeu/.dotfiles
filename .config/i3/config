@@ -21,10 +21,11 @@ exec_always --no-startup-id ~/.config/i3/scripts/screen-config.sh
 
 # Change keyboard layout
 exec "setxkbmap -model pc104 -layout us,se,ru -option grp:win_space_toggle"
+
 # Autostart XDG .desktop files using dex
 exec --no-startup-id dex --autostart --environment i3
 
-bindsym Print exec flameshot gui
+bindsym Mod4+Shift+s exec flameshot gui
 
 # System tray applications
 exec --no-startup-id nm-applet

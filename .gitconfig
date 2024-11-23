@@ -4,7 +4,7 @@
     signingkey = FCF050DE87047586  
 [core]
 	autocrlf = input
-    safecrlf = true
+    safecrlf = warn
 	editor = nvim
 
 [commit]
