@@ -133,6 +133,7 @@ map <leader>q :action CloseContent<CR>
 
 " Display
 map <leader>dz :action ToggleDistractionFreeMode<CR>
+map <leader>zz :action ToggleZenMode<CR>
 map <leader>dp :action TogglePresentationMode<CR>
 
 " Method Refactor

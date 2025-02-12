@@ -16,6 +16,7 @@ fi
 alias ls='ls -alh --color=auto'
 alias grep='rg --smart-case --color=auto --line-number'
 alias tree='ls -aR | grep ":$" | perl -pe '\''s/:$//;s/[^-][^\/]*\//    /g;s/^    (\S)/└── \1/;s/(^    |    (?= ))/│   /g;s/    (\S)/└── \1/'\'''
+alias treef='find . -print | sed -e "s;[^/]*/;|____;g;s;____|; |;g"'
 
 # Neovim
 alias e='nvim'
@@ -51,8 +52,8 @@ export HISTIGNORE="clear:bg:fg:cd:cd -:cd ..:exit:date:w:* --help:ls:l:ll:lll"
 # For Tauri on X11
 export WEBKIT_DISABLE_COMPOSITING_MODE=1
 
-# zig
-export PATH="$HOME/zig:$PATH"
+export VISUAL="nvim"
+export EDITOR="nvim"
 
 PS1='[\u@\h \W]\$ '
 . "$HOME/.cargo/env"
