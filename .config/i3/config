@@ -18,10 +18,6 @@ set $ws10 10
 # Turn off all monitors
 exec_always --no-startup-id ~/.config/i3/scripts/screen-config.sh
 
-
-# Change keyboard layout
-exec "setxkbmap -model pc104 -layout us,se,ru -option grp:win_space_toggle"
-
 # Autostart XDG .desktop files using dex
 exec --no-startup-id dex --autostart --environment i3
 
@@ -41,12 +37,12 @@ bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
 bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
 
-bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl set +2%
-bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 2%-
+bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl set +5%
+bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 5%-
 
 # Night lights
 bindsym $mod+x exec redshift -x
-bindsym $mod+c exec redshift -P -O 2500
+bindsym $mod+c exec redshift -P -O 3500
 
 # Application launchers and shortcuts
 # Start terminal
@@ -194,17 +190,6 @@ set $blue #45707a
 set $purple #945e80
 set $aqua #4c7a5d
 
-# dark-medium 
-# set $bg0 #282828
-# set $bg2 #32302f
-# set $fg0 #d4be98
-# set $red #ea6962
-# set $green #a9b665
-# set $yellow #d8a657
-# set $blue #7daea3
-# set $purple #d3869b
-# set $aqua #89b482
-
 # i3bar configuration
 bar {
     status_command i3blocks -c ~/.config/i3/i3blocks.conf
@@ -225,6 +210,7 @@ client.focused          $bg2   $bg2   $fg0 $purple   $fg0
 client.focused_inactive $bg2   $bg2   $fg0 $purple   $bg2
 client.unfocused        $bg0   $bg0   $fg0 $purple   $bg0
 client.urgent           $red   $red   $bg0 $red      $red
+
 
 # Autostart applications
 # Start Youtube Music

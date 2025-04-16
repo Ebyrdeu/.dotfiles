@@ -86,6 +86,24 @@ for package in "${packages[@]}"; do
     fi
 done
 
+# Function to configure Docker permissions
+configure_docker() {
+    if ! grep -qE '^docker:' /etc/group; then
+        echo "Creating docker group..."
+        sudo groupadd docker
+    fi
+
+    if ! groups $USER | grep -q '\bdocker\b'; then
+        echo "Adding $USER to docker group..."
+        sudo usermod -aG docker $USER
+        echo "NOTE: You'll need to log out and back in for group changes to take effect!"
+    fi
+
+    echo "Enabling Docker service..."
+    sudo systemctl enable --now docker.service
+    sudo systemctl enable --now docker.socket
+}
+
 # Install SDKMAN
 install_sdkman
 
@@ -94,5 +112,9 @@ install_rust
 
 # Create code directory
 create_code_directory
+
+ 
+# Configure Docker permissions and service
+configure_docker
 
 echo "Done"

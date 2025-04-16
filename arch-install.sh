@@ -2,16 +2,21 @@
 
 # setup script for fresh install arch using i3wm
 packages=(
+	"ly"
 	"ttf-jetbrains-mono"
 	"ttf-jetbrains-mono-nerd"
+	"adobe-source-han-sans-jp-fonts"
+	"adobe-source-han-serif-jp-fonts"
+	"fcitx5-im"
+	"fcitx5-mozc"
 	"rofi"
 	"brightnessctl"
 	"xclip"
 	"xprop"
-	"xkblayout"
 	"xorg-xwininfo"
 	"redshift"
 	"btop"
+	"yazi"
 	"gnome-keyring"
 	"telegram-desktop"
 	"youtube-music-bin"

@@ -27,12 +27,12 @@ main() {
         title=$(get_window_title "$win_id")
         if [[ -n "$title" ]]; then
             clean_title_text=$(clean_title "$title")
-            echo "#[$clean_title_text]"
+            echo "###$clean_title_text###"
         else
             echo "Error: Could not retrieve window title."
         fi
     else
-        echo "Bruh"
+		echo "damn you live like that ?"
     fi
 }
 
