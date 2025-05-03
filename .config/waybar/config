@@ -37,7 +37,7 @@
     },
 
     "battery": {
-        "bat": "BAT1",
+        "bat": "BAT0",
         "interval": 60,
         "format": "{icon}  {capacity}%",
         "format-icons": ["\uf244", "\uf243", "\uf242", "\uf241", "\uf240"],
