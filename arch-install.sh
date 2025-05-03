@@ -2,25 +2,23 @@
 
 # setup script for fresh install arch using i3wm
 packages=(
-	"ly"
 	"ttf-jetbrains-mono"
 	"ttf-jetbrains-mono-nerd"
 	"adobe-source-han-sans-jp-fonts"
 	"adobe-source-han-serif-jp-fonts"
-	"fcitx5-im"
-	"fcitx5-mozc"
-	"rofi"
-	"brightnessctl"
-	"xclip"
-	"xprop"
-	"xorg-xwininfo"
-	"redshift"
+	"git"
+	"tldr"
+	"base-devel"
+	"unzip"
+	"zip"
 	"btop"
-	"yazi"
-	"gnome-keyring"
 	"telegram-desktop"
 	"youtube-music-bin"
 	"chromium"
+	"rofi-wayland"
+	"wl-clipboard"
+	"wayland"
+	"hyprsunset"
 )
 
 # Function to check if a package is installed via pacman
@@ -45,6 +43,18 @@ install_package_yay() {
     yay -S --noconfirm $1
 }
 
+install_hy3_plugin() {
+    echo "Installing hy3 plugin via hyprpm..."
+    if command -v hyprpm >/dev/null 2>&1; then
+        hyprpm add https://github.com/outfoxxed/hy3
+        hyprpm update
+        echo "hy3 plugin installed and updated successfully."
+    else
+        echo "Error: hyprpm not found. Make sure Hyprland is installed correctly."
+        exit 1
+    fi
+}
+
 
 # Loop through the list of packages and install if not already installed
 for package in "${packages[@]}"; do
@@ -59,5 +69,7 @@ for package in "${packages[@]}"; do
         echo "$package ---- 完全"
     fi
 done
+
+install_hy3_plugin
 
 echo "Done"

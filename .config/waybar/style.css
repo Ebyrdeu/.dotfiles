@@ -1,0 +1,40 @@
+@define-color foreground #654735;
+@define-color foreground-inactive #a89984;
+@define-color background #f2e5bc;
+
+* {
+    font-family: JetBrainsMono Nerd Font;
+    font-size: 17px;
+    padding: 0;
+    margin: 0;
+}
+
+#waybar {
+    color: @foreground;
+    background-color: @background;
+}
+
+#workspaces button {
+    color: @foreground;
+    padding-left: 0.7em;
+}
+
+#workspaces button.empty {
+    color: @foreground-inactive;
+}
+
+#memory,
+#disk,
+#temperature {
+    padding-left: 1em
+}
+
+#wireplumber,
+#battery,
+#backlight,
+#language,
+#network,
+#bluetooth,
+#tray {
+    padding-right: 1em 
+}

@@ -1,6 +1,9 @@
 #!/bin/bash
  
 packages=(
+	"git"
+	"tldr"
+	"base-devel"
 	"stow" 
 	"fd"
 	"tldr"
@@ -10,8 +13,7 @@ packages=(
 	"neovim" 
 	"alacritty"
 	"go"
-	"nodejs"
-	"npm"
+	"nvm"
 	"docker"
 	"docker-buildx"
 	"docker-compose"
