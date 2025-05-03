@@ -17,7 +17,8 @@ packages=(
 	"chromium"
 	"rofi-wayland"
 	"wl-clipboard"
-	"wayland"
+	"waybar"
+	"pavucontrol"
 	"hyprsunset"
 )
 
