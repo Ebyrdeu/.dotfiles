@@ -23,18 +23,20 @@
     color: @foreground-inactive;
 }
 
+#cpu,
 #memory,
 #disk,
 #temperature {
     padding-left: 1em
 }
 
-#wireplumber,
+#pulseaudio,
 #battery,
 #backlight,
 #language,
 #network,
 #bluetooth,
+#clock
 #tray {
     padding-right: 1em 
 }

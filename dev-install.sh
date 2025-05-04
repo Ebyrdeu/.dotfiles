@@ -1,22 +1,23 @@
 #!/bin/bash
  
 packages=(
-	"git"
-	"tldr"
-	"base-devel"
-	"stow" 
-	"fd"
-	"tldr"
-	"fzf" 
-	"ripgrep" 
-	"tmux" 
-	"neovim" 
-	"alacritty"
-	"go"
-	"nvm"
-	"docker"
-	"docker-buildx"
-	"docker-compose"
+# Core tools
+"base-devel"
+"cmake"
+"go"
+
+# Terminal & CLI
+"alacritty"
+"fd"
+"fzf"
+"ripgrep"
+"tmux"
+"tldr"
+
+# Containers
+"docker"
+"docker-buildx"
+"docker-compose"
 )
 
 # Directory for code projects
@@ -106,6 +107,23 @@ configure_docker() {
     sudo systemctl enable --now docker.socket
 }
 
+configure_sim_link_idea() {
+if [ -d "/opt/idea" ]; then
+    # Check if the idea binary exists in the expected location
+    if [ -f "/opt/idea/bin/idea" ]; then
+        # Create symbolic link
+        sudo ln -s /opt/idea/bin/idea /usr/local/bin/idea
+        echo "Symbolic link created successfully: /usr/local/bin/idea → /opt/idea/bin/idea"
+    else
+        echo "Error: /opt/idea/bin/idea not found. Is IntelliJ IDEA installed correctly?"
+        exit 1
+    fi
+else
+    echo "Error: /opt/idea directory not found. IntelliJ IDEA might not be installed."
+    exit 1
+fi
+}
+
 # Install SDKMAN
 install_sdkman
 
@@ -118,5 +136,9 @@ create_code_directory
  
 # Configure Docker permissions and service
 configure_docker
+
+
+# Configure Idea sim link for hyprland startup
+configure_sim_link_idea
 
 echo "Done"

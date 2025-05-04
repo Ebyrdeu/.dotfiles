@@ -2,24 +2,29 @@
 
 # setup script for fresh install arch using i3wm
 packages=(
-	"ttf-jetbrains-mono"
-	"ttf-jetbrains-mono-nerd"
-	"adobe-source-han-sans-jp-fonts"
-	"adobe-source-han-serif-jp-fonts"
-	"git"
-	"tldr"
-	"base-devel"
-	"unzip"
-	"zip"
-	"btop"
-	"telegram-desktop"
-	"youtube-music-bin"
-	"chromium"
-	"rofi-wayland"
-	"wl-clipboard"
-	"waybar"
-	"pavucontrol"
-	"hyprsunset"
+    # Fonts
+    "adobe-source-han-sans-jp-fonts"
+    "adobe-source-han-serif-jp-fonts"
+    "ttf-jetbrains-mono"
+    "ttf-jetbrains-mono-nerd"
+
+    # System & CLI tools
+    "btop"
+    "brightnessctl"
+    "git"
+    "hyprsunset"
+    "pavucontrol"
+    "rofi-wayland"
+    "stow"
+    "unzip"
+    "waybar"
+    "wl-clipboard"
+    "zip"
+
+    # GUI Applications
+    "chromium"
+    "telegram-desktop"
+    "youtube-music-bin"
 )
 
 # Function to check if a package is installed via pacman

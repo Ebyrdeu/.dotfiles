@@ -4,9 +4,9 @@
     "height": 24,
     "spacing": 5,
 
-    "modules-left": ["hyprland/workspaces", "memory", "temperature", "disk"],
-    "modules-center": ["clock"],
-    "modules-right": ["wireplumber", "backlight", "hyprland/language", "battery", "network", "tray"],
+    "modules-left": ["hyprland/workspaces", "cpu", "memory", "temperature", "disk"],
+    "modules-center": ["custom/youtube"],
+    "modules-right": ["pulseaudio", "backlight", "hyprland/language", "network", "battery", "clock", "tray"],
 
     "hyprland/workspaces": {
         "format": "<span size='larger'>{icon}</span>",
@@ -26,34 +26,67 @@
         }
     },
 
+	"custom/youtube": {
+		"exec": "$HOME/.config/waybar/scripts/youtube-music.title.sh",
+		"return-type": "json",
+		"format": "{}",
+		"interval": 5,
+		"tooltip": false
+	},
+
     "clock": {
-        "format": "{:%d.%m.%Y | %H:%M}"
+        "format": "{:%H:%M | %a%e %b }"
     },
 
-    "wireplumber": {
+    "pulseaudio": {
         "format": "\udb81\udd7e  {volume}%",
         "max-volume": 100,
-        "scroll-step": 5
+        "scroll-step": 5,
+        "on-click": "pavucontrol",
     },
 
     "battery": {
         "bat": "BAT0",
-        "interval": 60,
-        "format": "{icon}  {capacity}%",
-        "format-icons": ["\uf244", "\uf243", "\uf242", "\uf241", "\uf240"],
+		"interval": 10,
+			"states": {
+				"warning": 20,
+				"critical": 10
+		},
+		/*"format-time": "{H}:{M:02}",*/
+		"format": "{icon} {capacity}%",
+		"format-charging": " {capacity}%",
+		"format-charging-full": " {capacity}%",
+		"format-full": "{icon} {capacity}%",
+		"format-icons": [
+			"",
+			"",
+			"",
+			"",
+			""
+		]
     },
 
     "backlight": {
-        "format": "\udb80\udcdf  {percent}%"
+     "device": "intel_backlight",
+	 "format": "{icon} {percent}%",
+     "format-icons": ["󱩎", "󱩑", "󱩓", "󱩕", "󰛨"],
+     "format": "\udb80\udcdf  {percent}%"
+    },
+
+
+    "cpu": {
+        "interval": 5,
+        "format": "\uf4bc  {usage}%", 
     },
 
     "memory": {
         "interval": 30,
-        "format": "\uf4bc  {used:0.1f}G"
+        "format": "\uefc5  {used:0.1f}G"
     },
 
     "temperature": {
-        "format": "  {temperatureC}°C"
+		"interval": 30,
+        "format": "\uf2c9 {temperatureC}°C"
     },
 
 	"disk": {
@@ -68,8 +101,8 @@
         "format-wifi": "{icon}",
         "format-disconnected": "\udb83\udc9c",
         "format-icons": ["\udb82\udd2f", "\udb82\udd1f", "\udb82\udd22", "\udb82\udd25", "\udb82\udd28"],
-        "tooltip-format-wifi": "{essid} ({signalStrength}%)",
-        "tooltip-format-ethernet": "{ifname}",
+        "tooltip-format-wifi": "{essid} ({signalStrength}%) {bandwidthDownBits}",
+        "tooltip-format-ethernet": "{ifname} {bandwidthDownBits}",
         "tooltip-format-disconnected": "Disconnected",
     },
 
