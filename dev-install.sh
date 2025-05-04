@@ -1,25 +1,40 @@
 #!/bin/bash
  
 packages=(
-# Core tools
-"base-devel"
-"cmake"
-"go"
+    # Core system
+    "alacritty"
+    "base-devel"
+    "cmake"
+    "go"
+    "neovim"
+    "nvm"
+    "ripgrep"
+    "tmux"
+    "tldr"
 
-# Terminal & CLI
-"alacritty"
-"fd"
-"fzf"
-"ripgrep"
-"tmux"
-"tldr"
+    # Graphics/Video
+    "gstreamer"
+    "gst-plugins-base"
+    "gst-plugins-good"
+    "gst-plugins-bad"
+    "gst-plugins-ugly"
+    "gst-libav"
+    "libva-mesa-driver"
+    "mesa-vdpau"
+    "vulkan-intel"
 
-# Containers
-"docker"
-"docker-buildx"
-"docker-compose"
+    # Web/Networking
+    "webkit2gtk-4.1"
+
+    # Containers
+    "docker"
+    "docker-buildx"
+    "docker-compose"
+
+    # CLI tools
+    "fd"
+    "fzf"
 )
-
 # Directory for code projects
 code_dir="$HOME/code"
 
