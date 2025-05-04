@@ -16,6 +16,9 @@ for file in ~/.bash_{aliases,exports}; do
     [ -f "$file" ] && source "$file"
 done
 
+
+source /usr/share/nvm/init-nvm.sh
+
 PS1='[\u@\h \W]\$ '
 . "$HOME/.cargo/env"
 

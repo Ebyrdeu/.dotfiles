@@ -25,6 +25,7 @@ packages=(
     "chromium"
     "telegram-desktop"
     "youtube-music-bin"
+	"qbittorrent"
 )
 
 # Function to check if a package is installed via pacman
