@@ -20,6 +20,8 @@ packages=(
     "waybar"
     "wl-clipboard"
     "zip"
+	"network-manager-applet"
+	"gnome-keyring"
 
     # GUI Applications
     "chromium"
