@@ -10,16 +10,11 @@ normal.white   = '#a89984'
 primary.background = "#f2e5bc"
 primary.foreground = "#654735"
 
-[terminal.shell]
-program = 'tmux'  
-args = ["new-session", "-A", "-s", "0"]
-
 [env]
 TERM = "xterm-256color"
 
 [font]
-#1440p
-size = 18.0
+size = 24.0
 
 normal = { family = "JetBrainsMono Nerd Font", style = "Regular" }
 bold = { family = "JetBrainsMono Nerd Font", style = "Bold" }
