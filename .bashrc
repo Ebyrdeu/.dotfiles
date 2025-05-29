@@ -12,15 +12,15 @@ elif [ -f /etc/bash.bashrc ]; then
 fi
 
 # Source individual configuration files
-for file in ~/.bash_{aliases,exports}; do
+for file in ~/.bash_{aliases,exports,functions}; do
     [ -f "$file" ] && source "$file"
 done
 
 
-source /usr/share/nvm/init-nvm.sh
+PS1='\u@\h:\[\e[34m\]\w\[\e[0m\]\$ '
 
-PS1='[\u@\h \W]\$ '
 . "$HOME/.cargo/env"
+. /usr/share/nvm/init-nvm.sh
 
 # GPG
 export GPG_TTY=$(tty)

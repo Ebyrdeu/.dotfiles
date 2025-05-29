@@ -20,13 +20,8 @@
     tool = nvim -d
 
 [alias]
-	st = status
-	last = log -1 HEAD --stat
-	# https://stackoverflow.com/a/11688523/472927
 	ss = "!f() { git stash show stash^{/$*} -p; }; f"
 	sa = "!f() { git stash apply stash^{/$*}; }; f"
-	sl = stash list
-	tree = "log --graph --topo-order --pretty='%w(100,0,6)%C(#b57614)%h%C(bold)%C(#665c54)%d %C(#d65d0e)%ar %C(#689d6a)%an%n%C(bold)%C(#7c6f64)%s %N' --abbrev-commit"
 
 [pull]
     ff = only
