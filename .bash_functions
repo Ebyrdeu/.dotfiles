@@ -170,3 +170,99 @@ function connect {
 
     return 0
 }
+
+function sysinfo {
+   # Define color codes for labels (bright cyan) and reset
+    local C="\e[1;36m"
+    local R="\e[0m"
+
+    # 1) Operating System and Version
+    if [ -r /etc/os-release ]; then
+        # shellcheck disable=SC1091
+        . /etc/os-release
+        os="${NAME} ${VERSION_ID}"
+    else
+        os="$(uname -s) $(uname -r)"
+    fi
+
+    # 2) Kernel Version
+    kernel="$(uname -r)"
+
+    # 3) Uptime (e.g., “up 1 hour, 23 minutes”)
+    uptime="$(uptime -p)"
+
+    # 4) Installed Package Count (including Flatpak)
+    local pkg_str=""
+    # Primary package manager
+    if command -v dpkg-query >/dev/null 2>&1; then
+        local dpkg_count
+        dpkg_count="$(dpkg-query -f '${binary:Package}\n' -W 2>/dev/null | wc -l)"
+        pkg_str="${dpkg_count} (dpkg)"
+    elif command -v rpm >/dev/null 2>&1; then
+        local rpm_count
+        rpm_count="$(rpm -qa 2>/dev/null | wc -l)"
+        pkg_str="${rpm_count} (rpm)"
+    elif command -v pacman >/dev/null 2>&1; then
+        local pacman_count
+        pacman_count="$(pacman -Q 2>/dev/null | wc -l)"
+        pkg_str="${pacman_count} (pacman)"
+    else
+        pkg_str="N/A"
+    fi
+    # Flatpak count (if installed)
+    if command -v flatpak >/dev/null 2>&1; then
+        local flatpak_count
+        flatpak_count="$(flatpak list --app 2>/dev/null | wc -l)"
+        if [ "$pkg_str" != "N/A" ]; then
+            pkg_str+=" + ${flatpak_count} (flatpak)"
+        else
+            pkg_str="${flatpak_count} (flatpak)"
+        fi
+    fi
+
+    # 5) Default Shell (basename of $SHELL)
+    shell="$(basename "$SHELL")"
+
+    # 6) Desktop Environment or Window Manager
+    if [ -n "$XDG_CURRENT_DESKTOP" ]; then
+        desktop="$XDG_CURRENT_DESKTOP"
+    elif [ -n "$DESKTOP_SESSION" ]; then
+        desktop="$DESKTOP_SESSION"
+    else
+        desktop="N/A"
+    fi
+
+    # 7) CPU Model
+    cpu="$(awk -F: '/model name/ {print $2; exit}' /proc/cpuinfo 2>/dev/null | sed 's/^ //')"
+    [ -z "$cpu" ] && cpu="N/A"
+
+    # 8) Memory Usage (used / total)
+    memory="$(free -h 2>/dev/null | awk '/Mem:/ {print $3 " / " $2}')"
+    [ -z "$memory" ] && memory="N/A"
+
+    # 9) Storage Info for Root Filesystem (free / used / percentage)
+    if df -h / >/dev/null 2>&1; then
+        local df_free df_used df_percent
+        read -r _ df_used df_free df_percent _ < <(df -h / | awk 'NR==2 {print $3, $4, $5}')
+        df_percent="${df_percent%\%}"
+        storage="${df_free} free | ${df_used} used (${df_percent}%)"
+    else
+        storage="N/A"
+    fi
+
+    # 10) Swap Usage (used/total)
+    swap="$(free -h 2>/dev/null | awk '/Swap:/ {print $3 "/" $2}')"
+    [ -z "$swap" ] && swap="N/A"
+
+    # 11) Print All Collected Fields with Colored Labels
+    printf "${C}OS:${R}         %s\n" "$os"
+    printf "${C}Kernel:${R}     %s\n" "$kernel"
+    printf "${C}Uptime:${R}     %s\n" "$uptime"
+    printf "${C}Packages:${R}   %s\n" "$pkg_str"
+    printf "${C}Shell:${R}      %s\n" "$shell"
+    printf "${C}DE/WM:${R}      %s\n" "$desktop"
+    printf "${C}CPU:${R}        %s\n" "$cpu"
+    printf "${C}Memory:${R}     %s\n" "$memory"
+    printf "${C}Storage:${R}    %s\n" "$storage"
+    printf "${C}Swap:${R}       %s\n" "$swap"
+}
