@@ -28,6 +28,7 @@ packages=(
     "rsync"
 
     # GUI Applications
+	"arandr"
     "chromium"
 	"firefox"
     "telegram-desktop"
