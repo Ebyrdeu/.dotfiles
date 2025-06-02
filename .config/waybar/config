@@ -6,7 +6,7 @@
 
     "modules-left": ["hyprland/workspaces", "cpu", "memory", "temperature", "disk"],
     "modules-center": ["custom/youtube"],
-    "modules-right": ["pulseaudio", "backlight", "hyprland/language", "battery", "clock", "tray"],
+    "modules-right": ["pulseaudio", "backlight", "hyprland/language", "battery", "clock", "network", "tray"],
 
     "hyprland/workspaces": {
         "format": "<span size='larger'>{icon}</span>",
@@ -25,6 +25,15 @@
             "10": [],
         }
     },
+
+	"network": {
+		"format-wifi": "<span> 󰤨 </span>{signalStrength}% ",
+		"format-ethernet": "<span> </span>Wired ",
+		"tooltip-format": "<span> 󰅧 </span>{bandwidthUpBytes}  <span> 󰅢 </span>{bandwidthDownBytes}",
+		"format-linked": "<span> 󱘖 </span>{ifname} (No IP) ",
+		"format-disconnected": "<span>  </span>Disconnected ",
+		"interval": 1
+	},
 
 	"custom/youtube": {
 		"exec": "$HOME/.config/waybar/scripts/youtube-music.title.sh",
