@@ -32,6 +32,7 @@
 		"tooltip-format": "<span> 󰅧 </span>{bandwidthUpBytes}  <span> 󰅢 </span>{bandwidthDownBytes}",
 		"format-linked": "<span> 󱘖 </span>{ifname} (No IP) ",
 		"format-disconnected": "<span>  </span>Disconnected ",
+		"format-disabled": "",
 		"interval": 1
 	},
 
@@ -43,7 +44,7 @@
 	},
 
     "clock": {
-        "format": "{:%H:%M | %a %e %b }"
+        "format": "{:%H:%M %a %e %b }"
     },
 
     "pulseaudio": {
