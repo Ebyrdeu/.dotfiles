@@ -29,6 +29,7 @@ packages=(
 
     # GUI Applications
     "chromium"
+	"firefox"
     "telegram-desktop"
     "youtube-music-bin"
     "qbittorrent"
