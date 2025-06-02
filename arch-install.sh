@@ -9,6 +9,7 @@ packages=(
     "ttf-jetbrains-mono-nerd"
 
     # System & CLI tools
+	"bash-completion"
     "btop"
     "brightnessctl"
     "hyprsunset"
