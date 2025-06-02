@@ -44,7 +44,8 @@
 	},
 
     "clock": {
-        "format": "{:%H:%M %a %e %b }"
+        "format": "{:%H:%M %a %e %b }",
+		"tooltip": false
     },
 
     "pulseaudio": {

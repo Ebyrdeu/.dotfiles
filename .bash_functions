@@ -172,7 +172,7 @@ function connect {
 }
 
 function sysinfo {
-   # Define color codes for labels (bright cyan) and reset
+    # Define color codes for labels (bright cyan) and reset
     local C="\e[1;36m"
     local R="\e[0m"
 
@@ -188,8 +188,8 @@ function sysinfo {
     # 2) Kernel Version
     kernel="$(uname -r)"
 
-    # 3) Uptime (e.g., “up 1 hour, 23 minutes”)
-    uptime="$(uptime -p)"
+    # 3) Uptime
+    uptime="$(uptime -p | sed 's/up //')"
 
     # 4) Installed Package Count (including Flatpak)
     local pkg_str=""
@@ -209,7 +209,7 @@ function sysinfo {
     else
         pkg_str="N/A"
     fi
-    # Flatpak count (if installed)
+    # Flatpak count
     if command -v flatpak >/dev/null 2>&1; then
         local flatpak_count
         flatpak_count="$(flatpak list --app 2>/dev/null | wc -l)"
@@ -220,7 +220,7 @@ function sysinfo {
         fi
     fi
 
-    # 5) Default Shell (basename of $SHELL)
+    # 5) Default Shell
     shell="$(basename "$SHELL")"
 
     # 6) Desktop Environment or Window Manager
@@ -236,22 +236,22 @@ function sysinfo {
     cpu="$(awk -F: '/model name/ {print $2; exit}' /proc/cpuinfo 2>/dev/null | sed 's/^ //')"
     [ -z "$cpu" ] && cpu="N/A"
 
-    # 8) Memory Usage (used / total)
-    memory="$(free -h 2>/dev/null | awk '/Mem:/ {print $3 " / " $2}')"
+    # 8) Memory Usage (SI units - GB)
+    memory="$(free --si -h 2>/dev/null | awk '/Mem:/ {print $3 " / " $2}')"
     [ -z "$memory" ] && memory="N/A"
 
-    # 9) Storage Info for Root Filesystem (free / used / percentage)
-    if df -h / >/dev/null 2>&1; then
-        local df_free df_used df_percent
-        read -r _ df_used df_free df_percent _ < <(df -h / | awk 'NR==2 {print $3, $4, $5}')
-        df_percent="${df_percent%\%}"
-        storage="${df_free} free | ${df_used} used (${df_percent}%)"
+    # 9) Storage Info for Root Filesystem (SI units - GB)
+    if df -H / >/dev/null 2>&1; then
+        local df_output
+        df_output="$(df -H / | awk 'NR==2 {print $2,$3,$4,$5}')"
+        read -r total used free percent <<< "$df_output"
+        storage="${used} used | ${free} free (${percent})"
     else
         storage="N/A"
     fi
 
-    # 10) Swap Usage (used/total)
-    swap="$(free -h 2>/dev/null | awk '/Swap:/ {print $3 "/" $2}')"
+    # 10) Swap Usage (SI units - GB)
+    swap="$(free --si -h 2>/dev/null | awk '/Swap:/ {if ($2 == "0") print "0"; else print $3 "/" $2}')"
     [ -z "$swap" ] && swap="N/A"
 
     # 11) Print All Collected Fields with Colored Labels
