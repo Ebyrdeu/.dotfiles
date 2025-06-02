@@ -11,7 +11,6 @@ packages=(
     # System & CLI tools
     "btop"
     "brightnessctl"
-    "git"
     "hyprsunset"
     "pavucontrol"
     "rofi-wayland"

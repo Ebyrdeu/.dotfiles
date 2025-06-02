@@ -11,7 +11,6 @@ packages=(
     "ripgrep"
     "tmux"
     "tldr"
-	"zsh"
 
     # Graphics/Video
     "gstreamer"
