@@ -142,7 +142,7 @@ function connect {
     #      nmcli device wifi connect "<SSID>"
     #
     #    If you need to force a specific interface, append: `ifname "<interface>"`
-    nmcli device wifi connect "$target_ssid"
+    nmcli --ask device wifi connect "$target_ssid"
     local nmcli_status=$?
 
     # 8) Check the exit status of nmcli to see if the connection succeeded.
@@ -176,54 +176,50 @@ function sysinfo {
     local C="\e[1;36m"
     local R="\e[0m"
 
-    # 1) Operating System and Version
+    # 1) OS and Architecture
     if [ -r /etc/os-release ]; then
-        # shellcheck disable=SC1091
         . /etc/os-release
-        os="${NAME} ${VERSION_ID}"
+        os="${NAME} $(uname -m)"
     else
-        os="$(uname -s) $(uname -r)"
+        os="$(uname -s) $(uname -m)"
     fi
 
-    # 2) Kernel Version
-    kernel="$(uname -r)"
-
-    # 3) Uptime
-    uptime="$(uptime -p | sed 's/up //')"
-
-    # 4) Installed Package Count (including Flatpak)
-    local pkg_str=""
-    # Primary package manager
-    if command -v dpkg-query >/dev/null 2>&1; then
-        local dpkg_count
-        dpkg_count="$(dpkg-query -f '${binary:Package}\n' -W 2>/dev/null | wc -l)"
-        pkg_str="${dpkg_count} (dpkg)"
-    elif command -v rpm >/dev/null 2>&1; then
-        local rpm_count
-        rpm_count="$(rpm -qa 2>/dev/null | wc -l)"
-        pkg_str="${rpm_count} (rpm)"
-    elif command -v pacman >/dev/null 2>&1; then
-        local pacman_count
-        pacman_count="$(pacman -Q 2>/dev/null | wc -l)"
-        pkg_str="${pacman_count} (pacman)"
+    # 2) Host Information
+    if [ -r /sys/class/dmi/id/product_name ] && [ -r /sys/class/dmi/id/product_version ]; then
+        host_model="$(cat /sys/class/dmi/id/product_name) $(cat /sys/class/dmi/id/product_version)"
     else
-        pkg_str="N/A"
-    fi
-    # Flatpak count
-    if command -v flatpak >/dev/null 2>&1; then
-        local flatpak_count
-        flatpak_count="$(flatpak list --app 2>/dev/null | wc -l)"
-        if [ "$pkg_str" != "N/A" ]; then
-            pkg_str+=" + ${flatpak_count} (flatpak)"
-        else
-            pkg_str="${flatpak_count} (flatpak)"
-        fi
+        host_model="Unknown"
     fi
 
-    # 5) Default Shell
-    shell="$(basename "$SHELL")"
+    # 3) Kernel Version
+    kernel="Linux $(uname -r)"
 
-    # 6) Desktop Environment or Window Manager
+    # 4) Uptime (formatted as "X hours, Y mins")
+    uptime_seconds=$(awk '{print int($1)}' /proc/uptime)
+    hours=$((uptime_seconds / 3600))
+    minutes=$(( (uptime_seconds % 3600) / 60 ))
+    uptime=""
+    [ $hours -gt 0 ] && uptime+="${hours} hour"
+    [ $hours -gt 1 ] && uptime+="s"
+    [ $hours -gt 0 ] && [ $minutes -gt 0 ] && uptime+=", "
+    [ $minutes -gt 0 ] && uptime+="${minutes} min"
+    [ $minutes -gt 1 ] && uptime+="s"
+
+    # 5) Package Count
+    if command -v pacman >/dev/null 2>&1; then
+        pkg_count="$(pacman -Q 2>/dev/null | wc -l) (pacman)"
+    else
+        pkg_count="N/A"
+    fi
+
+    # 6) Shell Version
+    if [ -n "$BASH_VERSION" ]; then
+        shell="bash $BASH_VERSION"
+    else
+        shell="$(basename "$SHELL") $($SHELL --version 2>/dev/null | head -n1 | awk '{print $NF}' || echo "?")"
+    fi
+
+    # 7) Desktop Environment/WM
     if [ -n "$XDG_CURRENT_DESKTOP" ]; then
         desktop="$XDG_CURRENT_DESKTOP"
     elif [ -n "$DESKTOP_SESSION" ]; then
@@ -232,37 +228,50 @@ function sysinfo {
         desktop="N/A"
     fi
 
-    # 7) CPU Model
-    cpu="$(awk -F: '/model name/ {print $2; exit}' /proc/cpuinfo 2>/dev/null | sed 's/^ //')"
-    [ -z "$cpu" ] && cpu="N/A"
+    # 8) CPU Information
+    cpu_model="$(awk -F: '/model name/ {print $2; exit}' /proc/cpuinfo 2>/dev/null | sed 's/^ //')"
+    cpu_cores=$(grep -c '^processor' /proc/cpuinfo)
+    cpu_speed=$(awk -F: '/cpu MHz/ {speed=$2/1000; printf "%.2f", speed; exit}' /proc/cpuinfo 2>/dev/null)
+    [ -z "$cpu_speed" ] && cpu_speed="N/A"
+    cpu="${cpu_model} ($cpu_cores) @ ${cpu_speed} GHz"
 
-    # 8) Memory Usage (SI units - GB)
-    memory="$(free --si -h 2>/dev/null | awk '/Mem:/ {print $3 " / " $2}')"
-    [ -z "$memory" ] && memory="N/A"
+    # 9) GPU Information
+    gpu="$(lspci | grep -i 'vga\|3d\|display' | cut -d ':' -f3 | sed 's/^ //;s/(.*//' | head -n1)"
+    [ -z "$gpu" ] && gpu="N/A"
 
-    # 9) Storage Info for Root Filesystem (SI units - GB)
-    if df -H / >/dev/null 2>&1; then
-        local df_output
-        df_output="$(df -H / | awk 'NR==2 {print $2,$3,$4,$5}')"
-        read -r total used free percent <<< "$df_output"
-        storage="${used} used | ${free} free (${percent})"
-    else
-        storage="N/A"
-    fi
+    # 10) Memory Usage (GiB)
+    mem_total=$(free -g | awk '/Mem:/ {print $2}')
+    mem_used=$(free -g | awk '/Mem:/ {print $3}')
+    mem_percent=$(free | awk '/Mem:/ {printf "%.0f", $3/$2 * 100}')
+    memory="${mem_used}.${mem_percent: -2} GiB / ${mem_total}.00 GiB ($mem_percent%)"
 
-    # 10) Swap Usage (SI units - GB)
-    swap="$(free --si -h 2>/dev/null | awk '/Swap:/ {if ($2 == "0") print "0"; else print $3 "/" $2}')"
-    [ -z "$swap" ] && swap="N/A"
+    # 11) Swap Usage (GiB)
+    swap_total=$(free -g | awk '/Swap:/ {print $2}')
+    swap_used=$(free -g | awk '/Swap:/ {print $3}')
+    swap_percent=$(free | awk '/Swap:/ {printf "%.0f", ($2==0) ? 0 : $3/$2 * 100}')
+    swap="${swap_used}.00 GiB / ${swap_total}.00 GiB ($swap_percent%)"
 
-    # 11) Print All Collected Fields with Colored Labels
-    printf "${C}OS:${R}         %s\n" "$os"
-    printf "${C}Kernel:${R}     %s\n" "$kernel"
-    printf "${C}Uptime:${R}     %s\n" "$uptime"
-    printf "${C}Packages:${R}   %s\n" "$pkg_str"
-    printf "${C}Shell:${R}      %s\n" "$shell"
-    printf "${C}DE/WM:${R}      %s\n" "$desktop"
-    printf "${C}CPU:${R}        %s\n" "$cpu"
-    printf "${C}Memory:${R}     %s\n" "$memory"
-    printf "${C}Storage:${R}    %s\n" "$storage"
-    printf "${C}Swap:${R}       %s\n" "$swap"
+    # 12) Disk Usage (GiB)
+    disk_info=$(df -BG / | awk 'NR==2 {print $2,$3,$5,$6}')
+    read -r total used percent mount <<< "$disk_info"
+    fs_type=$(df -T / | awk 'NR==2 {print $2}')
+    disk="${used} / ${total} ($percent) - $fs_type"
+
+    # 13) Locale
+    locale="$LANG"
+
+    # Print all collected fields in the exact format
+    printf "${C}OS:${R} %s\n" "$os"
+    printf "${C}Host:${R} %s\n" "$host_model"
+    printf "${C}Kernel:${R} %s\n" "$kernel"
+    printf "${C}Uptime:${R} %s\n" "$uptime"
+    printf "${C}Packages:${R} %s\n" "$pkg_count"
+    printf "${C}Shell:${R} %s\n" "$shell"
+    printf "${C}WM:${R} %s\n" "$desktop"
+    printf "${C}CPU:${R} %s\n" "$cpu"
+    printf "${C}GPU:${R} %s\n" "$gpu"
+    printf "${C}Memory:${R} %s\n" "$memory"
+    printf "${C}Swap:${R} %s\n" "$swap"
+    printf "${C}Disk (%s):${R} %s\n" "${mount:-/}" "$disk"
+    printf "${C}Locale:${R} %s\n" "$locale"
 }
