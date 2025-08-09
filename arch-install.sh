@@ -118,6 +118,7 @@ packages_wayland=(
 packages_xorg=(
   i3-wm
   i3status
+  i3blokcs
   rofi
   arandr
   xorg-server
@@ -127,7 +128,6 @@ packages_xorg=(
   xkblayout
   xorg-xwininfo
   redshift
-  polybar
 )
 
 # ---------- Install paru first ----------
