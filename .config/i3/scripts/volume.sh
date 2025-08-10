@@ -1,85 +1,123 @@
-#!/bin/bash
-# Copyright (C) 2022 Omar Castro <omar.castro.360@gmail.com>
+#!/usr/bin/env bash
+# i3blocks volume block for PipeWire (wpctl)
+# - Scroll up/down: volume ±5%
+# - Left click: mute toggle
+# - Middle click: open pavucontrol (if available)
+# - Right click: cycle default sink
+# - Sends i3blocks signal 10 to refresh instantly after actions
 
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
+set -u
+SIGNAL=10
+SINK="@DEFAULT_AUDIO_SINK@"
 
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
+# Colors (i3blocks hex)
+COLOR_OK="#cdd6f4"
+COLOR_WARN="#f9e2af"
+COLOR_MUTED="#f38ba8"
 
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# Pick icons (requires Nerd Fonts / Font Awesome)
+ICON_MUTE=""
+ICON_LOW=""
+ICON_MED=""
+ICON_HIGH=""
 
-#------------------------------------------------------------------------
-
-
-# The first parameter sets the step to change the volume by, and units to display
-# uses "step" env variable as fallback, which can be defined on the block configuration
-STEP="${1:-${step:-5}}"
-#------------------------------------------------------------------------
-
-unset LANG;
-
-
-clear_input_buffer(){
-  while read -t 0.02 line; do :; done
+# Fallback to ASCII if font lacks icons
+supports_icons() {
+  # crude check: if locale/term can render, assume yes; otherwise let user override
+  [[ -n "${LC_ALL:-${LC_CTYPE:-${LANG:-}}}" ]]
 }
 
+notify_blocks() {
+  # Refresh i3blocks (non-fatal if not running)
+  pkill -RTMIN+$SIGNAL i3blocks 2>/dev/null || true
+}
 
-
-tick(){
-  local volume_info="$(wpctl get-volume @DEFAULT_AUDIO_SINK@)"
-  local active_sink_name="$(wpctl inspect @DEFAULT_AUDIO_SINK@ | grep node.name)"
-  local volume_info_arr=($volume_info)
-  local volume=`bc -q <<< "(${volume_info_arr[1]} * 100)/1"`
-
-  case "$active_sink_name" in
-    *head* )  OFFICON="";  ONICON=""  ;;
-    *hdmi* )  OFFICON="";  ONICON=""  ;;
-    * )       OFFICON="";  ONICON=""  ;;
-  esac  
-
-  if [[ "${volume_info_arr[2]}" == *"MUTE"* ]]; then
-    echo "$OFFICON MUTE"
-  else
-    [[ $volume == "0" ]] && echo "$OFFICON OFF" || echo "$ONICON $volume%"
+open_mixer() {
+  if command -v pavucontrol >/dev/null 2>&1; then
+    pavucontrol >/dev/null 2>&1 &
   fi
 }
 
-handle_change(){
-  clear_input_buffer
-  tick  
-  while read line ; do
-    clear_input_buffer
-    tick
-  done
-}
+# Cycle to next sink and make it default
+cycle_sink() {
+  # Parse sinks section from `wpctl status`
+  mapfile -t sink_lines < <(wpctl status | awk '
+    /Sinks:/ {inSinks=1; next}
+    /Sources:/ {inSinks=0}
+    inSinks {print}
+  ')
+  ((${#sink_lines[@]})) || exit 0
 
-# there is no reliable way to check for sink change
-# pw-mon does not show information about active default sink
-monitor_sink_change(){
-  local old_sink="$(wpctl inspect @DEFAULT_SINK@ | grep node.name)"
-  local new_sink=""
-  sleep 2
-  while read line ; do
-    # debounce 300 milliseconds
-    while read -t 0.3 line; do :; done
-    new_sink="$(wpctl inspect @DEFAULT_SINK@ | grep node.name)"
-    if [[ "$new_sink" != "$old_sink" ]]; then
-      old_sink="$new_sink"
-      tick
+  # Current default sink id (line starting with '*')
+  current_id=$(printf "%s\n" "${sink_lines[@]}" | awk '
+    /^\s*\*/ { if (match($0, /([0-9]+)\./, m)) { print m[1]; exit } }
+  ')
+
+  # All sink ids in order
+  mapfile -t ids < <(printf "%s\n" "${sink_lines[@]}" | awk '
+    { if (match($0, /([0-9]+)\./, m)) print m[1] }
+  ')
+
+  (( ${#ids[@]} )) || exit 0
+
+  # Find next index
+  next="${ids[0]}"
+  for i in "${!ids[@]}"; do
+    if [[ "${ids[$i]}" == "$current_id" ]]; then
+      next="${ids[$(( (i+1) % ${#ids[@]} ))]}"
+      break
     fi
-    clear_input_buffer
   done
+
+  wpctl set-default "$next" >/dev/null 2>&1 || true
 }
 
-print_info(){
-  pw-mon | grep --line-buffered -e "sink" -e "^add" | tee >(grep --line-buffered "sink" | handle_change) >(monitor_sink_change) > /dev/null
-}
+# Handle clicks from i3blocks
+case "${BLOCK_BUTTON:-0}" in
+  1) wpctl set-mute "$SINK" toggle >/dev/null 2>&1; notify_blocks ;;
+  2) open_mixer; notify_blocks ;;
+  3) cycle_sink; notify_blocks ;;
+  4) wpctl set-volume -l 1.5 "$SINK" 5%+ >/dev/null 2>&1; notify_blocks ;; # allow up to 150%
+  5) wpctl set-volume "$SINK" 5%-      >/dev/null 2>&1; notify_blocks ;;
+  *) ;;
+esac
 
+# Read volume + mute state
+out="$(wpctl get-volume "$SINK" 2>/dev/null || echo "")"
+# Expected like: "Volume: 0.53 [MUTED]" or "Volume: 0.35"
+vol_raw=$(echo "$out" | awk '{for(i=1;i<=NF;i++) if ($i ~ /^[0-9]*\.[0-9]+$/) {print $i; exit}}')
+[[ -z "${vol_raw:-}" ]] && vol_raw="0"
+percent=$(awk -v v="$vol_raw" 'BEGIN{printf("%d", v*100 + 0.5)}')
+muted=$(echo "$out" | grep -q '\[MUTED\]' && echo 1 || echo 0)
 
-print_info
+# Choose icon
+icon=""
+if (( muted == 1 || percent == 0 )); then
+  icon="$ICON_MUTE"
+elif (( percent < 34 )); then
+  icon="$ICON_LOW"
+elif (( percent < 67 )); then
+  icon="$ICON_MED"
+else
+  icon="$ICON_HIGH"
+fi
+$(! supports_icons) && icon="" # drop icons if desired
+
+# Text lines for i3blocks
+if (( muted == 1 )); then
+  full="${icon:+$icon }${percent}%"
+  short="${percent}%"
+  color="$COLOR_MUTED"
+elif (( percent >= 100 )); then
+  full="${icon:+$icon }${percent}%"
+  short="${percent}%"
+  color="$COLOR_WARN"
+else
+  full="${icon:+$icon }${percent}%"
+  short="${percent}%"
+  color="$COLOR_OK"
+fi
+
+echo "$full"        # full_text
+echo "$short"       # short_text
+echo "$color"       # color
