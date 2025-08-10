@@ -1,6 +1,5 @@
-#!/usr/bin/env bash
-# Copyright (C) 2014 Julien Bonjean <julien@bonjean.info>
-# Copyright (C) 2014 Alexander Keller <github@nycroth.com>
+#!/bin/bash
+# Copyright (C) 2022 Omar Castro <omar.castro.360@gmail.com>
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,79 +14,72 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# original source: https://github.com/vivien/i3blocks-contrib/tree/master/volume
-# check the readme: https://github.com/vivien/i3blocks-contrib/blob/master/volume/README.md
 #------------------------------------------------------------------------
 
-# The second parameter overrides the mixer selection
-# For PulseAudio users, eventually use "pulse"
-# For Jack/Jack2 users, use "jackplug"
-# For ALSA users, you may use "default" for your primary card
-# or you may use hw:# where # is the number of the card desired
-if [[ -z "$MIXER" ]] ; then
-    MIXER="default"
-    if command -v pulseaudio >/dev/null 2>&1 && pulseaudio --check ; then
-        # pulseaudio is running, but not all installations use "pulse"
-        if amixer -D pulse info >/dev/null 2>&1 ; then
-            MIXER="pulse"
-        fi
+
+# The first parameter sets the step to change the volume by, and units to display
+# uses "step" env variable as fallback, which can be defined on the block configuration
+STEP="${1:-${step:-5}}"
+#------------------------------------------------------------------------
+
+unset LANG;
+
+
+clear_input_buffer(){
+  while read -t 0.02 line; do :; done
+}
+
+
+
+tick(){
+  local volume_info="$(wpctl get-volume @DEFAULT_AUDIO_SINK@)"
+  local active_sink_name="$(wpctl inspect @DEFAULT_AUDIO_SINK@ | grep node.name)"
+  local volume_info_arr=($volume_info)
+  local volume=`bc -q <<< "(${volume_info_arr[1]} * 100)/1"`
+
+  case "$active_sink_name" in
+    *head* )  OFFICON="";  ONICON=""  ;;
+    *hdmi* )  OFFICON="";  ONICON=""  ;;
+    * )       OFFICON="";  ONICON=""  ;;
+  esac  
+
+  if [[ "${volume_info_arr[2]}" == *"MUTE"* ]]; then
+    echo "$OFFICON MUTE"
+  else
+    [[ $volume == "0" ]] && echo "$OFFICON OFF" || echo "$ONICON $volume%"
+  fi
+}
+
+handle_change(){
+  clear_input_buffer
+  tick  
+  while read line ; do
+    clear_input_buffer
+    tick
+  done
+}
+
+# there is no reliable way to check for sink change
+# pw-mon does not show information about active default sink
+monitor_sink_change(){
+  local old_sink="$(wpctl inspect @DEFAULT_SINK@ | grep node.name)"
+  local new_sink=""
+  sleep 2
+  while read line ; do
+    # debounce 300 milliseconds
+    while read -t 0.3 line; do :; done
+    new_sink="$(wpctl inspect @DEFAULT_SINK@ | grep node.name)"
+    if [[ "$new_sink" != "$old_sink" ]]; then
+      old_sink="$new_sink"
+      tick
     fi
-    [ -n "$(lsmod | grep jack)" ] && MIXER="jackplug"
-    MIXER="${2:-$MIXER}"
-fi
-
-# The instance option sets the control to report and configure
-# This defaults to the first control of your selected mixer
-# For a list of the available, use `amixer -D $Your_Mixer scontrols`
-if [[ -z "$SCONTROL" ]] ; then
-    SCONTROL="${BLOCK_INSTANCE:-$(amixer -D $MIXER scontrols |
-                      sed -n "s/Simple mixer control '\([^']*\)',0/\1/p" |
-                      head -n1
-                    )}"
-fi
-
-# The first parameter sets the step to change the volume by (and units to display)
-# This may be in in % or dB (eg. 5% or 3dB)
-if [[ -z "$STEP" ]] ; then
-    STEP="${1:-5%}"
-fi
-
-# AMIXER(1):
-# "Use the mapped volume for evaluating the percentage representation like alsamixer, to be
-# more natural for human ear."
-NATURAL_MAPPING=${NATURAL_MAPPING:-0}
-if [[ "$NATURAL_MAPPING" != "0" ]] ; then
-    AMIXER_PARAMS="-M"
-fi
-
-#------------------------------------------------------------------------
-
-capability() { # Return "Capture" if the device is a capture device
-  amixer $AMIXER_PARAMS -D $MIXER get $SCONTROL |
-    sed -n "s/  Capabilities:.*cvolume.*/Capture/p"
+    clear_input_buffer
+  done
 }
 
-volume() {
-  amixer $AMIXER_PARAMS -D $MIXER get $SCONTROL $(capability)
+print_info(){
+  pw-mon | grep --line-buffered -e "sink" -e "^add" | tee >(grep --line-buffered "sink" | handle_change) >(monitor_sink_change) > /dev/null
 }
 
-format() {
-  
-  perl_filter='if (/.*\[(\d+%)\] (\[(-?\d+.\d+dB)\] )?\[(on|off)\]/)'
-  perl_filter+='{CORE::say $4 eq "off" ? "MUTE" : "'
-  # If dB was selected, print that instead
-  perl_filter+=$([[ $STEP = *dB ]] && echo '$3' || echo '$1')
-  perl_filter+='"; exit}'
-  output=$(perl -ne "$perl_filter")
-  echo "$LABEL$output"
-}
 
-#------------------------------------------------------------------------
-
-case $BLOCK_BUTTON in
-  3) amixer $AMIXER_PARAMS -q -D $MIXER sset $SCONTROL $(capability) toggle ;;  # right click, mute/unmute
-  4) amixer $AMIXER_PARAMS -q -D $MIXER sset $SCONTROL $(capability) ${STEP}+ unmute ;; # scroll up, increase
-  5) amixer $AMIXER_PARAMS -q -D $MIXER sset $SCONTROL $(capability) ${STEP}- unmute ;; # scroll down, decrease
-esac
-
-volume | format
+print_info

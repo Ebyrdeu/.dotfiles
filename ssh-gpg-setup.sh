@@ -139,7 +139,7 @@ show_keys() {
   fi
   echo
   say "GPG public keys:"
-  gpg --list-keys || warn "No GPG public keys."
+  gpg --list-secret-keys --keyid-format=long || warn "No GPG public keys."
 }
 
 # ---------- Menu ----------

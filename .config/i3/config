@@ -23,9 +23,6 @@ exec --no-startup-id dex --autostart --environment i3
 
 bindsym Mod4+Shift+s exec flameshot gui
 
-# System tray applications
-exec --no-startup-id nm-applet
-
 # Screen lock and power management
 # Lock screen before suspend
 exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
@@ -46,7 +43,9 @@ bindsym $mod+c exec redshift -P -O 3500
 
 # Application launchers and shortcuts
 # Start terminal
-bindsym $mod+Shift+Return exec alacritty
+bindsym $mod+Shift+Return exec alacritty -e tmux new-session -A -s 0
+bindsym $mod+Return exec alacritty 
+
 
 # Kill focused window
 bindsym $mod+Shift+q kill
@@ -69,10 +68,10 @@ bindsym $mod+Down focus down
 bindsym $mod+Up focus up
 bindsym $mod+Right focus right
 
-bindsym $mod+Shift+h move left
-bindsym $mod+Shift+j move down
-bindsym $mod+Shift+k move up
-bindsym $mod+Shift+l move right
+bindsym $mod+Shift+j move left
+bindsym $mod+Shift+h move down
+bindsym $mod+Shift+l move up
+bindsym $mod+Shift+k move right
 
 bindsym $mod+Shift+Left move left
 bindsym $mod+Shift+Down move down
@@ -86,9 +85,6 @@ bindsym $mod+b split h
 # Vertical split
 bindsym $mod+v split v
 
-# Fullscreen and layout
-# Toggle fullscreen mode
-bindsym $mod+f fullscreen toggle
 
 # Stacked layout
 bindsym $mod+s layout stacking
@@ -169,7 +165,7 @@ mode "exit: [l]ogout, [r]eboot, [h]ibernate, [s]leep, [p]oweroff" {
 bindsym $mod+Shift+e mode "exit: [l]ogout, [r]eboot, [h]ibernate, [s]leep, [p]oweroff"
 
 # Font settings
-font pango: JetBrains Mono  10
+font pango: JetBrains Mono  13
 
 # Border settings
 default_border pixel 3
@@ -192,7 +188,7 @@ set $aqua #4c7a5d
 
 # i3bar configuration
 bar {
-    status_command i3blocks -c ~/.config/i3/i3blocks.conf
+        status_command i3blocks -c ~/.config/i3/i3blocks.conf
         colors {
         background $bg0
         statusline $fg0

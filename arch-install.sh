@@ -82,6 +82,7 @@ packages_common=(
   ttf-jetbrains-mono-nerd
 
   # System & CLI tools
+  thunar
   bash-completion
   btop
   brightnessctl
@@ -89,7 +90,6 @@ packages_common=(
   stow
   unzip
   zip
-  network-manager-applet
   gnome-keyring
   wireplumber
   rsync
@@ -98,8 +98,9 @@ packages_common=(
   chromium
   firefox
   telegram-desktop
-  youtube-music-bin   # AUR
+  youtube-music-bin
   qbittorrent
+  mpv
 )
 
 # Wayland / Hyprland specific
@@ -120,6 +121,8 @@ packages_xorg=(
   i3status
   i3blokcs
   rofi
+  brightnessctl
+  upower
   arandr
   xorg-server
   xorg-xrandr

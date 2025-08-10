@@ -61,19 +61,19 @@ else
 fi
 
 # Print the output for i3blocks
-echo " $label $full_text"
-echo " $label $short_text"
+echo " $label $full_text "
+echo " $label $short_text "
 
 # Handle urgency and color based on the battery percentage if discharging
 if [[ "$status" == "discharging" ]]; then
   if [[ $percent -lt 20 ]]; then
-    echo "#ebdbb2"  # Gruvbox Red (Bright)
+    echo "#654745"  # Gruvbox Red (Bright)
   elif [[ $percent -lt 40 ]]; then
-    echo "#ebdbb2"  # Gruvbox Orange (Bright)
+    echo "#654745"  # Gruvbox Orange (Bright)
   elif [[ $percent -lt 60 ]]; then
-    echo "#ebdbb2"  # Gruvbox Yellow (Bright)
+    echo "#654745"  # Gruvbox Yellow (Bright)
   elif [[ $percent -lt 85 ]]; then
-    echo "#ebdbb2"  # Gruvbox Green (Bright)
+    echo "#654745"  # Gruvbox Green (Bright)
   fi
 
   # Set urgency flag if below 5%
