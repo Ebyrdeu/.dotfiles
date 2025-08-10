@@ -8,10 +8,9 @@ set -euo pipefail
 SIGNAL=11
 CACHE="/tmp/i3b-cpu-${UID}.cache"
 
-# Colors (Catppuccin-ish)
-COLOR_OK="#cdd6f4"
-COLOR_WARN="#f9e2af"
-COLOR_HOT="#f38ba8"
+COLOR_OK="#654735"
+COLOR_WARN="#654735"
+COLOR_HOT="#654735"
 
 ICON=""   # Nerd Font; falls back to plain text if not supported
 
