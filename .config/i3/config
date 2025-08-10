@@ -21,8 +21,6 @@ exec_always --no-startup-id ~/.config/i3/scripts/screen-config.sh
 # Autostart XDG .desktop files using dex
 exec --no-startup-id dex --autostart --environment i3
 
-bindsym Mod4+Shift+s exec flameshot gui
-
 # Screen lock and power management
 # Lock screen before suspend
 exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
@@ -37,25 +35,23 @@ bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOU
 bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl set +5%
 bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 5%-
 
-# Night lights
-bindsym $mod+x exec redshift -x
-bindsym $mod+c exec redshift -P -O 3500
+
+# Autostart applications
+exec --no-startup-id i3-msg 'workspace 10; exec youtube-music'
+exec --no-startup-id i3-msg 'workspace 10; exec telegram-desktop'
 
 # Application launchers and shortcuts
-# Start terminal
+bindsym $mod+x exec redshift -x
+bindsym $mod+c exec redshift -P -O 3500
 bindsym $mod+Shift+Return exec alacritty -e tmux new-session -A -s 0
 bindsym $mod+Return exec alacritty 
-
+bindsym $mod+d exec --no-startup-id rofi -modi drun -show drun -config ~/.config/rofi/rofidmenu.rasi
 
 # Kill focused window
 bindsym $mod+Shift+q kill
 
-# Start dmenu using rofi
-bindsym $mod+d exec --no-startup-id rofi -modi drun -show drun -config ~/.config/rofi/rofidmenu.rasi
-
-# Floating windows
-# Use $mod + mouse to drag floating windows
-floating_modifier $mod
+# Kill focused window
+bindsym $mod+f fullscreen toggle global
 
 # Focus and movement
 bindsym $mod+j focus left
@@ -63,44 +59,16 @@ bindsym $mod+h focus down
 bindsym $mod+l focus up
 bindsym $mod+k focus right
 
-bindsym $mod+Left focus left
-bindsym $mod+Down focus down
-bindsym $mod+Up focus up
-bindsym $mod+Right focus right
-
 bindsym $mod+Shift+j move left
 bindsym $mod+Shift+h move down
 bindsym $mod+Shift+l move up
 bindsym $mod+Shift+k move right
 
-bindsym $mod+Shift+Left move left
-bindsym $mod+Shift+Down move down
-bindsym $mod+Shift+Up move up
-bindsym $mod+Shift+Right move right
-
-# Split orientation
-# Horizontal split
-bindsym $mod+b split h
-
-# Vertical split
-bindsym $mod+v split v
-
-
-# Stacked layout
-bindsym $mod+s layout stacking
-
 # Tabbed layout
 bindsym $mod+w layout tabbed
 
 # Toggle split layout
-bindsym $mod+e layout toggle split
-
-# Focus mode
-# Toggle between tiling and floating windows
-bindsym $mod+space focus mode_toggle
-
-# Focus the parent container
-bindsym $mod+a focus parent
+bindsym $mod+e layout splith
 
 # Workspace navigation
 bindsym $mod+1 workspace  number $ws1
@@ -126,24 +94,15 @@ bindsym $mod+Shift+8 move container to workspace number $ws8
 bindsym $mod+Shift+9 move container to workspace number $ws9
 bindsym $mod+Shift+0 move container to workspace number $ws10
 
-# Configuration reload and restart
-# Reload the configuration file
-bindsym $mod+Shift+c reload
-
 # Restart i3 inplace
 bindsym $mod+Shift+r restart
 
 # Resize mode
 mode "resize" {
-    bindsym h resize shrink width 5 px or 5 ppt
-        bindsym k resize grow height 5 px or 5 ppt
-        bindsym j resize shrink height 5 px or 5 ppt
-        bindsym l resize grow width 5 px or 5 ppt
-
-        bindsym Left resize shrink width 5 px or 5 ppt
-        bindsym Down resize grow height 5 px or 5 ppt
-        bindsym Up resize shrink height 5 px or 5 ppt
-        bindsym Right resize grow width 5 px or 5 ppt
+        bindsym l resize grow height 10 px or 10 ppt
+        bindsym j resize shrink width 10 px or 10 ppt
+        bindsym k resize grow width 10 px or 10 ppt
+        bindsym h resize shrink height 10 px or 10 ppt
 
         bindsym Return mode "default"
         bindsym Escape mode "default"
@@ -153,27 +112,24 @@ mode "resize" {
 bindsym $mod+r mode "resize"
 
 # Exit menu
-mode "exit: [l]ogout, [r]eboot, [h]ibernate, [s]leep, [p]oweroff" {
+mode "exit: [l]ogout, [r]eboot, [s]leep, [p]oweroff" {
     bindsym l exec i3-msg 'exit'
         bindsym r exec systemctl reboot
-        bindsym h exec systemctl hibernate
         bindsym s exec systemctl suspend
         bindsym p exec systemctl poweroff
         bindsym Return exec i3-msg exit
         bindsym Escape mode "default"
 }
-bindsym $mod+Shift+e mode "exit: [l]ogout, [r]eboot, [h]ibernate, [s]leep, [p]oweroff"
+bindsym $mod+Shift+e mode "exit: [l]ogout, [r]eboot, [s]leep, [p]oweroff"
 
 # Font settings
 font pango: JetBrains Mono  13
 
 # Border settings
-default_border pixel 3
-for_window [class=".*"] border pixel 3
+default_border pixel 4
+for_window [class=".*"] border pixel 4
 default_floating_border none
 hide_edge_borders smart
-
-# Define colors variables:
 
 #light-soft
 set $bg0 #f2e5bc
@@ -208,8 +164,3 @@ client.unfocused        $bg0   $bg0   $fg0 $purple   $bg0
 client.urgent           $red   $red   $bg0 $red      $red
 
 
-# Autostart applications
-# Start Youtube Music
-exec --no-startup-id i3-msg 'workspace 10; exec youtube-music'
-# Start Telegram desktop
-exec --no-startup-id i3-msg 'workspace 10; exec telegram-desktop'

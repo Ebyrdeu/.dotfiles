@@ -19,10 +19,10 @@ packages=(
   meson
   cpio
   pkg-config
-  gcc                 # provides g++ on Arch
+  gcc
   go
   neovim
-  nvm                 # AUR
+  nvm
   ripgrep
   tmux
   tldr

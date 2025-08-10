@@ -1,8 +1,6 @@
 # General
 alias ls='ls -alhrt --color=auto'
 alias grep='rg --smart-case --color=auto --line-number'
-alias ..='cd ../'
-alias ...='cd ../../'
 alias yay='paru'
 
 # Neovim

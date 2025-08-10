@@ -82,6 +82,7 @@ packages_common=(
   ttf-jetbrains-mono-nerd
 
   # System & CLI tools
+  networkmanager
   thunar
   bash-completion
   btop
@@ -119,7 +120,7 @@ packages_wayland=(
 packages_xorg=(
   i3-wm
   i3status
-  i3blokcs
+  i3blocks
   rofi
   brightnessctl
   upower
