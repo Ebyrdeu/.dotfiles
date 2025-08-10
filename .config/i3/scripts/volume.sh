@@ -11,12 +11,12 @@ SIGNAL=10
 SINK="@DEFAULT_AUDIO_SINK@"
 
 # Colors (i3blocks hex)
-COLOR_OK="#cdd6f4"
-COLOR_WARN="#f9e2af"
-COLOR_MUTED="#f38ba8"
+COLOR_OK="#654735"
+COLOR_WARN="#654735"
+COLOR_MUTED="#654735"
 
 # Pick icons (requires Nerd Fonts / Font Awesome)
-ICON_MUTE=""
+ICON_MUTE="MUTED"
 ICON_LOW=""
 ICON_MED=""
 ICON_HIGH=""
@@ -105,12 +105,10 @@ $(! supports_icons) && icon="" # drop icons if desired
 
 # Text lines for i3blocks
 if (( muted == 1 )); then
-  full="${icon:+$icon }${percent}%"
-  short="${percent}%"
+  full="${icon:+$icon}"
   color="$COLOR_MUTED"
 elif (( percent >= 100 )); then
   full="${icon:+$icon }${percent}%"
-  short="${percent}%"
   color="$COLOR_WARN"
 else
   full="${icon:+$icon }${percent}%"
