@@ -6,9 +6,5 @@ export HISTIGNORE="clear:bg:fg:cd:cd -:cd ..:exit:date:w:* --help:ls:l:ll:lll"
 export VISUAL="nvim"
 export EDITOR="nvim"
 
-# TAURI specific for Wayland
-export WEBKIT_DISABLE_DMABUF_RENDERER=1
-
-
 export GOPATH=$HOME/go
 export PATH=$PATH:/usr/lib/go/bin:$GOPATH/bin

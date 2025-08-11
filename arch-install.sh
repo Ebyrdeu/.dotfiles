@@ -94,6 +94,7 @@ packages_common=(
   gnome-keyring
   wireplumber
   rsync
+  tldr
 
   # GUI Applications
   chromium

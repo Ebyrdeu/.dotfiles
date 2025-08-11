@@ -32,7 +32,7 @@ main() {
             echo "Error: Could not retrieve window title."
         fi
     else
-		echo "Nothing"
+		echo ""
     fi
 }
 

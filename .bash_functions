@@ -13,7 +13,7 @@ __err() { printf "%b%s%b\n" "$__c_red"   "$*" "$__c_reset" >&2; }
 #   Creates DIR if needed; defaults to current dir.
 #   For multi-file calls, each file extracts into its own folder.
 # ============================================================
-ex() {
+extract() {
   local dest="" one_dest=0
   while getopts ":d:" opt; do
     case "$opt" in
@@ -94,88 +94,7 @@ EOF
 #   - Enter to pick; strongest suggested; hidden SSIDs labeled.
 # ============================================================
 connect() {
-  local iface="" wanted_ssid="" auto=0
-  while (($#)); do
-    case "$1" in
-      --if|--iface) iface="$2"; shift 2;;
-      --ssid)       wanted_ssid="$2"; shift 2;;
-      --auto)       auto=1; shift;;
-      -h|--help)    echo "Usage: connect [--if IFACE] [--ssid NAME] [--auto]"; return 0;;
-      *)            __err "Unknown option: $1"; return 1;;
-    esac
-  done
-
-  __say "Rescanning Wi-Fi…"
-  if [[ -n "$iface" ]]; then
-    nmcli device wifi rescan ifname "$iface" >/dev/null 2>&1
-  else
-    nmcli device wifi rescan >/dev/null 2>&1
-  fi
-
-  # SSID:SECURITY:SIGNAL:BSSID
-  mapfile -t rows < <(nmcli -t -f SSID,SECURITY,SIGNAL,BSSID device wifi list | grep -v '^--' || true)
-  ((${#rows[@]})) || { __err "No Wi-Fi networks detected."; return 1; }
-
-  # Deduplicate by SSID, keep the row with max SIGNAL
-  declare -A bestRow bestSig
-  local r ssid sec sig bssid
-  for r in "${rows[@]}"; do
-    IFS=":" read -r ssid sec sig bssid <<<"$r"
-    [[ -z "$ssid" ]] && ssid="<Hidden SSID>"
-    [[ -z "${bestSig[$ssid]}" || "$sig" -gt "${bestSig[$ssid]}" ]] && { bestSig[$ssid]="$sig"; bestRow[$ssid]="$ssid:$sec:$sig:$bssid"; }
-  done
-
-  # Build a menu (sorted by signal desc)
-  mapfile -t menu < <(
-    for k in "${!bestRow[@]}"; do
-      IFS=":" read -r ssid sec sig bssid <<<"${bestRow[$k]}"
-      printf "%03d%%  %-32s  %s  %s\n" "$sig" "$ssid" "$sec" "$bssid"
-    done | sort -r
-  )
-
-  # If a SSID was provided, try to connect immediately
-  if [[ -n "$wanted_ssid" ]]; then
-    __say "Connecting to SSID: $wanted_ssid"
-    if [[ -n "$iface" ]]; then
-      nmcli --ask device wifi connect "$wanted_ssid" ifname "$iface"
-    else
-      nmcli --ask device wifi connect "$wanted_ssid"
-    fi
-  else
-    local chosen
-    if command -v fzf >/dev/null 2>&1; then
-      chosen="$(printf '%s\n' "${menu[@]}" | fzf --prompt='Wi-Fi › ' --height 40% --reverse --border --ansi || true)"
-    else
-      __say "Available Wi-Fi (Signal  SSID  Security  BSSID)"
-      printf "%s\n" "${menu[@]}"
-      if ((auto)); then
-        chosen="${menu[0]}"
-        __warn "Auto mode: selecting strongest network."
-      else
-        read -r -p "Pick by typing the full line or press Enter for strongest: " chosen
-        [[ -z "$chosen" ]] && chosen="${menu[0]}"
-      fi
-    fi
-    [[ -z "$chosen" ]] && { __warn "Cancelled."; return 0; }
-    # Extract SSID (column starts at position 8 after percentage)
-    local chosen_ssid
-    chosen_ssid="$(echo "$chosen" | sed -E 's/^[0-9]{3}%[[:space:]]+([^[:space:]][^ ]([^ ]|[ ](?![ ]{2}))+).*/\1/' | sed 's/[[:space:]]+$//')"
-    [[ -z "$chosen_ssid" ]] && { __err "Could not parse selection."; return 1; }
-    __say "Connecting to: $chosen_ssid"
-    if [[ -n "$iface" ]]; then
-      nmcli --ask device wifi connect "$chosen_ssid" ifname "$iface"
-    else
-      nmcli --ask device wifi connect "$chosen_ssid"
-    fi
-  fi
-
-  if nmcli -t -f ACTIVE,SSID device wifi | grep -q '^yes:'; then
-    local current; current="$(nmcli -t -f ACTIVE,SSID device wifi | awk -F: '/^yes:/{print $2; exit}')"
-    __ok "Connected to: $current"
-  else
-    __err "Connection attempt finished, but no active Wi-Fi reported."
-    return 1
-  fi
+	echo "todo"
 }
 
 # ============================================================
@@ -242,10 +161,6 @@ sysinfo() {
   [[ -z "$cpu_speed" ]] && cpu_speed="N/A"
   local cpu="${cpu_model:-N/A} (${cpu_cores:-?}) @ ${cpu_speed} GHz"
 
-  # GPU (first)
-  local gpu; gpu="$(lspci 2>/dev/null | grep -iE 'vga|3d|display' | sed -E 's/.*: //; s/\(.*\)//' | head -n1)"
-  [[ -z "$gpu" ]] && gpu="N/A"
-
   # Memory
   # Use /proc/meminfo for accuracy; show used = MemTotal - MemAvailable
   local mt ma mu mem_p
@@ -279,7 +194,6 @@ sysinfo() {
   printf "${C}Shell:${R} %s\n" "$shell"
   printf "${C}WM:${R} %s\n" "$desktop"
   printf "${C}CPU:${R} %s\n" "$cpu"
-  printf "${C}GPU:${R} %s\n" "$gpu"
   printf "${C}Memory:${R} %s\n" "$mem_str"
   printf "${C}Swap:${R} %s\n" "$swap_str"
   printf "${C}Disk (%s):${R} %s\n" "${mount:-/}" "$disk"

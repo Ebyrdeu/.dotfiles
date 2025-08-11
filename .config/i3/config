@@ -18,6 +18,9 @@ set $ws10 10
 # Turn off all monitors
 exec_always --no-startup-id ~/.config/i3/scripts/screen-config.sh
 
+# System tray applications
+exec --no-startup-id nm-applet
+
 # Autostart XDG .desktop files using dex
 exec --no-startup-id dex --autostart --environment i3
 
@@ -46,6 +49,10 @@ bindsym $mod+c exec redshift -P -O 3500
 bindsym $mod+Shift+Return exec alacritty -e tmux new-session -A -s 0
 bindsym $mod+Return exec alacritty 
 bindsym $mod+d exec --no-startup-id rofi -modi drun -show drun -config ~/.config/rofi/rofidmenu.rasi
+
+# Floating windows
+# Use $mod + mouse to drag floating windows
+floating_modifier $mod
 
 # Kill focused window
 bindsym $mod+Shift+q kill

@@ -19,7 +19,7 @@ COLOR_MUTED="#654735"
 ICON_MUTE="MUTED"
 ICON_LOW=""
 ICON_MED=""
-ICON_HIGH=""
+ICON_HIGH=" "
 
 # Fallback to ASCII if font lacks icons
 supports_icons() {

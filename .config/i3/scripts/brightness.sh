@@ -10,5 +10,5 @@ max_brightness=$(brightnessctl max)
 percentage=$(( brightness * 100 / max_brightness ))
 
 # Print the current brightness percentage
-echo "${percentage}%"
+echo "󰃟 ${percentage}%"
 
