@@ -99,7 +99,7 @@ packages_common=(
   # GUI Applications
   chromium
   firefox
-  telegram-desktop
+  telegram-desktop-bin
   youtube-music-bin
   qbittorrent
   mpv

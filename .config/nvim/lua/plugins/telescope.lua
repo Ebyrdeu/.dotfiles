@@ -1,7 +1,7 @@
 return {
 	'nvim-telescope/telescope.nvim',
 	tag = '0.1.8',
-	dependencies = { 'nvim-lua/plenary.nvim' },
+	dependencies = { 'nvim-lua/plenary.nvim', 'kyazdani42/nvim-web-devicons' },
 
 	config = function()
 		require('telescope').setup({
@@ -14,7 +14,7 @@ return {
 
 		-- Corespading to .ideavimrc
 		vim.keymap.set('n', '<leader><leader>', function()
-			builtin.find_files({ hidden = true})
+			builtin.find_files({ hidden = true, disable_devicons= false })
 		end, { desc = 'Telescope find files' })
 
 		vim.keymap.set('n', '<leader>sr', builtin.buffers, { desc = 'Telescope buffers' })
