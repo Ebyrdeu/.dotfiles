@@ -8,7 +8,7 @@ sudo groupadd -f docker
 if id -nG "$USER" | grep -qw docker; then
   echo " User '$USER' is already in the 'docker' group."
 else
-  echo " Adding '$USER' to 'docker' group…"
+  echo "  Adding '$USER' to 'docker' group…"
   sudo usermod -aG docker "$USER"
   echo "⚠️  You’ll need to log out and back in for group changes to take effect!"
 fi

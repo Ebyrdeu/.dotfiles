@@ -79,7 +79,7 @@ for pkg in "${packages[@]}"; do
     if pacman -Si "$pkg" &>/dev/null; then
         sudo pacman -S --noconfirm --needed "$pkg"
     else
-        source ~/.dotfiles/install/paru.sh
+        source ~/.dotfiles/install/init/paru.sh
         paru -S --noconfirm --needed "$pkg"
     fi
 done
