@@ -29,7 +29,7 @@
 	"network": {
 		"format-wifi": "<span> 󰤨 </span>{signalStrength}% ",
 		"format-ethernet": "<span> </span>Wired ",
-		"tooltip-format": "<span> 󰅧 </span>{bandwidthUpBytes}  <span> 󰅢 </span>{bandwidthDownBytes}",
+		"tooltip-format": "<span> 󰅧   </span>{bandwidthUpBytes}  <span> 󰅢   </span>{bandwidthDownBytes}",
 		"format-linked": "<span> 󱘖 </span>{ifname} (No IP) ",
 		"format-disconnected": "<span>  </span>Disconnected ",
 		"format-disabled": "",

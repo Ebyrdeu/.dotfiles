@@ -128,6 +128,7 @@ nnoremap <leader>co :action OptimizeImports<CR>
 nnoremap <leader>to :action ActivateTerminalToolWindow<CR>
 nnoremap <leader>tn :action Terminal.NewTab<CR>
 nnoremap <leader>tx :action CloseActiveTab<CR>
+
  " Close Active Tab
 map <leader>q :action CloseContent<CR>
 
@@ -180,4 +181,5 @@ nnoremap <leader>bm :action Maven.NavigatorActionsToolbar<CR>
 
 " Git
 nnoremap <leader>gl :action ActivateVersionControlToolWindow<CR>
+nnoremap <leader>gc :action ActivateCommitToolWindow<CR>
 nnoremap <leader>gm :action Git.Menu<CR>

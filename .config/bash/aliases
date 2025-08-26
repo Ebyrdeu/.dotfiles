@@ -2,6 +2,7 @@
 alias ls='ls -alhrt --color=auto'
 alias grep='rg --smart-case --color=auto --line-number'
 alias yay='paru'
+alias decompress="tar -xzf"
 
 # Neovim
 alias e='nvim'

@@ -47,7 +47,6 @@ exec --no-startup-id i3-msg 'workspace 10; exec telegram-desktop'
 bindsym $mod+x exec redshift -x
 bindsym $mod+c exec redshift -P -O 3500
 bindsym $mod+Shift+Return exec alacritty -e tmux new-session -A -s 0
-bindsym $mod+Return exec alacritty 
 bindsym $mod+d exec --no-startup-id rofi -modi drun -show drun -config ~/.config/rofi/rofidmenu.rasi
 
 # Floating windows

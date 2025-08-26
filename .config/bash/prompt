@@ -1,0 +1,5 @@
+PS1='\u@\h:\[\e[34m\]\w\[\e[0m\]\$ '
+
+. "$HOME/.cargo/env"
+. /usr/share/nvm/init-nvm.sh
+
