@@ -1,6 +1,6 @@
 --ignore=.stowrc
 --ignore=.gitignore
---ignore=arch-install.sh
---ignore=dev-install.sh
+--ignore=install.sh
 --ignore=Dark-Reader-Settings.json
 --ignore=.idea/*
+--ignore=install/*

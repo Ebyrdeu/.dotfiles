@@ -12,6 +12,6 @@ elif [ -f /etc/bash.bashrc ]; then
 fi
 
 # Source individual configuration files
-for file in ~/.config/bash/{aliases,prompt,functions,exports}; do
+for file in ~/.config/bash/{aliases,prompt,functions,envs}; do
     [ -f "$file" ] && source "$file"
 done
