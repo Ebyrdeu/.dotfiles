@@ -1,0 +1,117 @@
+{
+	"layer": "top",
+	"position": "bottom",
+	"height": 24,
+	"spacing": 0,
+	"modules-left": ["hyprland/workspaces", "cpu", "memory", "temperature", "disk"],
+	"modules-center": ["custom/youtube"],
+	"modules-right": [
+		"pulseaudio",
+		"backlight",
+		"bluetooth",
+		"hyprland/language",
+		"battery",
+		"clock",
+		"network",
+		"tray"
+	],
+	"hyprland/workspaces": {
+		"format": "<span size='larger'>{icon}</span>",
+		"on-click": "activate",
+		"format-icons": {
+			"active": "\uf444",
+			"default": "\uf4c3"
+		},
+		"icon-size": 10,
+		"sort-by-number": true,
+		"persistent-workspaces": {
+			"1": [],
+			"2": [],
+			"3": [],
+			"4": [],
+			"10": []
+		}
+	},
+	"network": {
+		"format-icons": ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"],
+		"format": "{icon}",
+		"format-wifi": "{icon}",
+		"format-ethernet": "󰀂",
+		"format-disconnected": "󰖪",
+		"tooltip-format-wifi": "{essid} ({frequency} GHz)\n⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}",
+		"tooltip-format-ethernet": "⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}",
+		"tooltip-format-disconnected": "Disconnected",
+		"interval": 3,
+		"on-click": "alacritty --class=Impala -e impala"
+	},
+	"custom/youtube": {
+		"exec": "$HOME/.config/waybar/scripts/youtube-music.title.sh",
+		"format": "{}",
+		"interval": 1,
+		"tooltip": false
+	},
+	"clock": {
+		"format": "{:%H:%M %a %e %b }",
+		"tooltip": false
+	},
+	"pulseaudio": {
+		"format": "\udb81\udd7e  {volume}%",
+		"format-muted": "MUTE",
+		"max-volume": 100,
+		"scroll-step": 1,
+		"on-click": "$HOME/.config/waybar/scripts/switch-audio.sh"
+	},
+	"battery": {
+		"format": "{capacity}% {icon}",
+		"format-discharging": "{icon}",
+		"format-charging": "{icon}",
+		"format-plugged": "",
+		"format-icons": {
+			"charging": ["󰢜", "󰂆", "󰂇", "󰂈", "󰢝", "󰂉", "󰢞", "󰂊", "󰂋", "󰂅"],
+			"default": ["󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
+		},
+		"format-full": "󰂅",
+		"tooltip-format-discharging": "{power:>1.0f}W↓ {capacity}%",
+		"tooltip-format-charging": "{power:>1.0f}W↑ {capacity}%",
+		"interval": 5,
+		"states": {
+			"warning": 20,
+			"critical": 10
+		}
+	},
+	"bluetooth": {
+		"format": "",
+		"format-disabled": "󰂲",
+		"format-connected": "",
+		"tooltip-format": "Devices connected: {num_connections}",
+		"on-click": "blueberry"
+	},
+	"backlight": {
+		"format": "{icon} {percent}%",
+		"format-icons": ["󱩎", "󱩑", "󱩓", "󱩕", "󰛨"]
+	},
+	"cpu": {
+		"interval": 10,
+		"format": "\uf4bc  {usage}%"
+	},
+	"memory": {
+		"interval": 10,
+		"format": "\uefc5  {used:0.1f}G"
+	},
+	"temperature": {
+		"interval": 10,
+		"format": "\uf2c9 {temperatureC}°C"
+	},
+	"disk": {
+		"interval": 10,
+		"format": "  {percentage_used}%",
+		"path": "/"
+	},
+	"hyprland/language": {
+		"format": "{short}"
+	},
+	"tray": {
+		"icon-size": 16,
+		"spacing": 16
+	}
+}

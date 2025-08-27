@@ -20,15 +20,15 @@
 #waybar {
 	font-family: JetBrainsMono Nerd Font;
 	font-size: 12pt;
-    color: @foreground;
-    background-color: @background;
+	color: @foreground;
+	background-color: @background;
 	font-weight: bolder;
 }
 
 #workspaces button {
-    color: @foreground;
-    padding-left: 0.7em;
-    padding-right: 0.7em;
+	color: @foreground;
+	padding-left: 0.7em;
+	padding-right: 0.7em;
 }
 
 #workspaces button:hover {
@@ -36,14 +36,14 @@
 }
 
 #workspaces button.empty {
-    color: @foreground-inactive;
+	color: @foreground-inactive;
 }
 
 #cpu,
 #memory,
 #disk,
 #temperature {
-    padding-left: 1em;
+	padding-left: 1em;
 	padding-right: 1em;
 
 }
@@ -52,12 +52,13 @@
 #network,
 #pulseaudio,
 #battery,
+#bluetooth,
 #backlight,
 #language,
 #network,
 #clock,
 #tray {
-    padding-right: 1em;
+	padding-right: 1em;
 	padding-left: 1em;
 }
 
@@ -65,10 +66,13 @@
 	background: @bg_visual_blue;
 }
 
-#backlight{
+#backlight {
 	background: @bg_visual_green;
 }
 
+#bluetooth {
+	background: @bg_visual_blue;
+}
 
 #language {
 	background: @bg_visual_red;
@@ -83,7 +87,7 @@
 }
 
 #network {
- background: @bg_visual_blue;
+	background: @bg_visual_blue;
 }
 
 #tray {

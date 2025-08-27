@@ -8,58 +8,68 @@ packages=(
   ttf-jetbrains-mono-nerd
 
   # System & CLI tools
-  networkmanager
-  thunar
+  avahi
   bash-completion
+  blueberry
   btop
   brightnessctl
-  pavucontrol
-  stow
-  unzip
-  zip
-  gnome-keyring
-  wireplumber
-  rsync
   curl
-  wget
+  gnome-keyring
+  impala
+  iwd
+  pavucontrol
+  rsync
+  stow
   tldr
+  ufw
+  unzip
+  wget
+  wireplumber
+
+  # Printers
+  cups
+  cups-browsed
+  cups-filters
+  cups-pdf
+  nss-mdns
+  polkit-gnome
+  system-config-printer
 
   # Core system / build tools
   alacritty
   base-devel
   cmake
-  meson
   cpio
-  pkg-config
   gcc
-  go
+  lld
+  llvm
+  meson
   neovim
-  nvm
+  pkg-config
   ripgrep
   tmux
   tldr
-  llvm
-  lld
 
   # Graphics / Video
-  gstreamer
+  gst-libav
+  gst-plugins-bad
   gst-plugins-base
   gst-plugins-good
-  gst-plugins-bad
   gst-plugins-ugly
-  gst-libav
+  gstreamer
   libva-mesa-driver
   mesa-vdpau
   vulkan-intel
 
   # Web / GTK
-  webkit2gtk-4.1
   webkit2gtk
+  webkit2gtk-4.1
 
   # Containers
   docker
   docker-buildx
   docker-compose
+  ufw-docker
 
   # CLI tools
   fd
@@ -68,11 +78,12 @@ packages=(
   # GUI Applications
   chromium
   firefox
+  mpv
+  qbittorrent
   telegram-desktop-bin
   youtube-music-bin
-  qbittorrent
-  mpv
 )
+
 
 for pkg in "${packages[@]}"; do
     echo " Installing $pkg"
