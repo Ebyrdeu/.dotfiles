@@ -40,6 +40,7 @@ let g:EasyMotion_do_mapping=0
 
 " make missing : less annoying
 nnoremap ; :
+inoremap jj <esc>
 
 " stop searching
 nnoremap <C-l> :noh<CR>
@@ -83,7 +84,7 @@ nnoremap g* g*zz
 nnoremap <leader>pp :action EditorPaste<CR>
 
 " Copy To System Buffer
-nnoremap  <leader>y  "+yy
+nnoremap  <leader>y  "+y
 vnoremap <leader>y "+y
 nnoremap  <leader>Y  "+yg_
 nnoremap  <leader>gy  "+ygg
@@ -117,8 +118,7 @@ nnoremap <leader>sf       :action FindInPath<CR>
 nnoremap <leader>gg :action Generate<CR>
 
 " Project View
-nnoremap <leader>pv :action ActivateProjectToolWindow<CR>
-nnoremap <leader>ps :action SelectInProjectView<CR>
+nnoremap <leader>o :action ActivateProjectToolWindow<CR>
 
 " Code Format
 nnoremap <leader>cc :action ReformatCode<CR>
@@ -172,11 +172,7 @@ nnoremap <leader>en :action GotoNextError<CR>
 nnoremap <leader>ep :action GotoPreviousError<CR>
 
 " Build
-
-" Rust
 nnoremap <leader>bc :action Rust.Cargo<CR>
-
-" Maven
 nnoremap <leader>bm :action Maven.NavigatorActionsToolbar<CR>
 
 " Git

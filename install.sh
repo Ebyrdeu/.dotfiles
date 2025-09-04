@@ -2,54 +2,56 @@
 
 set -eE
 
-ask_skip() {
+ask_install() {
     local section="$1"
-    read -p "Do you want to skip $section? [y/N]: " answer
-    answer=${answer:-N}
+    read -p "Do you want to install $section? [Y/n]: " answer
+    answer=${answer:-Y}
     [[ "$answer" =~ ^[Yy]$ ]]
 }
 
 echo "----------------------------------------"
 echo " Starting Initial setup"
 echo "----------------------------------------"
-if ! ask_skip "Initial setup"; then
-    source ~/.dotfiles/install/init/dirs.sh
-    source ~/.dotfiles/install/init/multilib.sh
-    source ~/.dotfiles/install/init/repo-add-color.sh
-    source ~/.dotfiles/install/init/packages.sh
+if ask_install "Initial setup"; then
+    source ~/.dotfiles/install/init/00-paru.sh
+    source ~/.dotfiles/install/init/01-pacman.sh
+    source ~/.dotfiles/install/init/02-packages.sh
 fi
 
 echo "----------------------------------------"
 echo "󰵮 Starting developer setup"
 echo "----------------------------------------"
-if ! ask_skip "Developer setup"; then
-    source ~/.dotfiles/install/dev/docker.sh
-    source ~/.dotfiles/install/dev/dev-env.sh
-    source ~/.dotfiles/install/dev/jetbrains-idea.sh
+if ask_install "Developer setup"; then
+    source ~/.dotfiles/install/dev/00-dev-env.sh
+    source ~/.dotfiles/install/dev/01-docker.sh
+    source ~/.dotfiles/install/dev/02-jetbrains-idea.sh
+    source ~/.dotfiles/install/dev/03-code-dir.sh
 fi
 
 echo "----------------------------------------"
 echo "󰹑 Starting WM setup"
 echo "----------------------------------------"
-if ! ask_skip "WM setup"; then
-    source ~/.dotfiles/install/wm/wm.sh
-    source ~/.dotfiles/install/wm/hy3.sh
+if ask_install "WM setup"; then
+    source ~/.dotfiles/install/wm/00-wm.sh
 fi
 
 echo "----------------------------------------"
 echo "󰻠 Starting System setup"
 echo "----------------------------------------"
-if ! ask_skip "System setup"; then
-    source ~/.dotfiles/install/system/bluetooth.sh
-    source ~/.dotfiles/install/system/firewall.sh
-    source ~/.dotfiles/install/system/printer.sh
-    source ~/.dotfiles/install/system/ssh-flakiness.sh
-    source ~/.dotfiles/install/system/network.sh
+if ask_install "System setup"; then
+    source ~/.dotfiles/install/system/00-network.sh
+    source ~/.dotfiles/install/system/01-bluetooth.sh
+    source ~/.dotfiles/install/system/02-firewall.sh
+    source ~/.dotfiles/install/system/03-printer.sh
+    source ~/.dotfiles/install/system/04-ssh-flakiness.sh
+    source ~/.dotfiles/install/system/05-usb-autosuspend.sh
 fi
 
 echo "----------------------------------------"
 echo "󱘷 Post install setup"
 echo "----------------------------------------"
-if ! ask_skip "Post install setup"; then
-    source ~/.dotfiles/install/post/cleanup.sh
-fi
+echo "Cleaning caches..."
+paru -Sc
+
+echo "Reloading bash configuration..."
+source ~/.bashrc

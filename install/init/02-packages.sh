@@ -15,7 +15,6 @@ packages=(
   brightnessctl
   curl
   gnome-keyring
-  impala
   iwd
   pavucontrol
   rsync
@@ -48,7 +47,6 @@ packages=(
   pkg-config
   ripgrep
   tmux
-  tldr
 
   # Graphics / Video
   gst-libav
@@ -74,6 +72,9 @@ packages=(
   # CLI tools
   fd
   fzf
+  lazygit
+  lazydocker
+  impala
 
   # GUI Applications
   chromium
@@ -84,13 +85,12 @@ packages=(
   youtube-music-bin
 )
 
-
+# Install packages
 for pkg in "${packages[@]}"; do
-    echo " Installing $pkg"
+    echo "Installing $pkg..."
     if pacman -Si "$pkg" &>/dev/null; then
         sudo pacman -S --noconfirm --needed "$pkg"
     else
-        source ~/.dotfiles/install/init/paru.sh
         paru -S --noconfirm --needed "$pkg"
     fi
 done
