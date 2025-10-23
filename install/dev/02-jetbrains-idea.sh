@@ -23,5 +23,9 @@ else
     echo "Linking $SYMLINK → $EXECUTABLE"
     sudo ln -sf "$EXECUTABLE" "$SYMLINK"
 
+    # Give privileges (for updates)
+    sudo chown -R $(whoami):$(whoami) /opt/idea
+    echo "Privileges was given"
+
     echo "Done! You can run IntelliJ IDEA using 'idea' from the terminal."
 fi
