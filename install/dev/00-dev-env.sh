@@ -34,48 +34,17 @@ echo "Installing Zig..."
 mise use --global zig@latest
 echo "Zig installed: $(zig version)"
 
+# Install Java
+echo "Installing Java..."
+mise use --global java@oracle-graalvm
+echo "Java installed: $(java --version)"
+
+# Install Maven
+echo "Installing Maven..."
+mise use --global maven@latest
+echo "Maven installed: $(mvn --version)"
+
 # Install Rust
-if ! command -v rustup &> /dev/null; then
-    echo "Installing Rust (rustup)…"
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-else
-    echo "Rust (rustup) already installed."
-fi
-
-# Install SDKMAN
-if [[ ! -d "$HOME/.sdkman" ]]; then
-    echo "Installing SDKMAN…"
-    curl -s "https://get.sdkman.io" | bash
-else
-    echo "SDKMAN already installed."
-fi
-
-# Load SDKMAN environment
-if [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]]; then
-    echo "Loading SDKMAN environment…"
-    source "$HOME/.sdkman/bin/sdkman-init.sh"
-fi
-
-# Install SDKMAN packages
-packages=("maven" "gradle")
-
-for pkg in "${packages[@]}"; do
-    if sdk list "$pkg" | grep -q 'installed'; then
-        echo "$pkg is already installed."
-    else
-        echo "Installing $pkg via SDKMAN…"
-        sdk install "$pkg"
-    fi
-done
-
-# Optional Java installation
-read -p "Install Java via SDKMAN? (y/N): " install_java
-install_java=${install_java,,} # lowercase
-
-if [[ "$install_java" == "y" || "$install_java" == "yes" ]]; then
-    read -p "Enter Java version (e.g., 24.0.2-graal): " java_version
-    echo "Installing Java $java_version via SDKMAN…"
-    sdk install java "$java_version"
-else
-    echo "Skipping Java installation."
-fi
+echo "Installing Rust..."
+mise use --global rust@latest
+echo "Rust installed: $(cargo --version)"

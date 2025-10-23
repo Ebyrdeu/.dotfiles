@@ -7,7 +7,7 @@ packages_wayland=(
   hyprsunset
   hyprlock
   hypridle
-  rofi-wayland
+  rofi
   waybar
   wl-clipboard
   xdg-desktop-portal-hyprland
