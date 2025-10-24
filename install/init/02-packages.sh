@@ -17,6 +17,7 @@ packages=(
   gnome-keyring
   iwd
   pavucontrol
+  power-profiles-daemon
   rsync
   stow
   tldr

@@ -6,6 +6,10 @@
 @define-color bg_visual_red #efd2b3;
 @define-color bg_visual_blue #d3d5b8;
 @define-color bg_visual_yellow #f3deaa;
+@define-color bg_visual_purple #e8d4ba;
+@define-color bg_diff_red #f7d9b9;
+@define-color bg_diff_green #dfe1b4;
+@define-color bg_diff_blue #dbddbf;
 
 * {
 	border: none;
@@ -49,6 +53,7 @@
 }
 
 
+#power-profiles-daemonm,
 #network,
 #pulseaudio,
 #battery,
@@ -63,11 +68,11 @@
 }
 
 #pulseaudio {
-	background: @bg_visual_blue;
+	background: @bg_diff_blue;
 }
 
 #backlight {
-	background: @bg_visual_green;
+	background: @bg_diff_red;
 }
 
 #bluetooth {
@@ -76,6 +81,10 @@
 
 #language {
 	background: @bg_visual_red;
+}
+
+#power-profiles-daemon {
+	background: @bg_visual_purple;
 }
 
 #battery {
@@ -87,7 +96,7 @@
 }
 
 #network {
-	background: @bg_visual_blue;
+	background: @bg_diff_blue;
 }
 
 #tray {

@@ -7,7 +7,6 @@ packages_i3=(
   i3blocks
   rofi
   brightnessctl
-  upower
   arandr
   xorg-server
   xorg-xrandr

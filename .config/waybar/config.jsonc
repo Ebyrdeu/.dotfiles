@@ -9,12 +9,24 @@
 		"pulseaudio",
 		"backlight",
 		"bluetooth",
+		"power-profiles-daemon",
 		"hyprland/language",
 		"battery",
 		"clock",
 		"network",
 		"tray"
 	],
+	"power-profiles-daemon": {
+		"format": " {icon} ",
+		"tooltip-format": "Power profile: {profile}\nDriver: {driver}",
+		"tooltip": true,
+		"format-icons": {
+			"default": "",
+			"performance": "",
+			"balanced": "",
+			"power-saver": ""
+		}
+	},
 	"hyprland/workspaces": {
 		"format": "<span size='larger'>{icon}</span>",
 		"on-click": "activate",

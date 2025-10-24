@@ -44,6 +44,11 @@ echo "Installing Maven..."
 mise use --global maven@latest
 echo "Maven installed: $(mvn --version)"
 
+# Install Gradle
+echo "Installing Gradle..."
+mise use --global gradle@latest
+echo "Gradle installed: $(gradle --version)"
+
 # Install Rust
 echo "Installing Rust..."
 mise use --global rust@latest

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -eE
+set -eEo pipefail
 
 ask_install() {
     local section="$1"
