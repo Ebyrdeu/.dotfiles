@@ -174,6 +174,7 @@ nnoremap <leader>ep :action GotoPreviousError<CR>
 " Build
 nnoremap <leader>bc :action Rust.Cargo<CR>
 nnoremap <leader>bm :action Maven.NavigatorActionsToolbar<CR>
+nnoremap <leader>bg :action Gradle.View.ActionsToolbar.RunPanel<CR>
 
 " Git
 nnoremap <leader>gl :action ActivateVersionControlToolWindow<CR>
