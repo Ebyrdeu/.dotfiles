@@ -36,7 +36,7 @@ echo "Zig installed: $(zig version)"
 
 # Install Java
 echo "Installing Java..."
-mise use --global java@oracle-graalvm
+mise use --global java@latest
 echo "Java installed: $(java --version)"
 
 # Install Maven

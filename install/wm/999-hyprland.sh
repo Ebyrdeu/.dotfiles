@@ -15,6 +15,7 @@ packages_wayland=(
   grim
   uwsm
   libnewt
+  dunst
 )
 
 

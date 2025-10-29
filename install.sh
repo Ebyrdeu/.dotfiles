@@ -25,7 +25,9 @@ if ask_install "Developer setup"; then
     source ~/.dotfiles/install/dev/00-dev-env.sh
     source ~/.dotfiles/install/dev/01-docker.sh
     source ~/.dotfiles/install/dev/02-jetbrains-idea.sh
-    source ~/.dotfiles/install/dev/03-code-dir.sh
+    source ~/.dotfiles/install/dev/03-clion.sh
+    source ~/.dotfiles/install/dev/04-code-dir.sh
+    source ~/.dotfiles/install/dev/05-gpg.sh
 fi
 
 echo "----------------------------------------"
