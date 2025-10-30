@@ -7,6 +7,10 @@ packages=(
   ttf-jetbrains-mono
   ttf-jetbrains-mono-nerd
 
+  # Keyboard
+  fcitx5-mozc
+  fcitx5-gtk
+
   # System & CLI tools
   avahi
   bash-completion

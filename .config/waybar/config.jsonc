@@ -9,10 +9,9 @@
 		"pulseaudio",
 		"backlight",
 		"bluetooth",
-		"power-profiles-daemon",
-		"hyprland/language",
-		"battery",
 		"clock",
+		"power-profiles-daemon",
+		"battery",
 		"network",
 		"tray"
 	],
@@ -118,9 +117,6 @@
 		"interval": 10,
 		"format": "  {percentage_used}%",
 		"path": "/"
-	},
-	"hyprland/language": {
-		"format": "{short}"
 	},
 	"tray": {
 		"icon-size": 16,

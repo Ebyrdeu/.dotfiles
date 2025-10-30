@@ -1,6 +1,7 @@
 [global]
     font = "JetBrainsMono Nerd Font 14"
     origin = bottom-right
+    width = 350
 
 [play_sound]
     summary = "*"

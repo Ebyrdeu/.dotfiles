@@ -59,7 +59,6 @@
 #battery,
 #bluetooth,
 #backlight,
-#language,
 #network,
 #clock,
 #tray {
@@ -79,12 +78,8 @@
 	background: @bg_visual_blue;
 }
 
-#language {
-	background: @bg_visual_red;
-}
-
 #power-profiles-daemon {
-	background: @bg_visual_purple;
+	background: @bg_visual_red;
 }
 
 #battery {
@@ -97,8 +92,4 @@
 
 #network {
 	background: @bg_diff_blue;
-}
-
-#tray {
-	background: @blue;
 }
