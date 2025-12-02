@@ -2,6 +2,7 @@
     font = "JetBrainsMono Nerd Font 14"
     origin = bottom-right
     width = 350
+    timeout = 5s
 
 [play_sound]
     summary = "*"
