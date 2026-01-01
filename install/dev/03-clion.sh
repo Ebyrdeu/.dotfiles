@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CLION_URL="https://download.jetbrains.com/cpp/CLion-2025.2.4.tar.gz"
+CLION_URL="https://download.jetbrains.com/cpp/CLion-2025.3.1.tar.gz"
 INSTALL_DIR="/opt/clion"
 SYMLINK="/usr/local/bin/clion"
 EXECUTABLE="$INSTALL_DIR/bin/clion"

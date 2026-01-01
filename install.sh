@@ -13,9 +13,10 @@ echo "----------------------------------------"
 echo " Starting Initial setup"
 echo "----------------------------------------"
 if ask_install "Initial setup"; then
-    source ~/.dotfiles/install/init/00-paru.sh
-    source ~/.dotfiles/install/init/01-pacman.sh
-    source ~/.dotfiles/install/init/02-packages.sh
+    source ~/.dotfiles/install/init/00-stow.sh
+    source ~/.dotfiles/install/init/01-paru.sh
+    source ~/.dotfiles/install/init/02-pacman.sh
+    source ~/.dotfiles/install/init/03-packages.sh
 fi
 
 echo "----------------------------------------"
@@ -47,13 +48,17 @@ if ask_install "System setup"; then
     source ~/.dotfiles/install/system/03-printer.sh
     source ~/.dotfiles/install/system/04-ssh-flakiness.sh
     source ~/.dotfiles/install/system/05-usb-autosuspend.sh
+    source ~/.dotfiles/install/system/06-applications.sh
 fi
 
 echo "----------------------------------------"
 echo "󱘷 Post install setup"
 echo "----------------------------------------"
 echo "Cleaning caches..."
-paru -Sc
+sudo pacman -Rns $(pacman -Qtdq)
+sudo pacman -Sc
+sudo pacman -Scc
+sudo du -sh ~/.cache/
 
 echo "Reloading bash configuration..."
 source ~/.bashrc

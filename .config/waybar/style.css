@@ -43,13 +43,20 @@
 	color: @foreground-inactive;
 }
 
+#mode,
+#submap {
+	background: @blue;
+	color: @background;
+	padding: 0px 4em;
+}
+
+
 #cpu,
 #memory,
 #disk,
 #temperature {
-	padding-left: 1em;
-	padding-right: 1em;
-
+	padding-left: 0.7em;
+	padding-right: 0.7em;
 }
 
 
@@ -60,36 +67,7 @@
 #bluetooth,
 #backlight,
 #network,
-#clock,
 #tray {
-	padding-right: 1em;
-	padding-left: 1em;
-}
-
-#pulseaudio {
-	background: @bg_diff_blue;
-}
-
-#backlight {
-	background: @bg_diff_red;
-}
-
-#bluetooth {
-	background: @bg_visual_blue;
-}
-
-#power-profiles-daemon {
-	background: @bg_visual_red;
-}
-
-#battery {
-	background: @bg_visual_green;
-}
-
-#clock {
-	background: @bg_visual_yellow;
-}
-
-#network {
-	background: @bg_diff_blue;
+	padding-right: 0.7em;
+	padding-left: 0.7em;
 }

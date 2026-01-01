@@ -1,79 +1,8 @@
-bash_func() {
-    cat <<EOF
-Available functions:
-
-  hideDesktopEntry <app>    - Hide a .desktop entry from menus
-  iso2sd <iso> <device>     - Write ISO file to SD card (e.g., /dev/sda)
-  compress <dir>            - Compress a folder to tar.gz
-  transcode-video-1080p <f> - Convert video to 1080p MP4 (good balance)
-  transcode-video-4K <f>    - Convert video to optimized 4K MP4
-  img2jpg <f>               - Convert image to JPG (high quality)
-  img2jpg-small <f>         - Convert image to JPG (max 1080px wide)
-  img2png <f>               - Convert image to compressed PNG
-  sysinfo                   - Show system information
-EOF
-}
-
-hideDesktopEntry() {
-    file_name=$1
-    if [ -f /usr/share/applications/$file_name.desktop ]; then
-        cp /usr/share/applications/$file_name.desktop ~/.local/share/applications/$file_name.desktop
-        sudo rm /usr/share/applications/$file_name.desktop
-        sudo ln -s /dev/null /usr/share/applications/$file_name.desktop
-        echo "NoDisplay=true" >> ~/.local/share/applications/$file_name.desktop
-        echo "Done! Hid $file_name"
-    else
-        echo "File $file_name.desktop does not exist."
-    fi
-}
-
-# Write ISO file to SD card
-iso2sd() {
-    if [ $# -ne 2 ]; then
-        echo "Usage: iso2sd <input_file> <output_device>"
-        echo "Example: iso2sd ~/Downloads/ubuntu.iso /dev/sda"
-        echo -e "\nAvailable SD cards:"
-        lsblk -d -o NAME | grep -E '^sd[a-z]' | awk '{print "/dev/"$1}'
-    else
-        sudo dd bs=4M status=progress oflag=sync if="$1" of="$2"
-        sudo eject "$2"
-    fi
-}
-
 # Compress directory to .tar.gz
 compress() {
     tar -czf "${1%/}.tar.gz" "${1%/}"
 }
 
-# Transcode video to 1080p (balanced for sharing)
-transcode-video-1080p() {
-    ffmpeg -i "$1" -vf scale=1920:1080 -c:v libx264 -preset fast -crf 23 -c:a copy "${1%.*}-1080p.mp4"
-}
-
-# Transcode video to 4K (optimized for sharing)
-transcode-video-4K() {
-    ffmpeg -i "$1" -c:v libx265 -preset slow -crf 24 -c:a aac -b:a 192k "${1%.*}-optimized.mp4"
-}
-
-# Convert image to high-quality JPG
-img2jpg() {
-    magick "$1" -quality 95 -strip "${1%.*}.jpg"
-}
-
-# Convert image to small JPG (max 1080px wide)
-img2jpg-small() {
-    magick "$1" -resize 1080x\> -quality 95 -strip "${1%.*}.jpg"
-}
-
-# Convert image to compressed PNG
-img2png() {
-    magick "$1" -strip \
-      -define png:compression-filter=5 \
-      -define png:compression-level=9 \
-      -define png:compression-strategy=1 \
-      -define png:exclude-chunk=all \
-      "${1%.*}.png"
-}
 
 # Show system information
 sysinfo() {

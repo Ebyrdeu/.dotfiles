@@ -1,14 +1,4 @@
-[colors]
-normal.black   = '#654735'
-normal.red     = '#c14a4a'
-normal.green   = '#6c782e'
-normal.yellow  = '#b47109'
-normal.blue    = '#45707a'
-normal.magenta = '#945e80'
-normal.cyan    = '#4c7a5d'
-normal.white   = '#a89984'
-primary.background = "#f2e5bc"
-primary.foreground = "#654735"
+general.import = ["~/.config/alacritty/colors.toml"]
 
 [env]
 TERM = "xterm-256color"

@@ -12,4 +12,3 @@ export GPG_TTY=$(tty)
 export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude node_modules'
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
-eval "$(~/.local/bin/mise activate bash)"

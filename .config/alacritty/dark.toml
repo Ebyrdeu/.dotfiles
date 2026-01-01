@@ -1,0 +1,11 @@
+[colors]
+normal.black   = '#d4be98'
+normal.red     = '#ea6962'
+normal.green   = '#a9b665'
+normal.yellow  = '#d8a657'
+normal.blue    = '#7daea3'
+normal.magenta = '#d3869b'
+normal.cyan    = '#89b482'
+normal.white   = '#7c6f64'
+primary.background = "#1d2021"
+primary.foreground = "#d4be98"

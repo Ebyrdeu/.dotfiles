@@ -1,6 +1,6 @@
 #!/bin/bash
 
-IDEA_URL="https://download.jetbrains.com/idea/ideaIU-2025.2.tar.gz"
+IDEA_URL="https://download.jetbrains.com/idea/idea-2025.3.1.tar.gz"
 INSTALL_DIR="/opt/idea"
 SYMLINK="/usr/local/bin/idea"
 EXECUTABLE="$INSTALL_DIR/bin/idea"

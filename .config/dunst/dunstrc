@@ -1,24 +1,9 @@
 [global]
+		origin = bottom-right
     font = "JetBrainsMono Nerd Font 14"
-    origin = bottom-right
-    width = 350
-    timeout = 5s
+    width = 700
+    timeout = 3s
 
 [play_sound]
     summary = "*"
     script = ~/.config/dunst/scripts/alert.sh
-
-[urgency_low]
-    background = "#f2e5bc"
-    foreground = "#654735"
-    frame_color = "#d3d5b8"
-
-[urgency_normal]
-    background = "#f2e5bc"
-    foreground = "#654735"
-    frame_color = "#d7d9ae"
-
-[urgency_critical]
-    background = "#f2e5bc"
-    foreground = "#654735"
-    frame_color = "#efd2b3"

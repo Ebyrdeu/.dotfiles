@@ -4,6 +4,9 @@ packages=(
   # Fonts
   adobe-source-han-sans-jp-fonts
   adobe-source-han-serif-jp-fonts
+  noto-fonts-cjk
+  otf-ipaexfont
+  ttf-mplus-git
   ttf-jetbrains-mono
   ttf-jetbrains-mono-nerd
 
@@ -52,6 +55,9 @@ packages=(
   pkg-config
   ripgrep
   tmux
+  zip
+  unzip
+  7zip
 
   # Graphics / Video
   gst-libav
@@ -59,14 +65,6 @@ packages=(
   gst-plugins-base
   gst-plugins-good
   gst-plugins-ugly
-  gstreamer
-  libva-mesa-driver
-  mesa-vdpau
-  vulkan-intel
-
-  # Web / GTK
-  webkit2gtk
-  webkit2gtk-4.1
 
   # Containers
   docker
@@ -77,8 +75,6 @@ packages=(
   # CLI tools
   fd
   fzf
-  lazygit
-  lazydocker
   impala
 
   # GUI Applications
@@ -87,7 +83,6 @@ packages=(
   mpv
   qbittorrent
   telegram-desktop-bin
-  youtube-music-bin
 )
 
 # Install packages

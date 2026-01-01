@@ -3,16 +3,24 @@
 	"position": "bottom",
 	"height": 24,
 	"spacing": 0,
-	"modules-left": ["hyprland/workspaces", "cpu", "memory", "temperature", "disk"],
-	"modules-center": ["custom/youtube"],
+	"modules-left": [
+		"hyprland/workspaces",
+		"cpu",
+		"memory",
+		"temperature",
+		"disk"
+	],
+	"modules-center": [
+		"clock"
+	],
 	"modules-right": [
+		"hyprland/submap",
 		"pulseaudio",
 		"backlight",
 		"bluetooth",
-		"clock",
 		"power-profiles-daemon",
-		"battery",
 		"network",
+		"battery",
 		"tray"
 	],
 	"power-profiles-daemon": {
@@ -22,11 +30,12 @@
 		"format-icons": {
 			"default": "",
 			"performance": "",
-			"balanced": "",
-			"power-saver": ""
+			"balanced": " ",
+			"power-saver": " "
 		}
 	},
 	"hyprland/workspaces": {
+		"signal": 1,
 		"format": "<span size='larger'>{icon}</span>",
 		"on-click": "activate",
 		"format-icons": {
@@ -44,22 +53,16 @@
 		}
 	},
 	"network": {
-		"format-icons": ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"],
+		"format-icons": ["󰤯 ", "󰤟 ", "󰤢 ", "󰤥 ", "󰤨 "],
 		"format": "{icon}",
-		"format-wifi": "{icon}",
+		"format-wifi": "{icon} {signalStrength}%",
 		"format-ethernet": "󰀂",
 		"format-disconnected": "󰖪",
 		"tooltip-format-wifi": "{essid} ({frequency} GHz)\n⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}",
 		"tooltip-format-ethernet": "⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}",
 		"tooltip-format-disconnected": "Disconnected",
-		"interval": 3,
-		"on-click": "alacritty --class=Impala -e impala"
-	},
-	"custom/youtube": {
-		"exec": "$HOME/.config/waybar/scripts/youtube-music.title.sh",
-		"format": "{}",
 		"interval": 1,
-		"tooltip": false
+		"on-click": "alacritty --class=Impala -e impala"
 	},
 	"clock": {
 		"format": "{:%H:%M %a %e %b }",
@@ -73,15 +76,14 @@
 		"on-click": "$HOME/.config/waybar/scripts/switch-audio.sh"
 	},
 	"battery": {
-		"format": "{capacity}% {icon}",
-		"format-discharging": "{icon}",
-		"format-charging": "{icon}",
+		"format": "{icon} {capacity}%",
+		"format-discharging": "↓{icon} {capacity}%",
+		"format-charging": "↑{icon} {capacity}%",
 		"format-plugged": "",
 		"format-icons": {
-			"charging": ["󰢜", "󰂆", "󰂇", "󰂈", "󰢝", "󰂉", "󰢞", "󰂊", "󰂋", "󰂅"],
-			"default": ["󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
+			"charging": ["󰁹"],
+			"default": ["󰁹"]
 		},
-		"format-full": "󰂅",
 		"tooltip-format-discharging": "{power:>1.0f}W↓ {capacity}%",
 		"tooltip-format-charging": "{power:>1.0f}W↑ {capacity}%",
 		"interval": 5,
@@ -119,7 +121,7 @@
 		"path": "/"
 	},
 	"tray": {
-		"icon-size": 16,
-		"spacing": 16
+		"icon-size": 18,
+		"spacing": 18
 	}
 }

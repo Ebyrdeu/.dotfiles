@@ -6,7 +6,6 @@ packages_wayland=(
   hyprland
   hyprsunset
   hyprlock
-  hypridle
   rofi
   waybar
   wl-clipboard
