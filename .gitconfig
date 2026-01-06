@@ -1,14 +1,14 @@
 [user]
     name = Maxim Khnykin
     email = ebyrdeu.khnykin@gmail.com
-    signingkey = 4DE1587A2C9A8469
+	signingkey = 866C67F05EEFBA8C
 [core]
 	autocrlf = input
   safecrlf = warn
 	editor = nvim
 
 [commit]
-    gpgsign = true
+	gpgsign = true
 
 [ui]
     color = always

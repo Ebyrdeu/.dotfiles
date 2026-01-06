@@ -2,9 +2,10 @@
 set -euo pipefail
 
 # ============================================================
-# Arch SSH + GPG quick-setup (lean edition)
+# Fedora SSH + GPG quick-setup (lean edition)
 # - SSH: ed25519 key, start agent for this session, ssh-add
 # - GPG: interactive full generator
+# - Git: Link GPG key to .gitconfig for signed commits
 # - Delete SSH/GPG keys from menu
 # ============================================================
 
@@ -25,15 +26,18 @@ elif command -v xclip >/dev/null 2>&1; then
   CLIP="xclip -selection clipboard"
 fi
 
-# ---------- Packages ----------
+# ---------- Packages (Fedora) ----------
 ensure_packages() {
-  say "Ensuring required packages…"
-  sudo pacman -S --noconfirm --needed openssh gnupg
-  if ! pacman -Qq | grep -q '^pinentry'; then
-    sudo pacman -S --noconfirm --needed pinentry-gtk || sudo pacman -S --noconfirm --needed pinentry
+  say "Ensuring required packages via DNF..."
+  sudo dnf install -y openssh-clients gnupg2 pinentry git
+
+  if [[ "$XDG_SESSION_TYPE" == "wayland" ]]; then
+    sudo dnf install -y wl-clipboard
+    CLIP="wl-copy"
+  else
+    sudo dnf install -y xclip
+    CLIP="xclip -selection clipboard"
   fi
-  sudo pacman -S --noconfirm --needed xclip || true
-  sudo pacman -S --noconfirm --needed wl-clipboard || true
   ok "Packages OK."
 }
 
@@ -68,22 +72,6 @@ setup_ssh() {
   fi
 }
 
-# ---------- Delete SSH key ----------
-delete_ssh() {
-  local keyfile="$HOME/.ssh/id_ed25519"
-  if [[ ! -f "$keyfile" ]]; then
-    warn "No SSH key found at $keyfile"
-    return
-  fi
-  read -rp "Are you sure you want to delete SSH key ($keyfile)? [y/N]: " ans
-  if [[ "$ans" =~ ^[Yy]$ ]]; then
-    rm -f "$keyfile" "$keyfile.pub"
-    ok "SSH key deleted."
-  else
-    warn "Deletion cancelled."
-  fi
-}
-
 # ---------- GPG setup ----------
 setup_gpg() {
   say "GPG setup (interactive)"
@@ -106,6 +94,45 @@ setup_gpg() {
     else
       warn "No key found for '$gemail'."
     fi
+  fi
+}
+
+# ---------- Git GPG Config ----------
+setup_git_gpg() {
+  say "Configuring Git to use GPG..."
+  gpg --list-secret-keys --keyid-format=LONG
+
+  read -rp "Enter the GPG Key ID you want to use for Git (the part after rsa4096/ or ed25519/): " keyid
+  if [[ -z "$keyid" ]]; then
+    err "Key ID cannot be empty."
+    return
+  fi
+
+  git config --global user.signingkey "$keyid"
+  git config --global commit.gpgsign true
+
+  # Ensure GPG works with TTY for passphrases
+  if ! grep -q "export GPG_TTY" "$HOME/.bashrc"; then
+    echo 'export GPG_TTY=$(tty)' >> "$HOME/.bashrc"
+    say "Added GPG_TTY to .bashrc. Please restart your terminal later."
+  fi
+
+  ok "Git is now configured to sign commits with key $keyid."
+}
+
+# ---------- Delete SSH key ----------
+delete_ssh() {
+  local keyfile="$HOME/.ssh/id_ed25519"
+  if [[ ! -f "$keyfile" ]]; then
+    warn "No SSH key found at $keyfile"
+    return
+  fi
+  read -rp "Are you sure you want to delete SSH key ($keyfile)? [y/N]: " ans
+  if [[ "$ans" =~ ^[Yy]$ ]]; then
+    rm -f "$keyfile" "$keyfile.pub"
+    ok "SSH key deleted."
+  else
+    warn "Deletion cancelled."
   fi
 }
 
@@ -140,20 +167,24 @@ show_keys() {
   echo
   say "GPG public keys:"
   gpg --list-secret-keys --keyid-format=long || warn "No GPG public keys."
+  echo
+  say "Current Git GPG Config:"
+  git config --global --get user.signingkey || echo "No signing key set in Git."
 }
 
 # ---------- Menu ----------
 menu() {
   echo
-  say "Arch SSH + GPG Quick Setup"
+  say "Fedora SSH + GPG Quick Setup"
   echo "1) Setup SSH"
   echo "2) Setup GPG"
   echo "3) Setup BOTH"
   echo "4) Show public keys"
   echo "5) Delete SSH key"
   echo "6) Delete GPG key"
-  echo "7) Exit"
-  read -rp "Choose [1-7]: " c
+  echo "7) Add GPG key to Git config"
+  echo "8) Exit"
+  read -rp "Choose [1-8]: " c
   case "${c:-}" in
     1) ensure_packages; setup_ssh ;;
     2) ensure_packages; setup_gpg ;;
@@ -161,19 +192,16 @@ menu() {
     4) show_keys ;;
     5) delete_ssh ;;
     6) delete_gpg ;;
-    7) exit 0 ;;
+    7) setup_git_gpg ;;
+    8) exit 0 ;;
     *) warn "Invalid choice"; menu ;;
   esac
 }
 
-# ---------- Non-interactive flags ----------
-case "${1:-}" in
-  --ssh) ensure_packages; setup_ssh; exit 0 ;;
-  --gpg) ensure_packages; setup_gpg; exit 0 ;;
-  --both) ensure_packages; setup_ssh; setup_gpg; exit 0 ;;
-esac
-
 # ---------- Start ----------
 need_cmd sudo
-need_cmd pacman
+if ! command -v dnf >/dev/null 2>&1; then
+    err "This script is modified for Fedora (dnf). Pacman not found."
+    exit 1
+fi
 menu
