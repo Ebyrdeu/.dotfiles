@@ -1,24 +1,50 @@
 #!/bin/bash
 
-sudo dnf install @c-development
-sudo dnf install @development-libs
-sudo dnf install @development-tools
-
 packages=(
-sqlite-devel
-qt6-qtbase-devel
-qt6-qtsvg-devel
-webkit2gtk4.1-devel
-json-devel
-json-c-devel
-libzip-devel
-vlc-devel
-mpv-devel
-mpv-libs
-cmake
-meson
-lld
-llvm
+  @c-development
+  @development-libs
+  @development-tools
+  cmake
+  fdk-aac-devel
+  fontconfig-devel
+  freetype-devel
+  fribidi-devel
+  glslang-devel
+  json-c-devel
+  json-devel
+  lame-devel
+  lcms2-devel
+  libdovi-devel
+  libffi-devel
+  libshaderc-devel
+  libunwind-devel
+  libzip-devel
+  lld
+  llvm
+  meson
+  mpv-devel
+  mpv-libs
+  mysql-devel
+  nasm
+  openssl-devel
+  qt6-qtbase-devel
+  qt6-qtsvg-devel
+  SDL2-devel
+  SDL2_image-devel
+  SDL2_mixer-devel
+  SDL2_net-devel
+  SDL2_sound-devel
+  spirv-headers-devel
+  spirv-tools-devel
+  sqlite-devel
+  twolame-devel
+  vlc-devel
+  vulkan-headers
+  vulkan-loader-devel
+  webkit2gtk4.1-devel
+  x264-devel
+  xxhash-devel
+  xz-devel
 )
 
 echo "Installing packages..."

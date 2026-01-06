@@ -9,7 +9,6 @@ set -euo pipefail
 # - Delete SSH/GPG keys from menu
 # ============================================================
 
-# ---------- Colors ----------
 C_RESET='\033[0m'; C_OK='\033[0;32m'; C_WARN='\033[1;33m'; C_ERR='\033[0;31m'; C_HEAD='\033[1;36m'
 say()  { printf "%b%s%b\n" "$C_HEAD" "$*" "$C_RESET"; }
 ok()   { printf "%b%s%b\n" "$C_OK"   "$*" "$C_RESET"; }
@@ -18,7 +17,6 @@ err()  { printf "%b%s%b\n" "$C_ERR"  "$*" "$C_RESET" >&2; }
 
 need_cmd() { command -v "$1" >/dev/null 2>&1 || { err "Missing: $1"; exit 1; }; }
 
-# ---------- Detect clipboard ----------
 CLIP=""
 if command -v wl-copy >/dev/null 2>&1; then
   CLIP="wl-copy"
@@ -26,7 +24,6 @@ elif command -v xclip >/dev/null 2>&1; then
   CLIP="xclip -selection clipboard"
 fi
 
-# ---------- Packages (Fedora) ----------
 ensure_packages() {
   say "Ensuring required packages via DNF..."
   sudo dnf install -y openssh-clients gnupg2 pinentry git
@@ -41,7 +38,6 @@ ensure_packages() {
   ok "Packages OK."
 }
 
-# ---------- SSH setup ----------
 setup_ssh() {
   say "SSH setup"
   read -rp "Email for SSH key comment (e.g. you@example.com): " email
@@ -72,7 +68,6 @@ setup_ssh() {
   fi
 }
 
-# ---------- GPG setup ----------
 setup_gpg() {
   say "GPG setup (interactive)"
   read -rp "Press Enter to launch gpg --full-generate-key…" _
@@ -97,7 +92,6 @@ setup_gpg() {
   fi
 }
 
-# ---------- Git GPG Config ----------
 setup_git_gpg() {
   say "Configuring Git to use GPG..."
   gpg --list-secret-keys --keyid-format=LONG
@@ -120,7 +114,6 @@ setup_git_gpg() {
   ok "Git is now configured to sign commits with key $keyid."
 }
 
-# ---------- Delete SSH key ----------
 delete_ssh() {
   local keyfile="$HOME/.ssh/id_ed25519"
   if [[ ! -f "$keyfile" ]]; then
@@ -136,7 +129,6 @@ delete_ssh() {
   fi
 }
 
-# ---------- Delete GPG key ----------
 delete_gpg() {
   say "Existing GPG keys:"
   gpg --list-keys --keyid-format LONG || { warn "No GPG keys found."; return; }
@@ -156,7 +148,6 @@ delete_gpg() {
   fi
 }
 
-# ---------- Show keys ----------
 show_keys() {
   say "SSH public key:"
   if [[ -f "$HOME/.ssh/id_ed25519.pub" ]]; then
@@ -172,7 +163,6 @@ show_keys() {
   git config --global --get user.signingkey || echo "No signing key set in Git."
 }
 
-# ---------- Menu ----------
 menu() {
   echo
   say "Fedora SSH + GPG Quick Setup"

@@ -1,8 +1,5 @@
 #!/bin/bash
 
-
-sudo dnf update '@core' '@multimedia' --exclude='PackageKit-gstreamer-plugin' --allowerasing && sync
-sudo dnf swap 'ffmpeg-free' 'ffmpeg' --allowerasing
-sudo dnf install 'ffmpeg-libs'
-sudo dnf install 'rpmfusion-free-release-tainted' 'rpmfusion-nonfree-release-tainted'
-sudo dnf install 'libdvdcss'
+sudo dnf swap -y ffmpeg-free ffmpeg --allowerasing
+sudo dnf update -y @core @multimedia --exclude=PackageKit-gstreamer-plugin --allowerasing
+sudo dnf install -y libdvdcss ffmpeg-libs gstreamer1-plugin-openh264 mozilla-openh264

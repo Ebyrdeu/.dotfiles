@@ -90,11 +90,7 @@ elif [[ "$DISTRO" == "fedora" ]]; then
         source ~/.dotfiles/install/fedora/init/02-base-devel.sh
         source ~/.dotfiles/install/fedora/init/03-other-packages.sh
         source ~/.dotfiles/install/fedora/init/04-fonts.sh
-        source ~/.dotfiles/install/fedora/dev/00-dev-env.sh
-        source ~/.dotfiles/install/fedora/dev/01-docker.sh
-        source ~/.dotfiles/install/fedora/dev/02-jetbrains-idea.sh
-        source ~/.dotfiles/install/fedora/dev/03-clion.sh
-        source ~/.dotfiles/install/fedora/dev/04-code-dir.sh
+        source ~/.dotfiles/install/fedora/init/05-hostname.sh
     echo "----------------------------------------"
        echo "󱘷 Fedora Post-install Cleaning"
        echo "----------------------------------------"
