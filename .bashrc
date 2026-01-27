@@ -28,3 +28,4 @@ unset rc
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 export GPG_TTY=$(tty)
+eval "$(mise activate bash)"

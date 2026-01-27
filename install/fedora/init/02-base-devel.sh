@@ -5,6 +5,8 @@ packages=(
   @development-libs
   @development-tools
   cmake
+  clang
+  clang-tools-extra
   fdk-aac-devel
   fontconfig-devel
   freetype-devel
@@ -26,6 +28,7 @@ packages=(
   mpv-libs
   mysql-devel
   nasm
+  nodejs-bash-language-server
   openssl-devel
   qt6-qtbase-devel
   qt6-qtsvg-devel

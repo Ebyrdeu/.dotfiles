@@ -33,6 +33,8 @@ echo "Go installed: $(go version)"
 echo "Installing Zig..."
 mise use --global zig@latest
 echo "Zig installed: $(zig version)"
+mise use --global zls@latest
+echo "Zls installed: $(zls version)"
 
 # Install Rust
 echo "Installing Rust..."
@@ -45,34 +47,30 @@ echo "Rust installed: $(cargo --version)"
 # Mise support of java kinda meh, so sdk for now
 #-----------------------------------------------
 if [[ ! -d "$HOME/.sdkman" ]]; then
-  echo "  Installing SDKMAN…"
+  echo "Installing SDKMAN..."
   curl -s "https://get.sdkman.io" | bash
 else
-  echo " SDKMAN already installed."
+  echo "SDKMAN already installed."
 fi
 
 if [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]]; then
-  echo "󰑓 Loading SDKMAN environment…"
+  echo "Loading SDKMAN environment…"
   source "$HOME/.sdkman/bin/sdkman-init.sh"
 fi
 
 packages=("maven" "gradle")
 
 for pkg in "${packages[@]}"; do
-    echo "  Installing $pkg via SDKMAN…"
+    echo "Installing $pkg via SDKMAN..."
     sdk install "$pkg"
 done
 
-read -p "Do you want to install Java via SDKMAN? (y/N): " install_java
-install_java=${install_java,,} # lowercase
 
-if [[ "$install_java" == "y" || "$install_java" == "yes" ]]; then
-  sdk list java
-  read -p "Enter the Java version you want to install: " java_version
-  java_candidate="${java_version}"
+jdks=(
+"25.0.1.fx-nik"
+)
 
-  echo " Installing Java $java_version via SDKMAN…"
-  sdk install java "$java_candidate"
-else
-  echo "Skipping Java installation."
-fi
+for jdk in "${jdks[@]}"; do
+    echo "Installing $jdk via SDKMAN..."
+    sdk install java "$jdk"
+done

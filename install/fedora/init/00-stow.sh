@@ -3,13 +3,18 @@
 CONFIG_DIR="$HOME/.config"
 DOTFILES_DIR="$HOME/.dotfiles"
 
-sudo dnf install stow
+sudo dnf install -y stow
 
-echo "Stowing dotfiles to $HOME "
+for file in ".bashrc" ".bash_profile"; do
+    if [ -f "$HOME/$file" ]; then
+        echo "Removing existing $HOME/$file"
+        rm "$HOME/$file"
+    fi
+done
+
+echo "Stowing dotfiles to $HOME"
 cd "$DOTFILES_DIR" || exit
 
-# --ignore=".bashrc|.bash_profile" tells stow to skip these files
-# We also ignore 'config' here since it was handled above
-stow -v --ignore=".bashrc|.bash_profile" .
+stow .
 
 echo "Done! Your environment is set up"

@@ -43,4 +43,4 @@ echo "Step 5: Updating font cache..."
 fc-cache -fv
 
 echo "------------------------------------------------"
-echo "Success! All developer, Google, and Adobe fonts installed."
+echo "Success! All fonts installed."

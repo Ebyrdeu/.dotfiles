@@ -4,7 +4,7 @@ packages=(
 tldr
 fcitx5
 fcitx5-mozc
-alacritty
+konsole
 tmux
 neovim
 mpv

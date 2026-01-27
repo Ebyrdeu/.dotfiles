@@ -18,5 +18,7 @@ save_to_clipboard = true
 hide_when_typing = true
 
 [window]
+decorations = 'None'
+startup_mode = 'Maximized'
 dynamic_padding = true
 padding = {x = 0, y = 0}

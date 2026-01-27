@@ -1,10 +1,8 @@
-#
-# ~/.bash_profile
-#
+# .bash_profile
 
-if uwsm check may-start && uwsm select; then
-	exec uwsm start default
+# Get the aliases and functions
+if [ -f ~/.bashrc ]; then
+    . ~/.bashrc
 fi
 
-[[ -f ~/.bashrc ]] && . ~/.bashrc
 . "$HOME/.cargo/env"
