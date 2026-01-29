@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+set -e
+
+# Help text if no folder is provided
+if [[ -z "${1:-}" ]]; then
+    echo "Usage: compress <directory_name>"
+    echo "Example: compress my_photos"
+    exit 1
+fi
+
+# Variables
+TARGET_DIR="${1%/}" # Removes trailing slash if user added one
+OUTPUT_FILE="${TARGET_DIR}.tar.gz"
+
+# Check if the directory exists
+if [[ ! -d "$TARGET_DIR" ]]; then
+    echo "Error: Directory '$TARGET_DIR' does not exist."
+    exit 1
+fi
+
+# Check if output file already exists to avoid overwriting without notice
+if [[ -f "$OUTPUT_FILE" ]]; then
+    read -rp "File $OUTPUT_FILE already exists. Overwrite? [y/N]: " confirm
+    if [[ ! "$confirm" =~ ^[Yy]$ ]]; then
+        echo "Compression cancelled."
+        exit 0
+    fi
+fi
+
+echo "Archiving: $TARGET_DIR -> $OUTPUT_FILE"
+
+# The tar command:
+# -c: create, -z: gzip, -f: file
+tar -czf "$OUTPUT_FILE" "$TARGET_DIR"
+
+if [[ $? -eq 0 ]]; then
+    echo "Successfully compressed $TARGET_DIR to $OUTPUT_FILE"
+    echo "Original size: $(du -sh "$TARGET_DIR" | cut -f1)"
+    echo "New size:      $(du -sh "$OUTPUT_FILE" | cut -f1)"
+else
+    echo "Compression failed."
+    exit 1
+fi

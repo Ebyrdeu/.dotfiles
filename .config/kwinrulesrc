@@ -1,0 +1,11 @@
+[General]
+count=1
+rules=ac2e949b-ae91-4190-afd7-d78d5dc46e61
+
+[ac2e949b-ae91-4190-afd7-d78d5dc46e61]
+Description=Application settings for org.kde.konsole
+noborder=true
+noborderrule=2
+wmclass=konsole org.kde.konsole
+wmclasscomplete=true
+wmclassmatch=1

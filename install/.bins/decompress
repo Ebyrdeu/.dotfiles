@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+set -e
+
+# Help text if no file is provided
+if [[ -z "${1:-}" ]]; then
+    echo "Usage: decompress <file_name>"
+    echo "Example: decompress data.tar.gz"
+    exit 1
+fi
+
+FILE="$1"
+
+if [[ ! -f "$FILE" ]]; then
+    echo "Error: File '$FILE' not found."
+    exit 1
+fi
+
+echo "Extracting '$FILE'..."
+
+case "$FILE" in
+    *.tar.gz|*.tgz)
+        tar -xzf "$FILE"
+        ;;
+    *.tar)
+        tar -xf "$FILE"
+        ;;
+    *.zip)
+        if command -v unzip >/dev/null 2>&1; then
+            unzip "$FILE"
+        else
+            echo "Error: 'unzip' is not installed. Run 'sudo dnf install unzip' or 'sudo pacman -S unzip'."
+            exit 1
+        fi
+        ;;
+    *.gz)
+        gunzip "$FILE"
+        ;;
+    *)
+        echo "Error: Unknown compression format for '$FILE'."
+        exit 1
+        ;;
+esac
+
+if [[ $? -eq 0 ]]; then
+    echo "Successfully extracted $FILE"
+else
+    echo "Extraction failed."
+    exit 1
+fi

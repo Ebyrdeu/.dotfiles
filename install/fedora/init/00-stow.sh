@@ -12,9 +12,17 @@ for file in ".bashrc" ".bash_profile"; do
     fi
 done
 
+# Kde
+for file in "kglobalshortcutsrc" "kwinrulesrc" "konsolerc"; do
+    if [ -f "$CONFIG_DIR/$file" ]; then
+        echo "Removing existing $CONFIG_DIR/$file"
+        rm "$CONFIG_DIR/$file"
+    fi
+done
+
 echo "Stowing dotfiles to $HOME"
 cd "$DOTFILES_DIR" || exit
 
-stow .
+stow --ignore="config/(i3|paru|rofi|hypr|waybar|alacritty|dunst)" .
 
 echo "Done! Your environment is set up"

@@ -3,10 +3,6 @@ alias ls='ls -alhrt --color=auto'
 alias grep='rg --smart-case --color=auto --line-number'
 alias yay='paru'
 alias dnf='sudo dnf'
-alias decompress="tar -xzf"
-
-# Neovim
-alias e='nvim'
 
 # Git
 alias g='git'

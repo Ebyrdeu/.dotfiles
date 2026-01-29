@@ -1,10 +1,4 @@
--------------------------------------------------------------------------------
---
--- preferences
---
--------------------------------------------------------------------------------
-vim.api.nvim_set_hl(0, 'NormalFloat', { bg = '#282828' })                 -- Background color
-vim.api.nvim_set_hl(0, 'FloatBorder', { bg = '#282828', fg = '#ebdbb2' }) -- Border
+vim.opt.termguicolors = true
 
 -- never ever folding
 vim.opt.foldenable = false
@@ -69,14 +63,4 @@ vim.opt.diffopt:append('iwhite')
 vim.opt.diffopt:append('algorithm:histogram')
 vim.opt.diffopt:append('indent-heuristic')
 
--- show a column at 80 characters as a guide for long lines
 vim.opt.colorcolumn = '80'
-
---- except in Rust where the rule is 100 characters
-vim.api.nvim_create_autocmd('Filetype', { pattern = 'rust', command = 'set colorcolumn=100' })
-
--- show more hidden characters
--- also, show tabs nicer
-vim.opt.listchars = 'tab:^ ,nbsp:¬,extends:»,precedes:«,trail:•'
-
-vim.api.nvim_set_hl(0, 'LeapBackdrop', { link = 'Comment' })

@@ -3,9 +3,9 @@ return {
 	lazy = false,
 	priority = 1000,
 	config = function()
-		vim.o.background = 'light'
+		vim.o.background = 'dark'
 		vim.g.gruvbox_material_enable_italic = false
-		vim.g.gruvbox_material_background = 'soft'
+		vim.g.gruvbox_material_background = 'hard'
 		vim.cmd.colorscheme('gruvbox-material')
 	end
 }

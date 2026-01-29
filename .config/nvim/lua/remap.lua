@@ -1,12 +1,6 @@
 -- always set leader first!
-vim.keymap.set("n", "<Space>", "<Nop>", { silent = true })
 vim.g.mapleader = " "
-
--------------------------------------------------------------------------------
---
--- hotkeys
---
-----------------------------------------------------------------
+vim.keymap.set("n", "<Space>", "<Nop>", { silent = true })
 
 -- close buffer
 vim.keymap.set('', '<leader>q', '<cmd>bd<cr>')
@@ -14,7 +8,6 @@ vim.keymap.set('', '<leader>q', '<cmd>bd<cr>')
 -- search buffers
 vim.keymap.set('n', '<leader>sr', '<cmd>Buffers<cr>')
 
--- Window Managment
 -- Splits / Unsplits
 vim.keymap.set('n', '<leader>wv', '<C-w>v<cr>')
 vim.keymap.set('n', '<leader>ws', '<C-w>s<cr>')
@@ -57,24 +50,6 @@ vim.keymap.set('c', '%s/', '%sm/')
 -- open new file adjacent to current file
 vim.keymap.set('n', '<leader>ne', ':e <C-R>=expand("%:p:h") . "/" <cr>')
 
--- rename current file
-vim.keymap.set('n', '<leader>re', function()
-  -- Get the current file path
-  local old_name = vim.fn.expand("%:p")
-  
-  -- Prompt the user for a new name
-  local new_name = vim.fn.input("Rename to: ", old_name)
-
-  -- If the user provides a new name, proceed with the rename
-  if new_name and new_name ~= "" and new_name ~= old_name then
-    -- Save the file with the new name and delete the old one
-    vim.cmd('saveas ' .. vim.fn.fnameescape(new_name))
-    vim.cmd('silent !rm ' .. vim.fn.fnameescape(old_name))
-    
-    -- Update the buffer list to reflect the new file name
-    vim.cmd('bdelete ' .. vim.fn.bufnr(old_name))
-  end
-end, { desc = "Rename current file", noremap = true, silent = true })
 -- let the left and right arrows be useful: they can switch buffers
 vim.keymap.set('n', '<Tab>', ':bp<cr>')
 vim.keymap.set('n', '<C-Tab>', ':bn<cr>')
@@ -83,7 +58,7 @@ vim.keymap.set('n', '<C-Tab>', ':bn<cr>')
 vim.keymap.set('n', 'j', 'gj')
 vim.keymap.set('n', 'k', 'gk')
 
-vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
+vim.keymap.set("n", "<leader>o", vim.cmd.Ex)
 
 
 vim.keymap.set("v", "<C-K>", ":m '<-2<CR>gv=gv")
