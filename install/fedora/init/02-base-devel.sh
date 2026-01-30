@@ -1,4 +1,12 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
+
+C_HEAD='\033[1;34m'
+C_OK='\033[0;32m'
+C_RESET='\033[0m'
+
+say() { echo -e "${C_HEAD}>>> $1${C_RESET}"; }
+
 
 packages=(
   @c-development
@@ -50,5 +58,9 @@ packages=(
   xz-devel
 )
 
-echo "Installing packages..."
+say "Installing Header Libraries and Toolchains..."
 sudo dnf install -y "${packages[@]}"
+
+echo -e "${C_OK}------------------------------------------------${C_RESET}"
+echo -e "Development environment is now fully provisioned."
+echo -e "${C_OK}------------------------------------------------${C_RESET}"

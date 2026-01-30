@@ -1,31 +1,44 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
-CLION_URL="https://download.jetbrains.com/cpp/CLion-2025.3.1.tar.gz"
+# Configuration
+CLION_URL="https://data.services.jetbrains.com/products/download?code=CL&platform=linux"
 INSTALL_DIR="/opt/clion"
-SYMLINK="/usr/local/bin/clion"
-EXECUTABLE="$INSTALL_DIR/bin/clion"
+BIN_LINK="/usr/local/bin/clion"
+EXEC_PATH="$INSTALL_DIR/bin/clion.sh"
 
-# Check if Clion is already installed
-if [[ -f "$EXECUTABLE" ]]; then
-    echo "Clion already installed at $EXECUTABLE"
+# Colors
+C_HEAD='\033[1;34m'
+C_OK='\033[0;32m'
+C_RESET='\033[0m'
+
+say() { echo -e "${C_HEAD}>>> $1${C_RESET}"; }
+
+# Check existing installation
+if [[ -f "$EXEC_PATH" ]]; then
+    echo -e "${C_OK}CLion already installed. Skipping...${C_RESET}"
 else
-    echo "Downloading Clion from $CLION_URL..."
-    wget -O /tmp/clion.tar.gz "$CLION_URL"
+    # 1. Dependency Check
+    for cmd in wget tar; do
+        if ! command -v "$cmd" &>/dev/null; then
+            sudo dnf install -y "$cmd"
+        fi
+    done
 
-    echo "Extracting to $INSTALL_DIR..."
-    sudo rm -rf "$INSTALL_DIR"
+    # 2. Download and Extract
+    say "Downloading latest CLion..."
+    wget -q --show-progress -O /tmp/clion.tar.gz "$CLION_URL"
+
+    say "Extracting to $INSTALL_DIR..."
     sudo mkdir -p "$INSTALL_DIR"
+    sudo rm -rf "${INSTALL_DIR:?}"/*
     sudo tar -xzf /tmp/clion.tar.gz -C "$INSTALL_DIR" --strip-components=1
+    rm /tmp/clion.tar.gz
 
-    echo "Installed to $INSTALL_DIR"
+    # 3. Ownership and Symlink
+    say "Finalizing installation..."
+    sudo chown -R "$(whoami):$(whoami)" "$INSTALL_DIR"
+    sudo ln -sf "$EXEC_PATH" "$BIN_LINK"
 
-    # Create or update symlink
-    echo "Linking $SYMLINK → $EXECUTABLE"
-    sudo ln -sf "$EXECUTABLE" "$SYMLINK"
-
-    # Give privileges (for updates)
-    sudo chown -R $(whoami):$(whoami) /opt/clion
-    echo "Privileges was given"
-
-    echo "Done! You can run Clion using 'clion' from the terminal."
+    echo -e "${C_OK}CLion installation complete!${C_RESET}"
 fi

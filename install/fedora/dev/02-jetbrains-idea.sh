@@ -1,31 +1,42 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
-IDEA_URL="https://download.jetbrains.com/idea/idea-2025.3.1.tar.gz"
+# Configuration
+IDEA_URL="https://data.services.jetbrains.com/products/download?code=IIU&platform=linux"
 INSTALL_DIR="/opt/idea"
-SYMLINK="/usr/local/bin/idea"
-EXECUTABLE="$INSTALL_DIR/bin/idea"
+BIN_LINK="/usr/local/bin/idea"
+EXEC_PATH="$INSTALL_DIR/bin/idea"
 
-# Check if IntelliJ IDEA is already installed
-if [[ -f "$EXECUTABLE" ]]; then
-    echo "IntelliJ IDEA already installed at $EXECUTABLE"
+# Colors
+C_HEAD='\033[1;34m'
+C_OK='\033[0;32m'
+C_RESET='\033[0m'
+
+say() { echo -e "${C_HEAD}>>> $1${C_RESET}"; }
+
+# Check existing installation
+if [[ -f "$EXEC_PATH" ]]; then
+    echo -e "${C_OK}IntelliJ IDEA already installed. Skipping...${C_RESET}"
 else
-    echo "Downloading IntelliJ IDEA from $IDEA_URL..."
-    wget -O /tmp/idea.tar.gz "$IDEA_URL"
+    # 1. Dependency Check
+    if ! command -v wget &>/dev/null; then
+        sudo dnf install -y wget tar
+    fi
 
-    echo "Extracting to $INSTALL_DIR..."
-    sudo rm -rf "$INSTALL_DIR"
+    # 2. Download and Extract
+    say "Downloading latest IntelliJ IDEA Ultimate..."
+    wget -q --show-progress -O /tmp/idea.tar.gz "$IDEA_URL"
+
+    say "Extracting to $INSTALL_DIR..."
     sudo mkdir -p "$INSTALL_DIR"
+    sudo rm -rf "${INSTALL_DIR:?}"/*
     sudo tar -xzf /tmp/idea.tar.gz -C "$INSTALL_DIR" --strip-components=1
+    rm /tmp/idea.tar.gz
 
-    echo "Installed to $INSTALL_DIR"
+    # 3. Ownership and Symlink
+    say "Finalizing installation..."
+    sudo chown -R "$(whoami):$(whoami)" "$INSTALL_DIR"
+    sudo ln -sf "$EXEC_PATH" "$BIN_LINK"
 
-    # Create or update symlink
-    echo "Linking $SYMLINK → $EXECUTABLE"
-    sudo ln -sf "$EXECUTABLE" "$SYMLINK"
-
-    # Give privileges (for updates)
-    sudo chown -R $(whoami):$(whoami) /opt/idea
-    echo "Privileges was given"
-
-    echo "Done! You can run IntelliJ IDEA using 'idea' from the terminal."
+    echo -e "${C_OK}IntelliJ IDEA installation complete!${C_RESET}"
 fi

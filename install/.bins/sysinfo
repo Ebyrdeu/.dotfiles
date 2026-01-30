@@ -1,75 +1,73 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
-# Colors for a clean, modern look
-C_HEAD='\033[1;36m'
+# Colors
+C_HEAD='\033[1;34m'
 C_LABEL='\033[1;32m'
+C_VAL='\033[0m'
+C_BAR='\033[1;30m'
 C_RESET='\033[0m'
 
-# 1. OS Information
-if [[ -r /etc/os-release ]]; then
-    . /etc/os-release
-    os="${NAME:-Linux} ($(uname -m))"
-else
-    os="$(uname -s) $(uname -m)"
-fi
+# Progress Bar Function
+draw_bar() {
+    local perc=$1
+    local size=15
+    local filled=$(( (perc * size) / 100 ))
+    local empty=$(( size - filled ))
+    printf "${C_BAR}["
+    printf "%${filled}s" | tr ' ' '■'
+    printf "${C_VAL}%${empty}s" | tr ' ' ' '
+    printf "${C_BAR}]${C_RESET}"
+}
 
-# 2. Host Model
-host_model="Unknown"
-[[ -r /sys/class/dmi/id/product_name ]] && host_model="$(< /sys/class/dmi/id/product_name)"
-[[ -r /sys/class/dmi/id/product_version ]] && host_model+=" $(< /sys/class/dmi/id/product_version)"
+# 1. System Info
+[[ -r /etc/os-release ]] && . /etc/os-release
+os="${NAME:-Fedora} ${VERSION_ID:-}"
+kernel=$(uname -r)
+uptime_str=$(uptime -p | sed 's/up //')
 
-# 3. Uptime
-up_s=$(awk '{print int($1)}' /proc/uptime)
-hours=$((up_s/3600)) mins=$(((up_s%3600)/60))
-uptime_str=""
-((hours>0)) && uptime_str+="${hours}h "
-((mins>0)) && uptime_str+="${mins}m"
+# 2. Package Counting (Fedora Specific)
+count_rpm=$(rpm -qa | wc -l)
+count_fp=$(command -v flatpak >/dev/null && flatpak list | wc -l || echo 0)
+pkg_str="$count_rpm (rpm)"
+[[ "$count_fp" -gt 0 ]] && pkg_str+=", $count_fp (flatpak)"
 
-# 4. Package Count (Fedora vs Arch Detection)
-pkg_count="N/A"
-if command -v pacman >/dev/null 2>&1; then
-    # Arch Linux
-    pkg_count="$(pacman -Q 2>/dev/null | wc -l) (pacman)"
-fi
-
-# 5. CPU & GPU
-cpu_model="$(awk -F: '/model name/ {print $2; exit}' /proc/cpuinfo | xargs)"
-cpu_cores="$(grep -c '^processor' /proc/cpuinfo)"
-cpu="${cpu_model:-N/A} (${cpu_cores} cores)"
-
+# 3. Hardware Detection
+cpu=$(awk -F: '/model name/ {print $2; exit}' /proc/cpuinfo | sed 's/^[ \t]*//')
 gpu="N/A"
-if command -v nvidia-smi >/dev/null 2>&1; then
-    gpu="$(nvidia-smi --query-gpu=name --format=csv,noheader | head -n1)"
+if command -v glxinfo >/dev/null 2>&1; then
+    gpu=$(glxinfo -B | grep "Device:" | cut -d: -f2 | sed 's/^[ \t]*//;s/ (.*//')
 elif command -v lspci >/dev/null 2>&1; then
-    gpu="$(lspci | grep -iE 'vga|3d|display' | cut -d: -f3 | xargs | sed 's/\[.*\]//g')"
+    gpu=$(lspci | grep -iE 'vga|3d|display' | cut -d: -f3 | head -n1 | sed 's/^[ \t]*//;s/\[.*\]//g')
 fi
 
+# 4. Memory & Disk Logic
+read -r mem_total mem_avail < <(awk '/MemTotal/ {t=$2} /MemAvailable/ {a=$2; print t, a}' /proc/meminfo)
+mem_used=$((mem_total - mem_avail))
+mem_perc=$((mem_used * 100 / mem_total))
+mem_used_gb=$(awk "BEGIN {printf \"%.1f\", $mem_used/1024/1024}")
+mem_total_gb=$(awk "BEGIN {printf \"%.1f\", $mem_total/1024/1024}")
 
-# 6. Memory & Storage
-mt=$(awk '/MemTotal:/ {print $2}' /proc/meminfo)
-ma=$(awk '/MemAvailable:/ {print $2}' /proc/meminfo)
-mu=$((mt - ma))
-mem_p=$(( mu * 100 / mt ))
-
-# Use awk to handle the math and formatting to avoid locale decimal errors
-mem_used_gb=$(awk "BEGIN {printf \"%.1f\", $mu/1024/1024}")
-mem_total_gb=$(awk "BEGIN {printf \"%.1f\", $mt/1024/1024}")
-
-mem_str="${mem_used_gb} GiB / ${mem_total_gb} GiB (${mem_p}%)"
-
-# 7. Disk Usage (Fixed)
-read -r d_total d_used d_percent <<<"$(df -h / | awk 'NR==2{print $2,$3,$5}')"
+read -r d_total d_used d_perc < <(df -h / | awk 'NR==2 {print $2, $3, $5}')
+d_perc_num=${d_perc%\%}
 
 # --- OUTPUT ---
-echo -e "${C_HEAD}------------------------------------------${C_RESET}"
-printf "${C_LABEL}%-12s${C_RESET} %s\n" "OS:"       "$os"
-printf "${C_LABEL}%-12s${C_RESET} %s\n" "Host:"     "$host_model"
-printf "${C_LABEL}%-12s${C_RESET} %s\n" "Kernel:"   "$(uname -r)"
-printf "${C_LABEL}%-12s${C_RESET} %s\n" "Uptime:"   "$uptime_str"
-printf "${C_LABEL}%-12s${C_RESET} %s\n" "Packages:" "$pkg_count"
-printf "${C_LABEL}%-12s${C_RESET} %s\n" "Desktop:"  "${XDG_CURRENT_DESKTOP:-N/A}"
-printf "${C_LABEL}%-12s${C_RESET} %s\n" "CPU:"      "$cpu"
-printf "${C_LABEL}%-12s${C_RESET} %s\n" "GPU:"      "$gpu"
-printf "${C_LABEL}%-12s${C_RESET} %s\n" "Memory:"   "$mem_str"
-printf "${C_LABEL}%-12s${C_RESET} %s\n" "Disk (/):" "$d_used / $d_total ($d_percent)"
-echo -e "${C_HEAD}------------------------------------------${C_RESET}"
+echo -e "\n${C_HEAD}SYSTEM OVERVIEW${C_RESET}"
+echo -e "${C_BAR}------------------------------------------------${C_RESET}"
+
+printf "${C_LABEL}%-12s${C_RESET} %s\n" "USER"    "$(whoami)@$(hostname)"
+printf "${C_LABEL}%-12s${C_RESET} %s\n" "OS"      "$os"
+printf "${C_LABEL}%-12s${C_RESET} %s\n" "KERNEL"  "$kernel"
+printf "${C_LABEL}%-12s${C_RESET} %s\n" "UPTIME"  "$uptime_str"
+printf "${C_LABEL}%-12s${C_RESET} %s\n" "PACKAGES" "$pkg_str"
+printf "${C_LABEL}%-12s${C_RESET} %s\n" "DESKTOP" "${XDG_CURRENT_DESKTOP:-N/A}"
+
+echo -e "\n${C_HEAD}HARDWARE${C_RESET}"
+printf "${C_LABEL}%-12s${C_RESET} %s\n" "CPU"     "$cpu"
+printf "${C_LABEL}%-12s${C_RESET} %s\n" "GPU"     "$gpu"
+
+echo -e "\n${C_HEAD}RESOURCES${C_RESET}"
+printf "${C_LABEL}%-12s${C_RESET} %-20s %s\n" "MEMORY" "$(draw_bar $mem_perc) $mem_perc%" "$mem_used_gb / $mem_total_gb GiB"
+printf "${C_LABEL}%-12s${C_RESET} %-20s %s\n" "STORAGE" "$(draw_bar $d_perc_num) $d_perc" "$d_used / $d_total"
+
+echo -e "${C_BAR}------------------------------------------------${C_RESET}\n"

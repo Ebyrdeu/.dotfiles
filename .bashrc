@@ -24,8 +24,9 @@ if [ -d ~/.bashrc.d ]; then
 fi
 unset rc
 
+eval "$(mise activate bash)"
+
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 export GPG_TTY=$(tty)
-eval "$(mise activate bash)"

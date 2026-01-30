@@ -1,43 +1,132 @@
 #!/usr/bin/env bash
-set -e
+set -euo pipefail
 
-# Help text if no folder is provided
+# Colors
+C_RESET='\033[0m'
+C_OK='\033[0;32m'
+C_WARN='\033[1;33m'
+C_ERR='\033[0;31m'
+C_HEAD='\033[1;36m'
+
+# Helpers
+say()  { printf "%b[INFO]%b %s\n" "$C_HEAD" "$C_RESET" "$*"; }
+ok()   { printf "%b[OK]%b %s\n" "$C_OK"   "$C_RESET" "$*"; }
+warn() { printf "%b[WARN]%b %s\n" "$C_WARN" "$C_RESET" "$*"; }
+err()  { printf "%b[ERR]%b %s\n" "$C_ERR"  "$C_RESET" "$*" >&2; }
+
+# Usage check
 if [[ -z "${1:-}" ]]; then
-    echo "Usage: compress <directory_name>"
-    echo "Example: compress my_photos"
+    echo "Usage: $(basename "$0") <directory_path>"
     exit 1
 fi
 
-# Variables
-TARGET_DIR="${1%/}" # Removes trailing slash if user added one
-OUTPUT_FILE="${TARGET_DIR}.tar.gz"
+# Input Processing
+INPUT_PATH="${1%/}" # Strip trailing slash
+DIR_NAME=$(basename "$INPUT_PATH")
+PARENT_DIR=$(dirname "$INPUT_PATH")
+OUTPUT_FILE="${PWD}/${DIR_NAME}.tar.gz"
 
-# Check if the directory exists
-if [[ ! -d "$TARGET_DIR" ]]; then
-    echo "Error: Directory '$TARGET_DIR' does not exist."
+# Check existence
+if [[ ! -d "$INPUT_PATH" ]]; then
+    err "Directory '$INPUT_PATH' does not exist."
     exit 1
 fi
 
-# Check if output file already exists to avoid overwriting without notice
+# Check overwrite
 if [[ -f "$OUTPUT_FILE" ]]; then
-    read -rp "File $OUTPUT_FILE already exists. Overwrite? [y/N]: " confirm
+    warn "File $OUTPUT_FILE already exists."
+    read -rp "Overwrite? [y/N]: " confirm
     if [[ ! "$confirm" =~ ^[Yy]$ ]]; then
-        echo "Compression cancelled."
+        echo "Cancelled."
         exit 0
     fi
 fi
 
-echo "Archiving: $TARGET_DIR -> $OUTPUT_FILE"
+# Dependency Check: pigz (Parallel GZip)
+COMPRESSOR="gzip"
+if command -v pigz >/dev/null 2>&1; then
+    COMPRESSOR="pigz"
+    # say "Using pigz for multi-core compression speed."
+fi
 
-# The tar command:
-# -c: create, -z: gzip, -f: file
-tar -czf "$OUTPUT_FILE" "$TARGET_DIR"
+# Dependency Check: pv (Pipe Viewer)
+HAS_PV=false
+if command -v pv >/dev/null 2>&1; then
+    HAS_PV=true
+fi
 
-if [[ $? -eq 0 ]]; then
-    echo "Successfully compressed $TARGET_DIR to $OUTPUT_FILE"
-    echo "Original size: $(du -sh "$TARGET_DIR" | cut -f1)"
-    echo "New size:      $(du -sh "$OUTPUT_FILE" | cut -f1)"
+# Trap Ctrl+C to clean up partial file
+cleanup() {
+    echo
+    warn "Interrupted. Removing partial file..."
+    rm -f "$OUTPUT_FILE"
+    exit 1
+}
+trap cleanup SIGINT
+
+# ============================================================
+# Execution
+# ============================================================
+
+say "Archiving: $DIR_NAME"
+say "Method:    tar + $COMPRESSOR"
+echo "------------------------------------------------------------"
+
+# Calculate raw size for PV estimation (bytes)
+RAW_SIZE=$(du -sb "$INPUT_PATH" 2>/dev/null | cut -f1 || echo 0)
+
+# Move to parent dir so the tarball doesn't contain absolute paths
+pushd "$PARENT_DIR" >/dev/null
+
+if [[ "$HAS_PV" == "true" && "$RAW_SIZE" -gt 0 ]]; then
+    # Complex pipe: tar -> pv (progress) -> pigz/gzip -> file
+    tar -cf - "$DIR_NAME" \
+        | pv -s "$RAW_SIZE" -N "Compressing" \
+        | $COMPRESSOR > "$OUTPUT_FILE"
 else
-    echo "Compression failed."
+    # Simple mode (no progress bar)
+    if [[ "$COMPRESSOR" == "pigz" ]]; then
+        tar -I pigz -cf "$OUTPUT_FILE" "$DIR_NAME"
+    else
+        tar -czf "$OUTPUT_FILE" "$DIR_NAME"
+    fi
+fi
+
+popd >/dev/null
+
+# ============================================================
+# Summary
+# ============================================================
+
+if [[ -f "$OUTPUT_FILE" ]]; then
+    echo "------------------------------------------------------------"
+
+    # Get human readable sizes
+    SIZE_ORIG=$(du -sh "$INPUT_PATH" | cut -f1)
+    SIZE_FINAL=$(du -sh "$OUTPUT_FILE" | cut -f1)
+
+    # Calculate ratio (requires stat to get bytes)
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        BYTES_ORIG=$(stat -f%z "$INPUT_PATH") # macOS
+        BYTES_FINAL=$(stat -f%z "$OUTPUT_FILE")
+    else
+        BYTES_ORIG=$(du -sb "$INPUT_PATH" | cut -f1) # Linux
+        BYTES_FINAL=$(stat -c%s "$OUTPUT_FILE")
+    fi
+
+    # Avoid division by zero
+    if [[ $BYTES_ORIG -gt 0 ]]; then
+        RATIO=$(awk "BEGIN {printf \"%.2f\", 100 - ($BYTES_FINAL/$BYTES_ORIG*100)}")
+    else
+        RATIO="0"
+    fi
+
+    ok "Success!"
+    echo "   File:     $OUTPUT_FILE"
+    echo "   Original: $SIZE_ORIG"
+    echo "   Packed:   $SIZE_FINAL"
+    echo "   Saved:    ${RATIO}%"
+else
+    err "Compression failed."
     exit 1
 fi
