@@ -30,10 +30,8 @@ set surround
 set multiple-cursors
 set commentary
 
-" 3rd Party Plugins
-set easymotion
-let g:EasyMotion_do_mapping=0
-
+set textobj-entire " adds 'ae' (all content) and 'ie'
+set argtextobj     " adds 'aa' (an argument) and 'ia'
 
 " Key Mapping
 " =========================================
@@ -47,8 +45,8 @@ nnoremap <C-l> :noh<CR>
 vnoremap <C-l> :noh<CR>
 
 " Easy Motion
-nmap s <Plug>(easymotion-s2)
-nmap S <Plug>(easymotion-sl2)
+nmap s <Action>(flash.search)
+xmap s <Action>(flash.search)
 
 " Tab Navigation
 nnoremap <Tab> :tabnext<CR>
