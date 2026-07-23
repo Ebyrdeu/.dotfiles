@@ -278,8 +278,6 @@ _launch=Alt+Shift+Return\tCtrl+Alt+T
 _launch=Search\tAlt+Space\tAlt+D\tAlt+F2
 
 [services][org.kde.spectacle.desktop]
-CurrentMonitorScreenShot=none
-OpenWithoutScreenshot=none
 RectangularRegionScreenShot=Meta+Shift+S\tMeta+Shift+Print
 WindowUnderCursorScreenShot=\tMeta+Ctrl+Print
 _launch=\tPrint
