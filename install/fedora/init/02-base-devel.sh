@@ -34,6 +34,7 @@ packages=(
     libffi-devel
     libshaderc-devel
     libunwind-devel
+    libXt-devel
     libzip-devel
     lld
     llvm
