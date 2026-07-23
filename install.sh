@@ -1,95 +1,90 @@
 #!/usr/bin/env bash
-set -eEo pipefail
+set -euo pipefail
 
-# --- Colors & UI ---
-C_HEAD='\033[1;36m'
-C_ITEM='\033[1;34m'
-C_LABEL='\033[1;32m'
+# Colors
 C_RESET='\033[0m'
+C_OK='\033[0;32m'
+C_WARN='\033[1;33m'
+C_ERR='\033[0;31m'
+C_HEAD='\033[1;36m'
+
+# Helpers
+say()  { printf "%b[INFO]%b %s\n" "$C_HEAD" "$C_RESET" "$*"; }
+ok()   { printf "%b[OK]%b %s\n" "$C_OK"   "$C_RESET" "$*"; }
+warn() { printf "%b[WARN]%b %s\n" "$C_WARN" "$C_RESET" "$*"; }
+err()  { printf "%b[ERR]%b %s\n" "$C_ERR"  "$C_RESET" "$*" >&2; }
 
 header() {
-    echo -e "${C_HEAD}----------------------------------------${C_RESET}"
-    echo -e "${C_HEAD} $1 ${C_RESET}"
-    echo -e "${C_HEAD}----------------------------------------${C_RESET}"
+    echo "----------------------------------------"
+    say "$1"
+    echo "----------------------------------------"
 }
 
-# --- Distribution Detection ---
-if [[ -f /etc/arch-release ]]; then
-    DISTRO="arch"
-elif [[ -f /etc/fedora-release ]]; then
-    DISTRO="fedora"
-else
-    echo "Distribution not automatically detected."
-    echo "1) Arch Linux"
-    echo "2) Fedora"
-    read -rp "Select [1-2]: " choice
-    case $choice in
-        1) DISTRO="arch" ;;
-        2) DISTRO="fedora" ;;
-        *) echo "Invalid choice. Exiting."; exit 1 ;;
-    esac
+safe_source() {
+    local script="$1"
+    if [[ -f "$script" ]]; then
+        say "Sourcing: $(basename "$script")"
+        # shellcheck disable=SC1090
+        source "$script"
+    else
+        warn "Script not found, skipping: $script"
+    fi
+}
+
+# --- Distribution Guardrail ---
+if [[ ! -f /etc/fedora-release ]]; then
+    err "This script requires Fedora Linux."
+    exit 1
 fi
 
+DOTFILES_INSTALL="$HOME/.dotfiles/install/fedora"
+
 # ============================================================
-# ARCH LINUX LOGIC
+# FEDORA INIT SETUP
 # ============================================================
-if [[ "$DISTRO" == "arch" ]]; then
-    header " Starting Arch Initial Setup"
-    source ~/.dotfiles/install/arch/init/00-stow.sh
-    source ~/.dotfiles/install/arch/init/01-paru.sh
-    source ~/.dotfiles/install/arch/init/02-pacman.sh
-    source ~/.dotfiles/install/arch/init/03-packages.sh
+header "Starting Fedora Setup"
+fedora_init=(
+    "$DOTFILES_INSTALL/init/00-base.sh"
+    "$DOTFILES_INSTALL/init/00-stow.sh"
+    "$DOTFILES_INSTALL/init/01-codecs.sh"
+    "$DOTFILES_INSTALL/init/02-base-devel.sh"
+    "$DOTFILES_INSTALL/init/03-other-packages.sh"
+    "$DOTFILES_INSTALL/init/04-fonts.sh"
+    "$DOTFILES_INSTALL/init/05-hostname.sh"
+    "$DOTFILES_INSTALL/init/06-bin.sh"
+)
+for script in "${fedora_init[@]}"; do
+    safe_source "$script"
+done
 
-    header "󰵮 Starting Developer Setup"
-    source ~/.dotfiles/install/arch/dev/00-dev-env.sh
-    source ~/.dotfiles/install/arch/dev/01-docker.sh
-    source ~/.dotfiles/install/arch/dev/02-jetbrains-idea.sh
-    source ~/.dotfiles/install/arch/dev/03-clion.sh
-    source ~/.dotfiles/install/arch/dev/04-code-dir.sh
-    source ~/.dotfiles/install/arch/dev/05-gpg.sh
+# ============================================================
+# FEDORA DEVELOPER SETUP
+# ============================================================
+header "Starting Fedora Developer Setup"
+fedora_dev=(
+    "$DOTFILES_INSTALL/dev/00-dev-env.sh"
+    "$DOTFILES_INSTALL/dev/01-docker.sh"
+    "$DOTFILES_INSTALL/dev/02-jetbrains-ide.sh"
+    "$DOTFILES_INSTALL/dev/03-code-dir.sh"
+)
+for script in "${fedora_dev[@]}"; do
+    safe_source "$script"
+done
 
-    header "󰹑 Starting WM Setup"
-    source ~/.dotfiles/install/arch/wm/00-wm.sh
+# ============================================================
+# CLEANUP & FINALIZE
+# ============================================================
+header "Fedora Post-Install Cleanup"
+sudo dnf autoremove -y
+sudo dnf clean all
 
-    header "󰻠 Starting System Setup"
-    source ~/.dotfiles/install/arch/system/00-network.sh
-    source ~/.dotfiles/install/arch/system/01-bluetooth.sh
-    source ~/.dotfiles/install/arch/system/02-firewall.sh
-    source ~/.dotfiles/install/arch/system/03-printer.sh
-    source ~/.dotfiles/install/arch/system/04-ssh-flakiness.sh
-    source ~/.dotfiles/install/arch/system/05-usb-autosuspend.sh
-    source ~/.dotfiles/install/arch/system/06-applications.sh
-
-    header "󱘷 Post-Install Cleanup"
-    sudo pacman -Rns $(pacman -Qtdq) || echo "No orphaned packages to remove."
-    sudo pacman -Sc --noconfirm
-
-elif [[ "$DISTRO" == "fedora" ]]; then
-    header " Starting Fedora Setup"
-    source ~/.dotfiles/install/fedora/init/00-base.sh
-    source ~/.dotfiles/install/fedora/init/00-stow.sh
-    source ~/.dotfiles/install/fedora/init/01-codecs.sh
-    source ~/.dotfiles/install/fedora/init/02-base-devel.sh
-    source ~/.dotfiles/install/fedora/init/03-other-packages.sh
-    source ~/.dotfiles/install/fedora/init/04-fonts.sh
-    source ~/.dotfiles/install/fedora/init/05-hostname.sh
-    source ~/.dotfiles/install/fedora/init/06-bin.sh
-
-    header "󰵮 Starting Fedora Developer Setup"
-    source ~/.dotfiles/install/fedora/dev/00-dev-env.sh
-    source ~/.dotfiles/install/fedora/dev/01-docker.sh
-    source ~/.dotfiles/install/fedora/dev/02-jetbrains-idea.sh
-    source ~/.dotfiles/install/fedora/dev/03-clion.sh
-    source ~/.dotfiles/install/fedora/dev/04-code-dir.sh
-
-    header "󱘷 Fedora Post-Install Cleanup"
-    sudo dnf autoremove -y
-    sudo dnf clean all
-fi
-
-# --- Finalize ---
-echo -e "\n${C_HEAD}Reloading configuration...${C_RESET}"
+echo "------------------------------------------------------------"
+say "Reloading shell configuration..."
 set +u
-source ~/.bashrc
+if [[ -f "$HOME/.bashrc" ]]; then
+    # shellcheck disable=SC1090
+    source "$HOME/.bashrc"
+fi
 set -u
-echo -e "${C_LABEL}Done! System is ready.${C_RESET}"
+
+ok "System setup completed successfully!"

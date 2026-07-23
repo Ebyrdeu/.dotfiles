@@ -1,6 +1,5 @@
-return {
-	'notjedi/nvim-rooter.lua',
-	config = function()
-		require('nvim-rooter').setup()
-	end
-}
+vim.pack.add({
+  { src = git("notjedi/nvim-rooter.lua.git") },
+})
+
+require("nvim-rooter").setup()

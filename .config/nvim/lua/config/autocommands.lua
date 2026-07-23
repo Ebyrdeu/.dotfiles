@@ -1,68 +1,74 @@
--- idea is keymaps only works when LSP is on
-vim.api.nvim_create_autocmd('LspAttach', {
-	callback = function(e)
-		local opts = { buffer = e.buf }
+-- LSP Keymaps (Buffer-local when LSP attaches)
+vim.api.nvim_create_autocmd("LspAttach", {
+  callback = function(e)
+    local opts = { buffer = e.buf }
 
-		-- Docs
-		vim.keymap.set("n", "<leader>j", vim.lsp.buf.hover, opts)
-
-		-- Code Navigation (LSP)
-		vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
-		vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
-		vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
-		vim.keymap.set("n", "<leader>a", vim.lsp.buf.code_action, opts)
-		vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
-
-		-- Diagnostics (Errors)
-		vim.keymap.set("n", "<leader>en", vim.diagnostic.goto_next)
-		vim.keymap.set("n", "<leader>ep", vim.diagnostic.goto_prev)
-
-		-- Formatting
-		vim.keymap.set("n", "<leader>cc", vim.lsp.buf.format) -- Reformat Code
-	end
-})
--- highlight yanked text
-vim.api.nvim_create_autocmd(
-	'TextYankPost',
-	{
-		pattern = '*',
-		command = 'silent! lua vim.highlight.on_yank({ timeout = 500 })'
-	}
-)
--- jump to last edit position on opening file
-vim.api.nvim_create_autocmd(
-	'BufReadPost',
-	{
-		pattern = '*',
-		callback = function(ev)
-			if vim.fn.line("'\"") > 1 and vim.fn.line("'\"") <= vim.fn.line("$") then
-				-- except for in git commit messages
-				-- https://stackoverflow.com/questions/31449496/vim-ignore-specifc-file-in-autocommand
-				if not vim.fn.expand('%:p'):find('.git', 1, true) then
-					vim.cmd('exe "normal! g\'\\""')
-				end
-			end
-		end
-	}
-)
--- prevent accidental writes to buffers that shouldn't be edited
-vim.api.nvim_create_autocmd('BufRead', { pattern = '*.orig', command = 'set readonly' })
-vim.api.nvim_create_autocmd('BufRead', { pattern = '*.pacnew', command = 'set readonly' })
--- leave paste mode when leaving insert mode (if it was on)
-vim.api.nvim_create_autocmd('InsertLeave', { pattern = '*', command = 'set nopaste' })
--- shorter columns in text because it reads better that way
-local text = vim.api.nvim_create_augroup('text', { clear = true })
-for _, pat in ipairs({ 'text', 'markdown', 'mail', 'gitcommit' }) do
-	vim.api.nvim_create_autocmd('Filetype', {
-		pattern = pat,
-		group = text,
-		command = 'setlocal spell tw=72 colorcolumn=73',
-	})
-end
---- tex has so much syntax that a little wider is ok
-vim.api.nvim_create_autocmd('Filetype', {
-	pattern = 'tex',
-	group = text,
-	command = 'setlocal spell tw=80 colorcolumn=81',
+    vim.keymap.set("n", "<leader>j", vim.lsp.buf.hover, opts)
+    vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
+    vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
+    vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+    vim.keymap.set("n", "<leader>a", vim.lsp.buf.code_action, opts)
+    vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
+    vim.keymap.set("n", "<leader>en", vim.diagnostic.goto_next, opts)
+    vim.keymap.set("n", "<leader>ep", vim.diagnostic.goto_prev, opts)
+    vim.keymap.set("n", "<leader>cc", vim.lsp.buf.format, opts)
+  end,
 })
 
+-- Highlight yanked text
+vim.api.nvim_create_autocmd("TextYankPost", {
+  callback = function()
+    vim.hl.on_yank({ timeout = 500 })
+  end,
+})
+
+-- Jump to last cursor position on file open
+vim.api.nvim_create_autocmd("BufReadPost", {
+  callback = function(ev)
+    local mark = vim.api.nvim_buf_get_mark(ev.buf, '"')
+    local line_count = vim.api.nvim_buf_line_count(ev.buf)
+    if mark[1] > 0 and mark[1] <= line_count then
+      if not vim.bo[ev.buf].filetype:find("git") then
+        pcall(vim.api.nvim_win_set_cursor, 0, mark)
+      end
+    end
+  end,
+})
+
+-- Read-only files
+vim.api.nvim_create_autocmd("BufRead", {
+  pattern = { "*.orig", "*.pacnew" },
+  callback = function()
+    vim.bo.readonly = true
+  end,
+})
+
+-- Leave paste mode on insert exit
+vim.api.nvim_create_autocmd("InsertLeave", {
+  callback = function()
+    vim.opt.paste = false
+  end,
+})
+
+-- Text & Document Formatting
+local text_group = vim.api.nvim_create_augroup("TextSettings", { clear = true })
+
+vim.api.nvim_create_autocmd("FileType", {
+  group = text_group,
+  pattern = { "text", "markdown", "mail", "gitcommit" },
+  callback = function()
+    vim.opt_local.spell = true
+    vim.opt_local.textwidth = 72
+    vim.opt_local.colorcolumn = "73"
+  end,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+  group = text_group,
+  pattern = "tex",
+  callback = function()
+    vim.opt_local.spell = true
+    vim.opt_local.textwidth = 80
+    vim.opt_local.colorcolumn = "81"
+  end,
+})

@@ -1,5 +1,3 @@
-general.import = ["~/.config/alacritty/colors.toml"]
-
 [env]
 TERM = "xterm-256color"
 
@@ -18,7 +16,33 @@ save_to_clipboard = true
 hide_when_typing = true
 
 [window]
-decorations = 'None'
 startup_mode = 'Maximized'
 dynamic_padding = true
-padding = {x = 0, y = 0}
+padding = { x = 0, y = 0 }
+
+# Default colors
+[colors.primary]
+background =  '#ffffea'
+foreground =  '#000000'
+
+# Normal colors
+[colors.normal]
+black   = '#101010'
+red     = '#af5f00'
+green   = '#cccc7c'
+yellow  = '#ffff5f'
+blue    = '#aeeeee'
+magenta = '#505050'
+cyan    = '#afffd7'
+white   = '#fcfcce'
+
+# Bright colors
+[colors.bright]
+black   = '#101010'
+red     = '#af5f00'
+green   = '#cccc7c'
+yellow  = '#ffff5f'
+blue    = '#aeeeee'
+magenta = '#505050'
+cyan    = '#afffd7'
+white   = '#fcfcce'

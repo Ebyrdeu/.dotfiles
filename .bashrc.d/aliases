@@ -1,27 +1,41 @@
-# General
+# ============================================================
+# GENERAL SYSTEM ALIASES
+# ============================================================
 alias ls='ls -alhrt --color=auto'
-alias grep='rg --smart-case --color=auto --line-number'
-alias yay='paru'
 alias dnf='sudo dnf'
 
-# Git
+# Modern Search (Ripgrep)
+if command -v rg &>/dev/null; then
+    alias grep='rg --smart-case --color=auto --line-number'
+else
+    alias grep='grep --color=auto -n'
+fi
+
+# ============================================================
+# GIT SHORTCUTS
+# ============================================================
 alias g='git'
 alias ga='git add -p'
 alias gaa='git add .'
 alias gc='git commit -m'
-alias gst="git status"
+alias gst='git status'
 alias gp='git pull'
 alias gf='git fetch --all --prune'
 
-# Docker
+# ============================================================
+# DOCKER SHORTCUTS
+# ============================================================
+# Base Commands
 alias d='docker'
 alias dcont='docker container'
 alias dcomp='docker compose'
 
-alias drc='docker rm $(docker ps -aq)'
-alias dri='docker rmi $(docker images -q -f dangling=true)'
-alias drv='docker volume rm $(docker volume ls -q)'
-alias dclean='docker system prune -af --volumes'
-
+# Status & Listing
 alias dps='docker ps -a'
 alias dls='docker container ls -a'
+
+# Cleanup Commands (Resilient execution)
+alias drc='docker rm $(docker ps -aq 2>/dev/null) 2>/dev/null || true'
+alias dri='docker rmi $(docker images -q -f dangling=true 2>/dev/null) 2>/dev/null || true'
+alias drv='docker volume rm $(docker volume ls -q 2>/dev/null) 2>/dev/null || true'
+alias dclean='docker system prune -af --volumes'

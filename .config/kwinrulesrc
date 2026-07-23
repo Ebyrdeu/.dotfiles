@@ -1,11 +1,32 @@
-[General]
-count=1
-rules=ac2e949b-ae91-4190-afd7-d78d5dc46e61
-
-[ac2e949b-ae91-4190-afd7-d78d5dc46e61]
-Description=Application settings for org.kde.konsole
-noborder=true
-noborderrule=2
-wmclass=konsole org.kde.konsole
+[3c0e11f6-16a5-4064-8b91-c73a6cddfb98]
+Description=Application settings for org.telegram.desktop
+desktops=08357aa2-e8c4-423c-98c1-12311bc3b419
+desktopsrule=2
+screen=1
+screenrule=2
+wmclass=Telegram org.telegram.desktop
 wmclasscomplete=true
 wmclassmatch=1
+
+[6ec6b0bc-3426-4937-8d9b-3460ee54992a]
+Description=Application settings for com.github.th-ch.youtube-music
+desktops=08357aa2-e8c4-423c-98c1-12311bc3b419
+desktopsrule=2
+screenrule=2
+wmclass=youtube-music com.github.th-ch.youtube-music
+wmclasscomplete=true
+wmclassmatch=1
+
+[955db561-6809-4f54-a1ff-1ce895e96b53]
+Description=Application settings for jetbrains-idea
+desktops=9baa552d-389d-45cb-bdb4-df5133ec294c
+desktopsrule=3
+screen=1
+screenrule=3
+wmclass=idea jetbrains-idea
+wmclasscomplete=true
+wmclassmatch=1
+
+[General]
+count=3
+rules=6ec6b0bc-3426-4937-8d9b-3460ee54992a,955db561-6809-4f54-a1ff-1ce895e96b53,3c0e11f6-16a5-4064-8b91-c73a6cddfb98

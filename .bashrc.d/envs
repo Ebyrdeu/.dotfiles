@@ -1,8 +1,14 @@
-# History management
-export HISTCONTROL=ignoreboth
+# ============================================================
+# HISTORY MANAGEMENT
+# ============================================================
+export HISTCONTROL="ignoreboth"
 export HISTSIZE=5000
+export HISTFILESIZE=5000
 export HISTIGNORE="clear:bg:fg:cd:cd -:cd ..:exit:date:w:* --help:ls:l:ll:lll"
 
+# ============================================================
+# DEFAULT EDITOR CONFIGURATION
+# ============================================================
 export VISUAL="nvim"
 export EDITOR="nvim"
 export SUDO_EDITOR="$EDITOR"

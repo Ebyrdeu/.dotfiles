@@ -21,20 +21,19 @@ if [[ -z "${1:-}" ]]; then
 fi
 
 # Input Processing
-INPUT_PATH="${1%/}" # Strip trailing slash
+INPUT_PATH="${1%/}"
 DIR_NAME=$(basename "$INPUT_PATH")
 PARENT_DIR=$(dirname "$INPUT_PATH")
 OUTPUT_FILE="${PWD}/${DIR_NAME}.tar.gz"
 
-# Check existence
 if [[ ! -d "$INPUT_PATH" ]]; then
     err "Directory '$INPUT_PATH' does not exist."
     exit 1
 fi
 
-# Check overwrite
+# Overwrite Confirmation
 if [[ -f "$OUTPUT_FILE" ]]; then
-    warn "File $OUTPUT_FILE already exists."
+    warn "File '$OUTPUT_FILE' already exists."
     read -rp "Overwrite? [y/N]: " confirm
     if [[ ! "$confirm" =~ ^[Yy]$ ]]; then
         echo "Cancelled."
@@ -42,27 +41,23 @@ if [[ -f "$OUTPUT_FILE" ]]; then
     fi
 fi
 
-# Dependency Check: pigz (Parallel GZip)
+# Auto-detect pigz (multi-threaded gzip)
 COMPRESSOR="gzip"
 if command -v pigz >/dev/null 2>&1; then
     COMPRESSOR="pigz"
-    # say "Using pigz for multi-core compression speed."
 fi
 
-# Dependency Check: pv (Pipe Viewer)
-HAS_PV=false
-if command -v pv >/dev/null 2>&1; then
-    HAS_PV=true
-fi
-
-# Trap Ctrl+C to clean up partial file
+# Cleanup partial output on failure or interruption
 cleanup() {
-    echo
-    warn "Interrupted. Removing partial file..."
-    rm -f "$OUTPUT_FILE"
-    exit 1
+    local exit_code=$?
+    if [[ $exit_code -ne 0 && -f "$OUTPUT_FILE" ]]; then
+        echo
+        warn "Process interrupted or failed. Cleaning up partial archive..."
+        rm -f "$OUTPUT_FILE"
+    fi
+    exit $exit_code
 }
-trap cleanup SIGINT
+trap cleanup EXIT SIGINT SIGTERM
 
 # ============================================================
 # Execution
@@ -72,27 +67,16 @@ say "Archiving: $DIR_NAME"
 say "Method:    tar + $COMPRESSOR"
 echo "------------------------------------------------------------"
 
-# Calculate raw size for PV estimation (bytes)
 RAW_SIZE=$(du -sb "$INPUT_PATH" 2>/dev/null | cut -f1 || echo 0)
 
-# Move to parent dir so the tarball doesn't contain absolute paths
-pushd "$PARENT_DIR" >/dev/null
-
-if [[ "$HAS_PV" == "true" && "$RAW_SIZE" -gt 0 ]]; then
-    # Complex pipe: tar -> pv (progress) -> pigz/gzip -> file
-    tar -cf - "$DIR_NAME" \
+if command -v pv >/dev/null 2>&1 && [[ "$RAW_SIZE" -gt 0 ]]; then
+    tar -C "$PARENT_DIR" -cf - "$DIR_NAME" \
         | pv -s "$RAW_SIZE" -N "Compressing" \
         | $COMPRESSOR > "$OUTPUT_FILE"
 else
-    # Simple mode (no progress bar)
-    if [[ "$COMPRESSOR" == "pigz" ]]; then
-        tar -I pigz -cf "$OUTPUT_FILE" "$DIR_NAME"
-    else
-        tar -czf "$OUTPUT_FILE" "$DIR_NAME"
-    fi
+    tar -C "$PARENT_DIR" -cf - "$DIR_NAME" \
+        | $COMPRESSOR > "$OUTPUT_FILE"
 fi
-
-popd >/dev/null
 
 # ============================================================
 # Summary
@@ -101,24 +85,21 @@ popd >/dev/null
 if [[ -f "$OUTPUT_FILE" ]]; then
     echo "------------------------------------------------------------"
 
-    # Get human readable sizes
     SIZE_ORIG=$(du -sh "$INPUT_PATH" | cut -f1)
     SIZE_FINAL=$(du -sh "$OUTPUT_FILE" | cut -f1)
 
-    # Calculate ratio (requires stat to get bytes)
+    # Byte calculations for exact saved percentage
     if [[ "$OSTYPE" == "darwin"* ]]; then
-        BYTES_ORIG=$(stat -f%z "$INPUT_PATH") # macOS
+        BYTES_ORIG=$(stat -f%z "$INPUT_PATH")
         BYTES_FINAL=$(stat -f%z "$OUTPUT_FILE")
     else
-        BYTES_ORIG=$(du -sb "$INPUT_PATH" | cut -f1) # Linux
-        BYTES_FINAL=$(stat -c%s "$OUTPUT_FILE")
+        BYTES_ORIG=$(du -sb "$INPUT_PATH" 2>/dev/null | cut -f1 || echo 0)
+        BYTES_FINAL=$(stat -c%s "$OUTPUT_FILE" 2>/dev/null || echo 0)
     fi
 
-    # Avoid division by zero
+    RATIO="0"
     if [[ $BYTES_ORIG -gt 0 ]]; then
-        RATIO=$(awk "BEGIN {printf \"%.2f\", 100 - ($BYTES_FINAL/$BYTES_ORIG*100)}")
-    else
-        RATIO="0"
+        RATIO=$(awk "BEGIN {printf \"%.2f\", 100 - ($BYTES_FINAL / $BYTES_ORIG * 100)}")
     fi
 
     ok "Success!"

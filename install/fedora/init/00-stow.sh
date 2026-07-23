@@ -1,63 +1,74 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-
 # Configuration
 DOTFILES_DIR="$HOME/.dotfiles"
 CONFIG_DIR="$HOME/.config"
 
 # Colors
-C_HEAD='\033[1;34m'
+C_RESET='\033[0m'
 C_OK='\033[0;32m'
 C_WARN='\033[1;33m'
-C_RESET='\033[0m'
+C_ERR='\033[0;31m'
+C_HEAD='\033[1;36m'
 
-say() { echo -e "${C_HEAD}>>> $1${C_RESET}"; }
+# Helpers
+say()  { printf "%b[INFO]%b %s\n" "$C_HEAD" "$C_RESET" "$*"; }
+ok()   { printf "%b[OK]%b %s\n" "$C_OK"   "$C_RESET" "$*"; }
+warn() { printf "%b[WARN]%b %s\n" "$C_WARN" "$C_RESET" "$*"; }
+err()  { printf "%b[ERR]%b %s\n" "$C_ERR"  "$C_RESET" "$*" >&2; }
 
-# 1. Dependency Check
-if ! command -v stow &>/dev/null; then
-    say "Installing GNU Stow..."
-    sudo dnf install -y stow
+# Guard check
+if [[ ! -d "$DOTFILES_DIR" ]]; then
+    err "Dotfiles directory '$DOTFILES_DIR' does not exist."
+    exit 1
 fi
 
-# 2. Cleanup Legacy Files
-say "Cleaning up existing configuration files..."
+# 1. Dependency Check
+if ! command -v stow >/dev/null 2>&1; then
+    say "Installing GNU Stow..."
+    sudo dnf install -y stow
+    ok "GNU Stow installed."
+fi
 
-for file in ".bashrc" ".bash_profile"; do
-    if [[ -f "$HOME/$file" && ! -L "$HOME/$file" ]]; then
-        echo "  [-] Removing local file: $HOME/$file"
-        rm "$HOME/$file"
+# 2. Cleanup Legacy Non-Symlink Files
+say "Cleaning up existing target configuration files..."
+
+legacy_home_files=(".bashrc" ".bash_profile")
+for file in "${legacy_home_files[@]}"; do
+    target="$HOME/$file"
+    if [[ -f "$target" && ! -L "$target" ]]; then
+        warn "Removing non-symlink file: $target"
+        rm -f "$target"
     fi
 done
 
-# KDE-specific configs
 kde_configs=("kglobalshortcutsrc" "kwinrulesrc" "konsolerc")
 for file in "${kde_configs[@]}"; do
     target="$CONFIG_DIR/$file"
     if [[ -f "$target" && ! -L "$target" ]]; then
-        echo "  [-] Removing local config: $file"
-        rm "$target"
+        warn "Removing non-symlink config: $target"
+        rm -f "$target"
     fi
 done
 
-# 3. Execution
-if [[ ! -d "$DOTFILES_DIR" ]]; then
-    echo -e "${C_ERR}Error: $DOTFILES_DIR not found.${C_RESET}"
-    exit 1
-fi
+# 3. Stow Execution
+say "Stowing dotfiles from $DOTFILES_DIR..."
 
-cd "$DOTFILES_DIR"
+stow_cmd=(
+    stow
+    --dir="$DOTFILES_DIR"
+    --target="$HOME"
+    --verbose=1
+    --ignore='(i3|paru|rofi|hypr|waybar|alacritty|dunst|install|README.md|\.git)'
+    .
+)
 
-say "Stowing dotfiles..."
-stow_cmd="stow --target=$HOME --verbose=1 --ignore=(i3|paru|rofi|hypr|waybar|alacritty|dunst|install|README.md|.git) ."
-
-# Run the command
-if $stow_cmd; then
-    echo -e "${C_OK}------------------------------------------------${C_RESET}"
-    echo -e "Success! Your environment is now stowed."
-    echo -e "Symlinks created in $HOME pointing to $DOTFILES_DIR"
-    echo -e "${C_OK}------------------------------------------------${C_RESET}"
+if "${stow_cmd[@]}"; then
+    echo "------------------------------------------------------------"
+    ok "Success! Your dotfiles environment is now stowed."
+    say "Symlinks created in $HOME pointing to $DOTFILES_DIR"
 else
-    echo -e "${C_WARN}Stow encountered conflicts. Check the output above.${C_RESET}"
+    err "Stow encountered conflicts or errors. Check the output above."
     exit 1
 fi

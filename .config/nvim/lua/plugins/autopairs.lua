@@ -1,9 +1,10 @@
-return {
-	'windwp/nvim-autopairs',
-	event = "InsertEnter",
-	config = function ()
-		local autopairs = require("nvim-autopairs")
-		autopairs.setup({})
-	end,
-	opts = {}
-}
+vim.pack.add({
+  { src = git("windwp/nvim-autopairs.git") },
+})
+
+vim.api.nvim_create_autocmd("InsertEnter", {
+  once = true,
+  callback = function()
+    require("nvim-autopairs").setup({})
+  end,
+})

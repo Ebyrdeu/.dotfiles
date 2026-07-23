@@ -6,8 +6,12 @@ DefaultProfile=Jetbrains.profile
 [General]
 ConfigVersion=1
 
-[MemorySettings]
-EnableMemoryMonitoring=true
+[MainWindow]
+MenuBar=Disabled
+ToolBarsMovable=Enabled
+
+[TabBar]
+TabBarVisibility=AlwaysHideTabBar
 
 [UiSettings]
 ColorScheme=

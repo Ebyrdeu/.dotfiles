@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-
 # Colors
 C_RESET='\033[0m'
 C_OK='\033[0;32m'
@@ -15,7 +14,7 @@ ok()   { printf "%b[OK]%b %s\n" "$C_OK"   "$C_RESET" "$*"; }
 warn() { printf "%b[WARN]%b %s\n" "$C_WARN" "$C_RESET" "$*"; }
 err()  { printf "%b[ERR]%b %s\n" "$C_ERR"  "$C_RESET" "$*" >&2; }
 
-# Usage
+# Usage Check
 if [[ -z "${1:-}" ]]; then
     echo "Usage:   $(basename "$0") <file> [destination_folder]"
     echo "Example: $(basename "$0") archive.tar.gz"
@@ -26,137 +25,90 @@ fi
 FILE="$1"
 DEST_DIR="${2:-}"
 
-# Check file existence
 if [[ ! -f "$FILE" ]]; then
     err "File '$FILE' not found."
     exit 1
 fi
 
-# Create Destination if provided
+# Prepare target directory array for tar
+TAR_DEST=()
 if [[ -n "$DEST_DIR" ]]; then
     mkdir -p "$DEST_DIR"
+    TAR_DEST=(-C "$DEST_DIR")
     say "Extracting to: $DEST_DIR"
 else
     say "Extracting to current directory..."
 fi
 
-# Detect helpers
-HAS_PV=false
-if command -v pv >/dev/null 2>&1; then HAS_PV=true; fi
-
-# Function to run tar with PV if available
-# Usage: extract_tar <algo_flag> <parallel_prog_name>
+# Multi-core & Progress Helper for Tar Archives
 extract_tar() {
-    local tar_flag="$1" # e.g., z, j, J
-    local parallel_prog="$2" # e.g., pigz, pbzip2
+    local decompressor="$1" # e.g., pigz, pbzip2, zstd, xz
 
-    local tar_cmd="tar -x${tar_flag}f -"
-
-    # Handle Destination
-    if [[ -n "$DEST_DIR" ]]; then
-        tar_cmd="tar -x${tar_flag}f - -C \"$DEST_DIR\""
-    fi
-
-    # 1. Try Parallel + Progress
-    if [[ -n "$parallel_prog" ]] && command -v "$parallel_prog" >/dev/null 2>&1; then
-        say "Using $parallel_prog (multi-core) optimization"
-        if [[ "$HAS_PV" == "true" ]]; then
-            pv "$FILE" | $parallel_prog -d | eval "$tar_cmd"
+    # Check if a custom multi-core program exists
+    if [[ -n "$decompressor" ]] && command -v "$decompressor" >/dev/null 2>&1; then
+        say "Using $decompressor (multi-threaded optimization)"
+        if command -v pv >/dev/null 2>&1; then
+            pv "$FILE" | "$decompressor" -d | tar -xf - "${TAR_DEST[@]}"
         else
-            # Parallel but no PV
-            # tar -I is cleaner than pipes if no pv
-            local direct_cmd="tar -I $parallel_prog -xf \"$FILE\""
-            [[ -n "$DEST_DIR" ]] && direct_cmd="$direct_cmd -C \"$DEST_DIR\""
-            eval "$direct_cmd"
+            "$decompressor" -d -c "$FILE" | tar -xf - "${TAR_DEST[@]}"
         fi
-
-    # 2. Standard + Progress
-    elif [[ "$HAS_PV" == "true" ]]; then
-        # Rely on tar's internal flags (z/j/J) but pipe via PV
-        # Note: We pipe PV into tar, so we use '-' as filename
-        pv "$FILE" | eval "$tar_cmd"
-
-    # 3. Basic fallback
+    # Fallback to standard pipe + PV progress bar
+    elif command -v pv >/dev/null 2>&1; then
+        pv "$FILE" | tar -xf - "${TAR_DEST[@]}"
+    # Basic standard tar extraction
     else
-        local basic_cmd="tar -x${tar_flag}f \"$FILE\""
-        [[ -n "$DEST_DIR" ]] && basic_cmd="$basic_cmd -C \"$DEST_DIR\""
-        eval "$basic_cmd"
+        tar -xf "$FILE" "${TAR_DEST[@]}"
     fi
 }
+
+# Normalize filename to lowercase for robust extension matching
+LOWER_FILE="${FILE,,}"
 
 # ============================================================
 # Extraction Logic
 # ============================================================
 
-# Get mimetype or extension logic
-EXT="${FILE##*.}"
-LOWER_EXT=$(echo "$EXT" | tr '[:upper:]' '[:lower:]')
+if [[ "$LOWER_FILE" =~ \.(tar\.gz|tgz)$ ]]; then
+    extract_tar "pigz"
 
-# Handle double extensions (tar.gz)
-if [[ "$FILE" == *".tar.gz" || "$FILE" == *".tgz" ]]; then
-    extract_tar "z" "pigz"
+elif [[ "$LOWER_FILE" =~ \.(tar\.bz2|tbz2)$ ]]; then
+    extract_tar "pbzip2"
 
-elif [[ "$FILE" == *".tar.bz2" || "$FILE" == *".tbz2" ]]; then
-    extract_tar "j" "pbzip2"
+elif [[ "$LOWER_FILE" =~ \.(tar\.xz|txz)$ ]]; then
+    extract_tar "pixz"
 
-elif [[ "$FILE" == *".tar.xz" || "$FILE" == *".txz" ]]; then
-    # pixz is sometimes available, but xz -T0 is standard in modern tar
-    # We'll use standard xz flag 'J'
-    extract_tar "J" "xz"
+elif [[ "$LOWER_FILE" =~ \.(tar\.zst|tzst)$ ]]; then
+    extract_tar "zstd"
 
-elif [[ "$FILE" == *".tar" ]]; then
-    extract_tar "" ""
+elif [[ "$LOWER_FILE" == *.tar ]]; then
+    extract_tar ""
 
-elif [[ "$LOWER_EXT" == "zip" ]]; then
-    if ! command -v unzip >/dev/null 2>&1; then err "Missing 'unzip'."; exit 1; fi
-    if [[ -n "$DEST_DIR" ]]; then
-        unzip "$FILE" -d "$DEST_DIR"
-    else
-        unzip "$FILE"
-    fi
+elif [[ "$LOWER_FILE" == *.zip ]]; then
+    command -v unzip >/dev/null 2>&1 || { err "Missing 'unzip'."; exit 1; }
+    unzip "$FILE" ${DEST_DIR:+-d "$DEST_DIR"}
 
-elif [[ "$LOWER_EXT" == "7z" ]]; then
-    if ! command -v 7z >/dev/null 2>&1; then err "Missing 'p7zip' or '7z'."; exit 1; fi
-    # 7z syntax: x file -o{dir} (no space allowed after -o)
-    if [[ -n "$DEST_DIR" ]]; then
-        7z x "$FILE" "-o$DEST_DIR"
-    else
-        7z x "$FILE"
-    fi
+elif [[ "$LOWER_FILE" == *.7z ]]; then
+    command -v 7z >/dev/null 2>&1 || { err "Missing '7z'."; exit 1; }
+    7z x "$FILE" ${DEST_DIR:+"-o$DEST_DIR"}
 
-elif [[ "$LOWER_EXT" == "rar" ]]; then
-    if ! command -v unrar >/dev/null 2>&1; then err "Missing 'unrar'."; exit 1; fi
-    if [[ -n "$DEST_DIR" ]]; then
-        unrar x "$FILE" "$DEST_DIR/"
-    else
-        unrar x "$FILE"
-    fi
+elif [[ "$LOWER_FILE" == *.rar ]]; then
+    command -v unrar >/dev/null 2>&1 || { err "Missing 'unrar'."; exit 1; }
+    unrar x "$FILE" ${DEST_DIR:+"$DEST_DIR/"}
 
-elif [[ "$LOWER_EXT" == "zst" ]]; then
-    if ! command -v zstd >/dev/null 2>&1; then err "Missing 'zstd'."; exit 1; fi
-    # zstd usually decompresses single files, but often used for tar.zst
-    if [[ "$FILE" == *".tar.zst" ]]; then
-        if [[ -n "$DEST_DIR" ]]; then
-            zstd -d "$FILE" --stdout | tar -xf - -C "$DEST_DIR"
-        else
-            zstd -d "$FILE" --stdout | tar -xf -
-        fi
-    else
-        # Single file
-        zstd -d "$FILE"
-    fi
+elif [[ "$LOWER_FILE" == *.zst ]]; then
+    command -v zstd >/dev/null 2>&1 || { err "Missing 'zstd'."; exit 1; }
+    zstd -d "$FILE" ${DEST_DIR:+-o "$DEST_DIR/$(basename "${FILE%.zst}")"}
 
-elif [[ "$LOWER_EXT" == "gz" ]]; then
-    # Single GZ file
+elif [[ "$LOWER_FILE" == *.gz ]]; then
     if command -v pigz >/dev/null 2>&1; then
-        pigz -d -k "$FILE" # -k keeps original
+        pigz -d -k "$FILE"
     else
         gunzip -k "$FILE"
     fi
 
 else
     err "Unknown format: $FILE"
-    err "Supported: tar.gz, tar.bz2, tar.xz, zip, 7z, rar, zst, gz"
+    err "Supported formats: tar.gz, tar.bz2, tar.xz, tar.zst, zip, 7z, rar, zst, gz"
     exit 1
 fi
 

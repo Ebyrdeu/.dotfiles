@@ -1,9 +1,0 @@
-[global]
-		origin = bottom-right
-    font = "JetBrainsMono Nerd Font 14"
-    width = 700
-    timeout = 3s
-
-[play_sound]
-    summary = "*"
-    script = ~/.config/dunst/scripts/alert.sh

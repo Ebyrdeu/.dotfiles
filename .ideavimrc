@@ -1,50 +1,53 @@
-" Base Settings
-" =========================================
+" ============================================================
+" BASE SETTINGS
+" ============================================================
 
-" General Settings
+" General
 set scrolloff=8
 set number
 set relativenumber
 set showcmd
-set autoindent
-set backspace=indent,eol,start
 
-" Search Settings
+" Search
 set hlsearch
 set ignorecase
 set incsearch
 set smartcase
 
+" Leader Key
 let mapleader = " "
 
-" Idea Specific Settings
+" IdeaVim Specifics
 set ideajoin
 set ideastatusicon=gray
 set idearefactormode=keep
 
-" Plugin Settings
-" =========================================
+" ============================================================
+" PLUGINS & EXTENSIONS
+" ============================================================
 set highlightedyank
 set NERDTree
 set surround
 set multiple-cursors
 set commentary
 
-set textobj-entire " adds 'ae' (all content) and 'ie'
-set argtextobj     " adds 'aa' (an argument) and 'ia'
+" Text Objects
+set textobj-entire    " Adds 'ae' (entire buffer) and 'ie'
+set argtextobj        " Adds 'aa' (an argument) and 'ia'
 
-" Key Mapping
-" =========================================
+" ============================================================
+" CORE KEY MAPPINGS
+" ============================================================
 
-" make missing : less annoying
+" Convenience
 nnoremap ; :
 inoremap jj <esc>
 
-" stop searching
+" Clear Search Highlights
 nnoremap <C-l> :noh<CR>
 vnoremap <C-l> :noh<CR>
 
-" Easy Motion
+" Flash Search / EasyMotion
 nmap s <Action>(flash.search)
 xmap s <Action>(flash.search)
 
@@ -53,128 +56,113 @@ nnoremap <Tab> :tabnext<CR>
 nnoremap <C-Tab> :tabprev<CR>
 
 " Jump Between Methods
-nnoremap <C-j>   :action MethodDown<CR>
-nnoremap <C-k>   :action MethodUp<CR>
+nnoremap <C-j> :action MethodDown<CR>
+nnoremap <C-k> :action MethodUp<CR>
 
-" Move Actions
+" Move Lines
 nnoremap <C-S-j> :action MoveLineDown<CR>
 nnoremap <C-S-k> :action MoveLineUp<CR>
 
-" Goto
-nnoremap gi  :action GotoImplementation<CR>
-nnoremap gt  :action GotoTest<CR>
-nnoremap gr  :action FindUsages<CR>
+" Navigation & Search Jumps
+nnoremap gi :action GotoImplementation<CR>
+nnoremap gt :action GotoTest<CR>
+nnoremap gr :action FindUsages<CR>
 
-" Jump to Start and End of Line
+" Jump to Start/End of Line
 nnoremap H ^
 nnoremap L $
 
-" Center Search Results
+" Center Screen on Search Navigation
 nnoremap n nzz
 nnoremap N Nzz
 nnoremap * *zz
 nnoremap # #zz
 nnoremap g* g*zz
 
-" Leader Key Mapping
-" =========================================
-" Paste From System Buffer
+" ============================================================
+" LEADER KEY MAPPINGS (<leader> = Space)
+" ============================================================
+
+" --- System Clipboard ---
 nnoremap <leader>pp :action EditorPaste<CR>
+nnoremap <leader>y  "+y
+vnoremap <leader>y  "+y
+nnoremap <leader>Y  "+yg_
+nnoremap <leader>gy "+ygg
 
-" Copy To System Buffer
-nnoremap  <leader>y  "+y
-vnoremap <leader>y "+y
-nnoremap  <leader>Y  "+yg_
-nnoremap  <leader>gy  "+ygg
-
-" Undotree
-nnoremap <leader>u :action Vcs.RollbackChangedLines<CR>
-
-" Create New File
+" --- File & Project Management ---
 nnoremap <leader>ne :action NewElement<CR>
 nnoremap <leader>nf :action NewFile<CR>
+nnoremap <leader>o  :action ActivateProjectToolWindow<CR>
+nnoremap <leader>q  :action CloseContent<CR>
 
-" Update Config - Build <C-S-O>
+" --- Configuration & System ---
 nnoremap <leader>vrr :source ~/.ideavimrc<CR>
 nnoremap <leader>hrr :action ExternalSystem.ProjectRefreshAction<CR>
+nnoremap <leader>u   :action Vcs.RollbackChangedLines<CR>
+nnoremap <leader>mm  :action MainMenu<CR>
 
-" Menu
-nnoremap <leader>mm :action MainMenu<CR>
+" --- Search & Find ---
+nnoremap <leader><leader> :action GotoFile<CR>
+nnoremap <leader>sr        :action RecentFiles<CR>
+nnoremap <leader>sa        :action GotoAction<CR>
+nnoremap <leader>se        :action SearchEverywhere<CR>
+nnoremap <leader>sf        :action FindInPath<CR>
 
-" Docs
+" --- Code Assistance & Formatting ---
 nnoremap <leader>j  :action QuickJavaDoc<CR>
 nnoremap <leader>ee :action ShowErrorDescription<CR>
-
-" Search
-nnoremap <leader><leader> :action GotoFile<CR>
-nnoremap <leader>sr       :action RecentFiles<CR>
-nnoremap <leader>sa       :action GotoAction<CR>
-nnoremap <leader>se       :action SearchEverywhere<CR>
-nnoremap <leader>sf       :action FindInPath<CR>
-
-" Generate Commands
 nnoremap <leader>gg :action Generate<CR>
-
-" Project View
-nnoremap <leader>o :action ActivateProjectToolWindow<CR>
-
-" Code Format
 nnoremap <leader>cc :action ReformatCode<CR>
 nnoremap <leader>co :action OptimizeImports<CR>
 
-" Terminal
+" --- Terminal Operations ---
 nnoremap <leader>to :action ActivateTerminalToolWindow<CR>
 nnoremap <leader>tn :action Terminal.NewTab<CR>
 nnoremap <leader>tx :action CloseActiveTab<CR>
 
- " Close Active Tab
-map <leader>q :action CloseContent<CR>
+" --- Display & Workspace Modes ---
+nnoremap <leader>dz :action ToggleDistractionFreeMode<CR>
+nnoremap <leader>zz :action ToggleZenMode<CR>
+nnoremap <leader>dp :action TogglePresentationMode<CR>
 
-" Display
-map <leader>dz :action ToggleDistractionFreeMode<CR>
-map <leader>zz :action ToggleZenMode<CR>
-map <leader>dp :action TogglePresentationMode<CR>
-
-" Method Refactor
+" --- Refactoring ---
 nnoremap <leader>rm :action Refactorings.QuickListPopupAction<CR>
 nnoremap <leader>rn :action RenameElement<CR>
 
-" Run
-nnoremap <leader>rr  :action RunClass<CR>
-nnoremap <leader>ru  :action Rerun<CR>
-nnoremap <leader>rs  :action Stop<CR>
+" --- Run & Configurations ---
+nnoremap <leader>rr :action RunClass<CR>
+nnoremap <leader>ru :action Rerun<CR>
+nnoremap <leader>rs :action Stop<CR>
+nnoremap <leader>rc :action ChooseRunConfiguration<CR>
+nnoremap <leader>dc :action ChooseDebugConfiguration<CR>
 
-" config
-nnoremap <leader>rc  :action ChooseRunConfiguration<CR>
-nnoremap <leader>dc  :action ChooseDebugConfiguration<CR>
+" --- Debugging ---
+nnoremap <leader>dd :action Debug<CR>
+nnoremap <leader>da :action ToggleLineBreakpoint<CR>
+nnoremap <leader>dA :action ToggleMethodBreakpoint<CR>
+nnoremap <leader>di :action StepInto<CR>
+nnoremap <leader>do :action StepOver<CR>
+nnoremap <leader>dO :action StepOut<CR>
 
-" Debug
-nnoremap <leader>dd  :action Debug<CR>
-nnoremap <leader>da  :action ToggleLineBreakpoint<CR>
-nnoremap <leader>dA  :action ToggleMethodBreakpoint<CR>
-nnoremap <leader>di    :action StepInto<CR>
-nnoremap <leader>do    :action StepOver<CR>
-nnoremap <leader>dO    :action StepOut<CR>
-
-" Window Splits
+" --- Window Splits & Controls ---
 nnoremap <leader>wv <C-w>v<CR>
 nnoremap <leader>ws <C-w>s<CR>
 nnoremap <leader>ww <C-w>w<CR>
-
 nnoremap <leader>wu :action Unsplit<CR>
 nnoremap <leader>wh :action HideAllWindows<CR>
 nnoremap <leader>wo :action ChangeSplitOrientation<CR>
 
-" Errors
+" --- Error Diagnostics ---
 nnoremap <leader>en :action GotoNextError<CR>
 nnoremap <leader>ep :action GotoPreviousError<CR>
 
-" Build
+" --- Build Tool Windows ---
 nnoremap <leader>bc :action Rust.Cargo<CR>
 nnoremap <leader>bm :action Maven.NavigatorActionsToolbar<CR>
 nnoremap <leader>bg :action Gradle.View.ActionsToolbar.RunPanel<CR>
 
-" Git
+" --- Git & Version Control ---
 nnoremap <leader>gl :action ActivateVersionControlToolWindow<CR>
 nnoremap <leader>gc :action ActivateCommitToolWindow<CR>
 nnoremap <leader>gm :action Git.Menu<CR>

@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-
 # Colors
 C_RESET='\033[0m'
 C_OK='\033[0;32m'
@@ -15,28 +14,22 @@ ok()   { printf "%b[OK]%b %s\n" "$C_OK"   "$C_RESET" "$*"; }
 warn() { printf "%b[WARN]%b %s\n" "$C_WARN" "$C_RESET" "$*"; }
 err()  { printf "%b[ERR]%b %s\n" "$C_ERR"  "$C_RESET" "$*" >&2; }
 
-# Check for sudo/root
-if [[ $EUID -ne 0 ]] && ! command -v sudo >/dev/null 2>&1; then
-    err "This script requires sudo rights to install packages."
-    exit 1
-fi
-
 # Clipboard Helper
 copy_to_clip() {
     local input_file="$1"
     local clip_cmd=""
 
-    if [[ "$XDG_SESSION_TYPE" == "wayland" ]] && command -v wl-copy >/dev/null 2>&1; then
+    if [[ "${XDG_SESSION_TYPE:-}" == "wayland" ]] && command -v wl-copy >/dev/null 2>&1; then
         clip_cmd="wl-copy"
     elif command -v xclip >/dev/null 2>&1; then
         clip_cmd="xclip -selection clipboard"
     fi
 
     if [[ -n "$clip_cmd" ]]; then
-        cat "$input_file" | $clip_cmd
-        ok "Content of $(basename "$input_file") copied to clipboard."
+        $clip_cmd < "$input_file"
+        ok "Content copied to clipboard."
     else
-        warn "No clipboard utility found (wl-copy or xclip). Skipping copy."
+        warn "No clipboard tool (wl-copy or xclip) found."
     fi
 }
 
@@ -44,19 +37,15 @@ ensure_packages() {
     say "Checking system dependencies..."
     local deps=(openssh-clients gnupg2 pinentry git)
 
-    # Detect clipboard tool needed
     if [[ "${XDG_SESSION_TYPE:-}" == "wayland" ]]; then
         deps+=(wl-clipboard)
     else
         deps+=(xclip)
     fi
 
-    # Install missing only
     local to_install=()
     for pkg in "${deps[@]}"; do
-        if ! rpm -q "$pkg" &>/dev/null; then
-            to_install+=("$pkg")
-        fi
+        rpm -q "$pkg" &>/dev/null || to_install+=("$pkg")
     done
 
     if [[ ${#to_install[@]} -gt 0 ]]; then
@@ -64,17 +53,16 @@ ensure_packages() {
         sudo dnf install -y "${to_install[@]}"
         ok "Dependencies installed."
     else
-        ok "All dependencies already installed."
+        ok "All dependencies installed."
     fi
 }
 
 setup_ssh() {
     say "Starting SSH Setup..."
-
     local keyfile="$HOME/.ssh/id_ed25519"
 
     if [[ -f "$keyfile" ]]; then
-        warn "SSH key already exists ($keyfile). Skipping generation."
+        warn "SSH key already exists ($keyfile)."
     else
         read -rp "Enter email for SSH key comment: " email
         email=${email:-"$(whoami)@$(hostname)"}
@@ -82,23 +70,16 @@ setup_ssh() {
         ok "SSH key generated."
     fi
 
-    # Smarter Agent Handling
     if [[ -z "${SSH_AUTH_SOCK:-}" ]]; then
-        say "Starting ssh-agent..."
         eval "$(ssh-agent -s)"
-    else
-        ok "ssh-agent is already running."
     fi
 
-    ssh-add "$keyfile" 2>/dev/null || warn "Key not added (maybe password protected and skipped?)"
+    ssh-add "$keyfile" 2>/dev/null || warn "Key not added to agent."
 
-    # Add known hosts to prevent first-connect prompt
     mkdir -p "$HOME/.ssh"
     touch "$HOME/.ssh/known_hosts"
     say "Scanning GitHub/GitLab host keys..."
     ssh-keyscan -H github.com gitlab.com 2>/dev/null >> "$HOME/.ssh/known_hosts" || true
-
-    # Remove duplicate lines in known_hosts (clean up)
     sort -u "$HOME/.ssh/known_hosts" -o "$HOME/.ssh/known_hosts"
 
     echo "------------------------------------------------------------"
@@ -110,27 +91,26 @@ setup_ssh() {
 setup_gpg() {
     say "Starting GPG Setup..."
 
-    # Check if keys exist to prevent redundant prompts
     if gpg --list-secret-keys --keyid-format LONG | grep -q "sec"; then
-        warn "GPG keys already exist. Run '4) Show keys' to see them."
+        warn "GPG keys already exist."
         read -rp "Generate a NEW key anyway? [y/N]: " ans
         if [[ ! "$ans" =~ ^[Yy]$ ]]; then return; fi
     fi
 
-    say "Generating key. Follow the prompts..."
     gpg --full-generate-key
 
-    # Auto-export the most recently generated key
-    local latest_key_email
-    latest_key_email=$(gpg --list-keys --with-colons | awk -F: '/^uid/ {print $10}' | tail -n1 | sed 's/.*<\(.*\)>/\1/')
+    local latest_key
+    latest_key=$(gpg --list-secret-keys --with-colons | awk -F: '/^sec/ {print $5}' | tail -n1)
 
-    if [[ -n "$latest_key_email" ]]; then
-        say "Detected new key for: $latest_key_email"
+    if [[ -n "$latest_key" ]]; then
+        say "Detected new key ID: $latest_key"
         read -rp "Export public key to clipboard? [Y/n]: " ans
         if [[ -z "${ans:-}" || "$ans" =~ ^[Yy]$ ]]; then
-            gpg --armor --export "$latest_key_email" > "/tmp/gpg_pub.asc"
-            copy_to_clip "/tmp/gpg_pub.asc"
-            rm "/tmp/gpg_pub.asc"
+            local tmp_file
+            tmp_file=$(mktemp)
+            gpg --armor --export "$latest_key" > "$tmp_file"
+            copy_to_clip "$tmp_file"
+            rm -f "$tmp_file"
         fi
     fi
 }
@@ -138,34 +118,25 @@ setup_gpg() {
 setup_git_gpg() {
     say "Configuring Git Global Settings..."
 
-    # Ensure GPG TTY is set in current session and .bashrc
     export GPG_TTY=$(tty)
     if ! grep -qF "export GPG_TTY" "$HOME/.bashrc"; then
         echo 'export GPG_TTY=$(tty)' >> "$HOME/.bashrc"
         ok "Added GPG_TTY to .bashrc"
-    else
-        ok "GPG_TTY already present in .bashrc"
     fi
 
-    # Attempt to auto-detect key
-    local key_count
-    key_count=$(gpg --list-secret-keys --keyid-format LONG | grep -c "sec")
+    local keys
+    mapfile -t keys < <(gpg --list-secret-keys --with-colons | awk -F: '/^sec/ {print $5}')
 
     local keyid=""
-
-    if [[ "$key_count" -eq 0 ]]; then
-        err "No GPG secret keys found. Please run Setup GPG first."
+    if [[ ${#keys[@]} -eq 0 ]]; then
+        err "No GPG secret keys found. Run Setup GPG first."
         return
-    elif [[ "$key_count" -eq 1 ]]; then
-        # Grab the ID of the only key
-        keyid=$(gpg --list-secret-keys --keyid-format LONG | grep "sec" | awk '{print $2}' | cut -d'/' -f2)
+    elif [[ ${#keys[@]} -eq 1 ]]; then
+        keyid="${keys[0]}"
         say "Found one GPG key: $keyid"
     else
-        # Multiple keys, ask user
         gpg --list-secret-keys --keyid-format LONG
-        echo
-        read -rp "Multiple keys found. Paste the Key ID (after rsa4096/ or ed25519/): " user_key
-        keyid="$user_key"
+        read -rp "Multiple keys found. Paste Key ID: " keyid
     fi
 
     if [[ -n "$keyid" ]]; then
@@ -173,17 +144,13 @@ setup_git_gpg() {
         git config --global commit.gpgsign true
         git config --global gpg.program gpg
         ok "Git configured to sign with key: $keyid"
-    else
-        err "Invalid Key ID."
     fi
 }
 
 delete_ssh() {
     local keyfile="$HOME/.ssh/id_ed25519"
-    if [[ ! -f "$keyfile" ]]; then
-        warn "No default ed25519 key found."
-        return
-    fi
+    [[ ! -f "$keyfile" ]] && { warn "No SSH key found."; return; }
+
     read -rp "DELETE SSH key ($keyfile)? [y/N]: " ans
     if [[ "$ans" =~ ^[Yy]$ ]]; then
         rm -f "$keyfile" "$keyfile.pub"
@@ -192,19 +159,15 @@ delete_ssh() {
 }
 
 delete_gpg() {
-    echo
-    gpg --list-keys --keyid-format LONG
-    echo
-    read -rp "Enter Key ID to DELETE (pub & secret): " keyid
+    gpg --list-secret-keys --keyid-format LONG
+    read -rp "Enter Key ID to DELETE: " keyid
+    [[ -z "$keyid" ]] && { warn "Cancelled."; return; }
 
-    if [[ -z "$keyid" ]]; then warn "Cancelled."; return; fi
-
-    read -rp "Are you SURE? This cannot be undone. [y/N]: " ans
+    read -rp "Are you SURE? [y/N]: " ans
     if [[ "$ans" =~ ^[Yy]$ ]]; then
-        # Must delete secret first, then public
-        gpg --delete-secret-keys "$keyid" || warn "Failed to delete secret key (or it didn't exist)."
-        gpg --delete-keys "$keyid" || warn "Failed to delete public key."
-        ok "GPG deletion attempted."
+        gpg --delete-secret-keys "$keyid" 2>/dev/null || true
+        gpg --delete-keys "$keyid" 2>/dev/null || true
+        ok "GPG key deleted."
     fi
 }
 
@@ -214,12 +177,24 @@ show_keys() {
     if [[ -f "$HOME/.ssh/id_ed25519.pub" ]]; then
         cat "$HOME/.ssh/id_ed25519.pub"
     else
-        warn "No ed25519 public key found."
+        warn "No SSH public key found."
     fi
 
     echo
-    say "--- GPG Keys ---"
-    gpg --list-secret-keys --keyid-format=short 2>/dev/null || warn "No GPG keys found."
+    say "--- GPG Keys & Armor Export ---"
+    local gpg_keys
+    mapfile -t gpg_keys < <(gpg --list-secret-keys --with-colons 2>/dev/null | awk -F: '/^sec/ {print $5}')
+
+    if [[ ${#gpg_keys[@]} -gt 0 ]]; then
+        for key in "${gpg_keys[@]}"; do
+            echo "Key ID: $key"
+            echo "------------------------------------------------------------"
+            gpg --armor --export "$key"
+            echo "------------------------------------------------------------"
+        done
+    else
+        warn "No GPG secret keys found."
+    fi
 
     echo
     say "--- Git Configuration ---"
@@ -229,11 +204,7 @@ show_keys() {
     read -rp "Press Enter to continue..."
 }
 
-# ============================================================
-# Main Logic
-# ============================================================
-
-# Pre-flight check
+# Main Execution Guard
 if ! command -v dnf >/dev/null 2>&1; then
     err "This script requires Fedora (dnf)."
     exit 1
@@ -245,7 +216,7 @@ while true; do
     echo "1) Setup SSH"
     echo "2) Setup GPG"
     echo "3) Setup BOTH (Recommended)"
-    echo "4) Show Keys & Config"
+    echo "4) Show Keys (SSH & GPG Armor Export)"
     echo "5) Link GPG to Git"
     echo "6) Delete SSH Key"
     echo "7) Delete GPG Key"

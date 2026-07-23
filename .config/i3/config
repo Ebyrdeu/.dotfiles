@@ -1,8 +1,8 @@
-# Mod key
-# Set Mod1 (Alt) as the modifier key
+# Modifier & Mouse
 set $mod Mod1
+floating_modifier $mod
 
-# Workspace definitions
+# Workspaces
 set $ws1 1
 set $ws2 2
 set $ws3 3
@@ -14,17 +14,19 @@ set $ws8 8
 set $ws9 9
 set $ws10 10
 
-# System tray applications
+# Autostart
 exec --no-startup-id nm-applet
-
-# Autostart XDG .desktop files using dex
 exec --no-startup-id dex --autostart --environment i3
-
-# Screen lock and power management
-# Lock screen before suspend
 exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
+exec --no-startup-id i3-msg 'workspace 10; exec telegram-desktop'
 
-# Volume control using pactl
+# Launchers & Shortcuts
+bindsym $mod+Shift+Return exec alacritty -e tmux new-session -A -s 0
+bindsym $mod+d exec --no-startup-id rofi -modi drun -show drun -config ~/.config/rofi/rofidmenu.rasi
+bindsym $mod+c exec redshift -P -O 3500
+bindsym $mod+x exec redshift -x
+
+# Media & Hardware Keys
 set $refresh_i3status killall -SIGUSR1 i3status
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +1% && $refresh_i3status
 bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -1% && $refresh_i3status
@@ -34,56 +36,37 @@ bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOU
 bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl set +1%
 bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 1%-
 
-
-# Autostart applications
-exec --no-startup-id i3-msg 'workspace 10; exec telegram-desktop'
-
-# Application launchers and shortcuts
-bindsym $mod+x exec redshift -x
-bindsym $mod+c exec redshift -P -O 3500
-bindsym $mod+Shift+Return exec alacritty -e tmux new-session -A -s 0
-bindsym $mod+d exec --no-startup-id rofi -modi drun -show drun -config ~/.config/rofi/rofidmenu.rasi
-
-# Floating windows
-# Use $mod + mouse to drag floating windows
-floating_modifier $mod
-
-# Kill focused window
+# Window Control
 bindsym $mod+Shift+q kill
-
-# Kill focused window
 bindsym $mod+f fullscreen toggle global
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout splith
 
-# Focus and movement
+# Focus Movement
 bindsym $mod+j focus left
 bindsym $mod+h focus down
 bindsym $mod+l focus up
 bindsym $mod+k focus right
 
+# Window Movement
 bindsym $mod+Shift+j move left
 bindsym $mod+Shift+h move down
 bindsym $mod+Shift+l move up
 bindsym $mod+Shift+k move right
 
-# Tabbed layout
-bindsym $mod+w layout tabbed
+# Switch Workspaces
+bindsym $mod+1 workspace number $ws1
+bindsym $mod+2 workspace number $ws2
+bindsym $mod+3 workspace number $ws3
+bindsym $mod+4 workspace number $ws4
+bindsym $mod+5 workspace number $ws5
+bindsym $mod+6 workspace number $ws6
+bindsym $mod+7 workspace number $ws7
+bindsym $mod+8 workspace number $ws8
+bindsym $mod+9 workspace number $ws9
+bindsym $mod+0 workspace number $ws10
 
-# Toggle split layout
-bindsym $mod+e layout splith
-
-# Workspace navigation
-bindsym $mod+1 workspace  number $ws1
-bindsym $mod+2 workspace  number $ws2
-bindsym $mod+3 workspace  number $ws3
-bindsym $mod+4 workspace  number $ws4
-bindsym $mod+5 workspace  number $ws5
-bindsym $mod+6 workspace  number $ws6
-bindsym $mod+7 workspace  number $ws7
-bindsym $mod+8 workspace  number $ws8
-bindsym $mod+9 workspace  number $ws9
-bindsym $mod+0 workspace  number $ws10
-
-# Move focused container to workspace
+# Move Window to Workspace
 bindsym $mod+Shift+1 move container to workspace number $ws1
 bindsym $mod+Shift+2 move container to workspace number $ws2
 bindsym $mod+Shift+3 move container to workspace number $ws3
@@ -95,73 +78,35 @@ bindsym $mod+Shift+8 move container to workspace number $ws8
 bindsym $mod+Shift+9 move container to workspace number $ws9
 bindsym $mod+Shift+0 move container to workspace number $ws10
 
-# Restart i3 inplace
+# System Commands
 bindsym $mod+Shift+r restart
 
-# Resize mode
+# Resize Mode
 mode "resize" {
-        bindsym l resize grow height 10 px or 10 ppt
-        bindsym j resize shrink width 10 px or 10 ppt
-        bindsym k resize grow width 10 px or 10 ppt
-        bindsym h resize shrink height 10 px or 10 ppt
+    bindsym l resize grow height 10 px or 10 ppt
+    bindsym j resize shrink width 10 px or 10 ppt
+    bindsym k resize grow width 10 px or 10 ppt
+    bindsym h resize shrink height 10 px or 10 ppt
 
-        bindsym Return mode "default"
-        bindsym Escape mode "default"
-        bindsym $mod+r mode "default"
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+    bindsym $mod+r mode "default"
 }
-
 bindsym $mod+r mode "resize"
 
-# Exit menu
+# Power Menu Mode
 mode "exit: [l]ogout, [r]eboot, [s]leep, [p]oweroff" {
     bindsym l exec i3-msg 'exit'
-        bindsym r exec systemctl reboot
-        bindsym s exec systemctl suspend
-        bindsym p exec systemctl poweroff
-        bindsym Return exec i3-msg exit
-        bindsym Escape mode "default"
+    bindsym r exec systemctl reboot
+    bindsym s exec systemctl suspend
+    bindsym p exec systemctl poweroff
+
+    bindsym Return exec i3-msg exit
+    bindsym Escape mode "default"
 }
 bindsym $mod+Shift+e mode "exit: [l]ogout, [r]eboot, [s]leep, [p]oweroff"
 
-# Font settings
-font pango: JetBrains Mono  13
-
-# Border settings
-default_border pixel 4
-for_window [class=".*"] border pixel 4
-default_floating_border none
-hide_edge_borders smart
-
-#light-soft
-set $bg0 #f2e5bc
-set $bg2 #ebdbb2
-set $fg0 #654735
-set $red #c14a4a
-set $green #6c782e
-set $yellow #b47109
-set $blue #45707a
-set $purple #945e80
-set $aqua #4c7a5d
-
-# i3bar configuration
+# Status Bar
 bar {
-        status_command i3blocks -c ~/.config/i3/i3blocks.conf
-        colors {
-        background $bg0
-        statusline $fg0
-
-        #                    border  backgr. text
-        focused_workspace    $bg2	 $bg2	 $fg0
-        inactive_workspace   $bg0    $bg0	 $fg0
-        active_workspace     $bg0    $bg0    $fg0 
-        urgent_workspace     $red    $red    $bg0
-        }
+    status_command i3status
 }
-
-#                       border|backgr|text|indicator|child_border
-client.focused          $bg2   $bg2   $fg0 $purple   $fg0
-client.focused_inactive $bg2   $bg2   $fg0 $purple   $bg2
-client.unfocused        $bg0   $bg0   $fg0 $purple   $bg0
-client.urgent           $red   $red   $bg0 $red      $red
-
-

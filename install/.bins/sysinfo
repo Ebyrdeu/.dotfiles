@@ -8,46 +8,89 @@ C_VAL='\033[0m'
 C_BAR='\033[1;30m'
 C_RESET='\033[0m'
 
-# Progress Bar Function
+# Progress Bar Function (ASCII Standard - No special font required)
 draw_bar() {
     local perc=$1
     local size=15
     local filled=$(( (perc * size) / 100 ))
     local empty=$(( size - filled ))
     printf "${C_BAR}["
-    printf "%${filled}s" | tr ' ' '■'
-    printf "${C_VAL}%${empty}s" | tr ' ' ' '
+    printf "%${filled}s" | tr ' ' '#'
+    printf "${C_VAL}%${empty}s" | tr ' ' '-'
     printf "${C_BAR}]${C_RESET}"
 }
 
 # 1. System Info
 [[ -r /etc/os-release ]] && . /etc/os-release
-os="${NAME:-Fedora} ${VERSION_ID:-}"
+os="${NAME:-Linux} ${VERSION_ID:-}"
 kernel=$(uname -r)
 uptime_str=$(uptime -p | sed 's/up //')
 
-# 2. Package Counting (Fedora Specific)
-count_rpm=$(rpm -qa | wc -l)
+# 2. Package Counting
+count_rpm=$(command -v rpm >/dev/null && rpm -qa | wc -l || echo 0)
 count_fp=$(command -v flatpak >/dev/null && flatpak list | wc -l || echo 0)
-pkg_str="$count_rpm (rpm)"
-[[ "$count_fp" -gt 0 ]] && pkg_str+=", $count_fp (flatpak)"
+pkg_str=""
+[[ "$count_rpm" -gt 0 ]] && pkg_str="$count_rpm (rpm)"
+[[ "$count_fp" -gt 0 ]] && { [[ -n "$pkg_str" ]] && pkg_str+=", "; pkg_str+="$count_fp (flatpak)"; }
 
-# 3. Hardware Detection
-cpu=$(awk -F: '/model name/ {print $2; exit}' /proc/cpuinfo | sed 's/^[ \t]*//')
-gpu="N/A"
-if command -v glxinfo >/dev/null 2>&1; then
-    gpu=$(glxinfo -B | grep "Device:" | cut -d: -f2 | sed 's/^[ \t]*//;s/ (.*//')
-elif command -v lspci >/dev/null 2>&1; then
-    gpu=$(lspci | grep -iE 'vga|3d|display' | cut -d: -f3 | head -n1 | sed 's/^[ \t]*//;s/\[.*\]//g')
+# 3. CPU Detection
+cpu="N/A"
+if [[ -f /proc/cpuinfo ]]; then
+    cpu=$(awk -F: '/model name/ {print $2; exit}' /proc/cpuinfo | sed 's/^[ \t]*//')
+    [[ -z "$cpu" ]] && cpu=$(awk -F: '/Hardware/ {print $2; exit}' /proc/cpuinfo | sed 's/^[ \t]*//')
 fi
 
-# 4. Memory & Disk Logic
+cpu=$(echo "$cpu" | sed -E \
+    -e 's/12th Gen //g' -e 's/13th Gen //g' -e 's/14th Gen //g' \
+    -e 's/\(R\)//g' -e 's/\(TM\)//g' -e 's/ CPU @.*//g' \
+    -e 's/Processor//g' -e 's/Core /Core /g' -e 's/ +/ /g')
+
+# 4. GPU Detection
+gpus=()
+
+if command -v nvidia-smi >/dev/null 2>&1; then
+    nv_gpu=$(nvidia-smi --query-gpu=name --format=csv,noheader 2>/dev/null | head -n1 || true)
+    [[ -n "$nv_gpu" ]] && gpus+=("$nv_gpu")
+fi
+
+if command -v lspci >/dev/null 2>&1; then
+    while IFS= read -r line; do
+        cleaned_gpu=$(echo "$line" | cut -d: -f3- | sed \
+            -e 's/\[VGA controller\]//g' \
+            -e 's/\[Display controller\]//g' \
+            -e 's/\[3D controller\]//g' \
+            -e 's/Corporation//g' \
+            -e 's/Advanced Micro Devices, Inc. //g' \
+            -e 's/\[AMD\/ATI\]//g' \
+            -e 's/NVIDIA //g' \
+            -e 's/Intel //g' \
+            -e 's/ (rev .*//g' \
+            -e 's/^[ \t]*//' -e 's/[ \t]*$//')
+
+        if [[ -n "$cleaned_gpu" ]]; then
+            duplicate=false
+            for g in "${gpus[@]}"; do
+                [[ "$g" == *"$cleaned_gpu"* || "$cleaned_gpu" == *"$g"* ]] && duplicate=true
+            done
+            [[ "$duplicate" == false ]] && gpus+=("$cleaned_gpu")
+        fi
+    done < <(lspci -nn 2>/dev/null | grep -iE 'vga|3d|display' || true)
+fi
+
+if [[ ${#gpus[@]} -gt 0 ]]; then
+    gpu_str=$(IFS=", "; echo "${gpus[*]}")
+else
+    gpu_str="N/A"
+fi
+
+# 5. Memory Logic
 read -r mem_total mem_avail < <(awk '/MemTotal/ {t=$2} /MemAvailable/ {a=$2; print t, a}' /proc/meminfo)
 mem_used=$((mem_total - mem_avail))
 mem_perc=$((mem_used * 100 / mem_total))
 mem_used_gb=$(awk "BEGIN {printf \"%.1f\", $mem_used/1024/1024}")
 mem_total_gb=$(awk "BEGIN {printf \"%.1f\", $mem_total/1024/1024}")
 
+# 6. Disk Logic
 read -r d_total d_used d_perc < <(df -h / | awk 'NR==2 {print $2, $3, $5}')
 d_perc_num=${d_perc%\%}
 
@@ -55,19 +98,19 @@ d_perc_num=${d_perc%\%}
 echo -e "\n${C_HEAD}SYSTEM OVERVIEW${C_RESET}"
 echo -e "${C_BAR}------------------------------------------------${C_RESET}"
 
-printf "${C_LABEL}%-12s${C_RESET} %s\n" "USER"    "$(whoami)@$(hostname)"
-printf "${C_LABEL}%-12s${C_RESET} %s\n" "OS"      "$os"
-printf "${C_LABEL}%-12s${C_RESET} %s\n" "KERNEL"  "$kernel"
-printf "${C_LABEL}%-12s${C_RESET} %s\n" "UPTIME"  "$uptime_str"
+printf "${C_LABEL}%-12s${C_RESET} %s\n" "USER"     "$(whoami)@$(hostname)"
+printf "${C_LABEL}%-12s${C_RESET} %s\n" "OS"       "$os"
+printf "${C_LABEL}%-12s${C_RESET} %s\n" "KERNEL"   "$kernel"
+printf "${C_LABEL}%-12s${C_RESET} %s\n" "UPTIME"   "$uptime_str"
 printf "${C_LABEL}%-12s${C_RESET} %s\n" "PACKAGES" "$pkg_str"
-printf "${C_LABEL}%-12s${C_RESET} %s\n" "DESKTOP" "${XDG_CURRENT_DESKTOP:-N/A}"
+printf "${C_LABEL}%-12s${C_RESET} %s\n" "DESKTOP"  "${XDG_CURRENT_DESKTOP:-N/A}"
 
 echo -e "\n${C_HEAD}HARDWARE${C_RESET}"
-printf "${C_LABEL}%-12s${C_RESET} %s\n" "CPU"     "$cpu"
-printf "${C_LABEL}%-12s${C_RESET} %s\n" "GPU"     "$gpu"
+printf "${C_LABEL}%-12s${C_RESET} %s\n" "CPU"      "$cpu"
+printf "${C_LABEL}%-12s${C_RESET} %s\n" "GPU"      "$gpu_str"
 
 echo -e "\n${C_HEAD}RESOURCES${C_RESET}"
-printf "${C_LABEL}%-12s${C_RESET} %-20s %s\n" "MEMORY" "$(draw_bar $mem_perc) $mem_perc%" "$mem_used_gb / $mem_total_gb GiB"
+printf "${C_LABEL}%-12s${C_RESET} %-20s %s\n" "MEMORY"  "$(draw_bar $mem_perc) $mem_perc%" "$mem_used_gb / $mem_total_gb GiB"
 printf "${C_LABEL}%-12s${C_RESET} %-20s %s\n" "STORAGE" "$(draw_bar $d_perc_num) $d_perc" "$d_used / $d_total"
 
 echo -e "${C_BAR}------------------------------------------------${C_RESET}\n"
