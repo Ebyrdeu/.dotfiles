@@ -21,6 +21,9 @@ if ! command -v dnf >/dev/null 2>&1; then
 fi
 
 packages=(
+    xdd
+    hexdump
+    chromium
     tldr
     fcitx5
     fcitx5-mozc

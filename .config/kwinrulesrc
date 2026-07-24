@@ -28,5 +28,13 @@ wmclasscomplete=true
 wmclassmatch=1
 
 [General]
-count=3
-rules=6ec6b0bc-3426-4937-8d9b-3460ee54992a,955db561-6809-4f54-a1ff-1ce895e96b53,3c0e11f6-16a5-4064-8b91-c73a6cddfb98
+count=4
+rules=e1a0d21a-ad0f-4ab3-9d7d-3881f29d68da,6ec6b0bc-3426-4937-8d9b-3460ee54992a,955db561-6809-4f54-a1ff-1ce895e96b53,3c0e11f6-16a5-4064-8b91-c73a6cddfb98
+
+[e1a0d21a-ad0f-4ab3-9d7d-3881f29d68da]
+Description=Application settings for Alacritty
+desktops=4230de54-0f4b-400a-b849-6e9e86ed7a2a
+desktopsrule=3
+wmclass=alacritty Alacritty
+wmclasscomplete=true
+wmclassmatch=1

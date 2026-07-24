@@ -39,6 +39,7 @@ packages=(
     lld
     llvm
     meson
+		mame-tools
     mpv-devel
     mpv-libs
     mysql-devel

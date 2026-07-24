@@ -60,7 +60,7 @@ stow_cmd=(
     --dir="$DOTFILES_DIR"
     --target="$HOME"
     --verbose=1
-    --ignore='(i3|paru|rofi|hypr|waybar|alacritty|dunst|install|README.md|\.git)'
+    --ignore='(install|\.git)'
     .
 )
 

@@ -6,3 +6,6 @@ sudo dnf upgrade --refresh -y
 sudo dnf group upgrade -y core
 sudo dnf install -y rpmfusion-free-release-tainted rpmfusion-nonfree-release-tainted dnf-plugins-core
 echo "RPM Fusion repositories enabled."
+
+sudo dnf remove firefox
+echo "Firefox removed"
