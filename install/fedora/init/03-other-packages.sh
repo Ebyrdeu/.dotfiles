@@ -25,6 +25,10 @@ packages=(
     hexdump
     chromium
     tldr
+    arandr
+    xrandr
+    flameshot
+    redshift
     fcitx5
     fcitx5-mozc
     tmux
@@ -32,7 +36,6 @@ packages=(
     mpv
     qbittorrent
     telegram-desktop
-    thunderbird
 )
 
 say "Checking software suite dependencies..."

@@ -80,7 +80,7 @@ fi
 # 4. Java Ecosystem (Maven, Gradle, JDKs)
 # ------------------------------------------------------------
 packages=("maven" "gradle")
-jdks=("25.0.1.fx-nik")
+jdks=("25.0.2-graalce")
 
 say "Provisioning Java ecosystem..."
 

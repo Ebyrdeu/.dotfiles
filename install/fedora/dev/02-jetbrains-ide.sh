@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -uo pipefail
 
 # Colors
 C_RESET='\033[0m'
@@ -13,6 +13,13 @@ say()  { printf "%b[INFO]%b %s\n" "$C_HEAD" "$C_RESET" "$*"; }
 ok()   { printf "%b[OK]%b %s\n" "$C_OK"   "$C_RESET" "$*"; }
 warn() { printf "%b[WARN]%b %s\n" "$C_WARN" "$C_RESET" "$*"; }
 err()  { printf "%b[ERR]%b %s\n" "$C_ERR"  "$C_RESET" "$*" >&2; }
+
+# If sourced, use 'return' instead of 'exit' so we don't kill the parent shell/runner.
+if [[ "${BASH_SOURCE[0]}" != "${0}" ]]; then
+    _exit() { return "$1"; }
+else
+    _exit() { exit "$1"; }
+fi
 
 # Track downloaded archives for reliable cleanup on exit
 TEMP_FILES=()
@@ -46,10 +53,12 @@ install_jetbrains_ide() {
             to_install+=("$cmd")
         fi
     done
-
     if [[ ${#to_install[@]} -gt 0 ]]; then
         say "Installing missing dependencies: ${to_install[*]}"
-        sudo dnf install -y "${to_install[@]}"
+        if ! sudo dnf install -y "${to_install[@]}"; then
+            err "Failed to install dependencies: ${to_install[*]}"
+            return 1
+        fi
     fi
 
     local download_url="https://data.services.jetbrains.com/products/download?code=${code}&platform=linux"
@@ -58,18 +67,28 @@ install_jetbrains_ide() {
     TEMP_FILES+=("$temp_tarball")
 
     say "Downloading $name..."
-    curl -sSL --progress-bar -o "$temp_tarball" "$download_url"
+    if ! curl -sSL --progress-bar -o "$temp_tarball" "$download_url"; then
+        err "Download failed for $name."
+        return 1
+    fi
 
     say "Extracting to $install_dir..."
-    sudo mkdir -p "$install_dir"
+    if ! sudo mkdir -p "$install_dir"; then
+        err "Could not create $install_dir."
+        return 1
+    fi
     sudo rm -rf "${install_dir:?}"/*
-    sudo tar -xzf "$temp_tarball" -C "$install_dir" --strip-components=1
+    if ! sudo tar -xzf "$temp_tarball" -C "$install_dir" --strip-components=1; then
+        err "Extraction failed for $name."
+        return 1
+    fi
 
     say "Setting ownership and creating symlinks..."
     sudo chown -R "$(id -u):$(id -g)" "$install_dir"
     sudo ln -sf "$exec_path" "$bin_link"
 
     ok "$name installation complete!"
+    return 0
 }
 
 # Prompt user for selection
@@ -77,7 +96,7 @@ select_ides() {
     # If running non-interactively (e.g. CI or automated script without TTY), default to skipping
     if [[ ! -t 0 ]]; then
         warn "Non-interactive terminal detected. Skipping JetBrains IDE installation."
-        exit 0
+        return 0
     fi
 
     echo "------------------------------------------------------------"
@@ -88,7 +107,8 @@ select_ides() {
     echo "4) Skip (Default)"
     echo "------------------------------------------------------------"
 
-    read -rp "Enter choice [1-4] (default: 4): " choice
+    local choice
+    read -rp "Enter choice [1-4] (default: 4): " choice || true
     choice="${choice:-4}"
 
     case "$choice" in
@@ -104,10 +124,10 @@ select_ides() {
             ;;
         4|*)
             warn "Skipping JetBrains IDE installation."
-            exit 0
             ;;
     esac
 }
 
 # Run selection
 select_ides
+_exit 0
