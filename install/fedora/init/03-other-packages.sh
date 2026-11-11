@@ -25,10 +25,6 @@ packages=(
     hexdump
     chromium
     tldr
-    arandr
-    xrandr
-    flameshot
-    redshift
     fcitx5
     fcitx5-mozc
     tmux
@@ -38,26 +34,45 @@ packages=(
     telegram-desktop
 )
 
-say "Checking software suite dependencies..."
+# Helper function to check and install a package array
+install_pkg_list() {
+    local list_label="$1"
+    shift
+    local pkg_array=("$@")
+    local to_install=()
 
-to_install=()
-for pkg in "${packages[@]}"; do
-    if ! rpm -q "$pkg" &>/dev/null; then
-        to_install+=("$pkg")
-    fi
-done
+    say "Checking $list_label..."
 
-if [[ ${#to_install[@]} -gt 0 ]]; then
-    say "Installing packages: ${to_install[*]}"
-    if sudo dnf install -y "${to_install[@]}"; then
-        ok "All packages installed successfully."
+    for pkg in "${pkg_array[@]}"; do
+        # Strip leading '@' for group checks via rpm or dnf group list check
+        if [[ "$pkg" == @* ]]; then
+            local group_name="${pkg#@}"
+            if ! dnf group list installed "$group_name" &>/dev/null; then
+                to_install+=("$pkg")
+            fi
+        else
+            if ! rpm -q "$pkg" &>/dev/null; then
+                to_install+=("$pkg")
+            fi
+        fi
+    done
+
+    if [[ ${#to_install[@]} -gt 0 ]]; then
+        say "Installing $list_label: ${to_install[*]}"
+        if sudo dnf install -y "${to_install[@]}"; then
+            ok "$list_label installed successfully."
+        else
+            err "Some packages in $list_label failed to install."
+            return 1
+        fi
     else
-        err "Some packages failed to install. Check output above."
-        exit 1
+        ok "All items in $list_label are already installed."
     fi
-else
-    ok "All requested packages are already installed."
-fi
+}
+
+# Run installation loops
+install_pkg_list "software suite dependencies" "${packages[@]}"
+echo "------------------------------------------------------------"
 
 # Post-Install Setup
 if command -v tldr &>/dev/null; then

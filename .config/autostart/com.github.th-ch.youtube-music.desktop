@@ -1,0 +1,9 @@
+[Desktop Entry]
+Categories=AudioVideo;
+Comment=YouTube Music Desktop App - including custom plugins
+Exec="/opt/YouTube Music/youtube-music" %U
+Icon=youtube-music
+Name=YouTube Music
+StartupWMClass=com.github.th-ch.youtube-music
+Terminal=false
+Type=Application
