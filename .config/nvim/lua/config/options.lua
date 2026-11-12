@@ -38,9 +38,3 @@ opt.listchars = "tab:^ ,nbsp:¬,extends:»,precedes:«,trail:•"
 
 -- Diff Settings
 opt.diffopt:append({ "iwhite", "algorithm:histogram", "indent-heuristic" })
-
--- Autocommands
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "rust",
-  command = "setlocal colorcolumn=100",
-})

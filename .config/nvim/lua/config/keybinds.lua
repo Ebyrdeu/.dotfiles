@@ -38,7 +38,7 @@ map("n", "<leader>gy", '"+ygg')
 map("n", "<leader>pp", '"+p')
 
 -- File Management
-map("n", "<leader>o", vim.cmd.Ex)
+map("n", "<leader>o", ":Neotree toggle<CR>", { silent = true, desc = "Toggle Neo-tree" })
 map("n", "<leader>ne", ':e <C-R>=expand("%:p:h") . "/"<CR>')
 map("n", "<leader>q", "<cmd>bd<CR>")
 

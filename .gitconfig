@@ -1,7 +1,7 @@
 [user]
 	name = Maxim Khnykin
 	email = ebyrdeu.khnykin@gmail.com
-	signingkey = 8FDA0723A3939249
+	signingkey = 91C1D32C51D6D45F
 
 [gpg]
 	program = gpg

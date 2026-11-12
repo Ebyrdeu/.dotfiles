@@ -14,7 +14,7 @@ require("mason-lspconfig").setup({
   ensure_installed = {
     "lua_ls",
     "clangd",
-    "zls",
+    "gopls",
     "dockerls",
     "yamlls",
     "bashls",
